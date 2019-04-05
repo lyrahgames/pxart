@@ -1,0 +1,49 @@
+\documentclass[fleqn,10pt,twoside]{article}
+\usepackage{standard}
+
+\geometry{a4paper, lmargin=45mm, rmargin=35mm, tmargin=40mm, bmargin=35mm}
+\pagestyle{mainstyle}
+
+\let\stdsection\section
+\renewcommand*\section{\cleardoublepage\thispagestyle{sectionstyle}\stdsection}
+
+\urlstyle{same}
+\usepackage{hyperref}
+
+\begin{document}
+  \import{sections/}{titlepage.tex}
+
+  \cleardoublepage
+  \import{sections/}{abstract.tex}
+  \import{sections/}{acknowledgements.tex}
+
+  \pagenumbering{roman}
+  \setcounter{page}{0}
+
+  \tableofcontents
+  \listoffigures
+  \import{sections/}{symbol_table.tex}
+
+  \cleardoublepage
+  \pagenumbering{arabic}
+  \import{sections/}{introduction.tex}
+  \import{sections/}{background.tex}
+  \import{sections/}{methodology.tex}
+  \import{sections/}{implementation.tex}
+  \import{sections/}{results.tex}
+  \import{sections/}{conclusion.tex}
+
+
+  \nocite{*}
+  \phantomsection
+  \addcontentsline{toc}{section}{References}
+  \bibliographystyle{babplain}
+  \bibliography{references}
+
+  \cleardoublepage
+  \appendix
+  \pagenumbering{roman}
+
+  \cleardoublepage
+  \import{sections/}{statutory_declaration.tex}
+\end{document}

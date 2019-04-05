@@ -1,0 +1,68 @@
+\documentclass[crop=false,10pt,ngerman]{standalone}
+\usepackage{standard}
+\usepackage{tabularx}
+
+\begin{document}
+  \section*{Symbol Table}
+  % \setlength\extrarowheight{5pt}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{table}[H]
+    \scriptsize
+    \begin{tabularx}{\textwidth}{p{0.15\textwidth}p{0.84\textwidth}}
+      \hline
+      \textbf{Symbol} & \textbf{Definition} \\
+      \hline
+      \hline
+
+      $x\in A$ & $x$ ist ein Element der Menge $A$. \\
+
+      $A\subset B$ & $A$ ist eine Teilmenge von $B$. \\
+
+      $A\cap B$ & $\set{x}{x\in A \text{ und } x\in B}$ für Mengen $A,B$ --- Mengenschnitt \\
+
+      $A\cup B$ & $\set{x}{x\in A \text{ oder } x\in B}$ für Mengen $A,B$ --- Mengenvereinigung \\
+
+      $A\setminus B$ & $\set{x\in A}{x\not\in B}$ für Mengen $A,B$ --- Differenzmenge \\
+
+      $A\times B$ & $\set{(x,y)}{x\in A,y\in B}$ für Mengen $A$ und $B$ --- kartesisches Produkt \\
+
+      $\emptyset$ & $\set{}{}$ --- leere Menge \\
+
+      $\setNatural$ & Menge der natürlichen Zahlen \\
+      $\setNatural_0$ & $\setNatural \cup \set{0}{}$ \\
+      $\setReal$ & Menge der reellen Zahlen \\
+      $\setReal^n$ & Menge der $n$-dimensionalen Vektoren \\
+      $\setReal^{n\times n}$ & Menge der $n\times n$-Matrizen \\
+      $\function{f}{X}{Y}$ & $f$ ist eine Funktion mit Definitionsbereich $X$ und Wertebereich $Y$ \\
+      $\partial\Omega$ & Rand einer Teilmenge $\Omega\subset\setReal^n$ \\
+      $σ$ & Oberflächenmaß \\
+      $λ$ & Lebesgue-Maß \\
+      $\integral{\Omega}{}{f}{λ}$ & Lebesgue-Integral von $f$ über der Menge $\Omega$ \\
+      $\integral{\partial\Omega}{}{f}{σ}$ & Oberflächen-Integral von $f$ über der Menge $\partial\Omega$ \\
+      $\partial_i$ & Partielle Ableitung nach der $i$.~Koordinate \\
+      $\partial_t$ & Partielle Ableitung nach der Zeitkoordinate \\
+      $\partial^2_i$ & Zweite partielle Ableitung nach $i$ \\
+      $\nabla$ & $\transpose{\begin{pmatrix}\partial_1 & \partial_2\end{pmatrix}}$ --- Nabla-Operator \\
+      $\laplacian$ & $\partial_1^2 + \partial_2^2$ --- Laplace-Operator \\
+      $\setDifferentiable^k(\Omega)$ & Menge der $k$-mal stetig differenzierbaren Funktion auf $\Omega$ \\
+      $\setIntegrable^2(\Omega)$ & Menge der quadrat-integrierbaren Funktionen auf $\Omega$ \\
+      $\setSobolev^1(\Omega)$ & Sobolevraum \\
+      $\appendValue{f}{\partial\Omega}$ & Einschränkung der Funktion $f$ auf $\partial\Omega$\\
+      $\scalarProduct{x}{y}$ & Euklidisches Skalarprodukt \\
+      $[a,b]$ & $\set{x\in\setReal}{a\leq x \leq b}$ \\
+      $(a,b)$ & $\set{x\in\setReal}{a < x < b}$ \\
+      $[a,b)$ & $\set{x\in\setReal}{a\leq x < b}$ \\
+      $u(\cdot,t)$ & Funktion $\tilde{u}$ mit $\tilde{u}(x) = u(x,t)$ \\
+      $\transpose{A}$ & Transponierte der Matrix $A$ \\
+      $\identity$ & Identitätsabbildung \\
+      $a\define b$ & $a$ wird durch $b$ definiert \\
+      $f\circ g$ & Komposition der Funktionen $f$ und $g$ \\
+      $\begin{vmatrix} a & b \\ c & d \end{vmatrix}$ & Determinante der angegeben Matrix \\
+      $\mathrm{span}\set{\ldots}{}$ & Lineare Hülle der angegebenen Menge \\
+      $\absolute{A}$ & Anzahl der Elemente in der Menge $A$ \\
+      \\
+      \hline
+    \end{tabularx}
+  \end{table}
+
+\end{document}
