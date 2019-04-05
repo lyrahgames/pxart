@@ -6,7 +6,7 @@ DEPENDENCIES = $(shell find . -name "*.tex")
 DEPENDENCIES += $(shell find $(PACKAGE_FOLDER)/ -name "*")
 SOURCE_BASE = $(basename $(SOURCE))
 TEMPORARY = $(addsuffix .pdf,$(SOURCE_BASE))
-SOURCE_CACHE = $(filter-out ./$(SOURCE) ./$(TARGET),$(shell find . -maxdepth 1 -name "$(SOURCE_BASE).*"))
+SOURCE_CACHE = $(filter-out ./$(SOURCE) ./$(TARGET),$(shell find . -maxdepth 1 -name "$(SOURCE_BASE)*"))
 
 $(info $(DEPENDENCIES))
 $(info $(SOURCE_CACHE))
