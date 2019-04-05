@@ -1,7 +1,7 @@
 !utilities
 !sections
 
-!*.tex
-!*.bib
+!main.tex
+!references.bib
 
 !makefile
