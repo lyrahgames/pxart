@@ -1,0 +1,9 @@
+add_executable(random_device_info)
+target_sources(random_device_info
+  PRIVATE
+    random_device_info.cpp
+)
+target_link_libraries(random_device_info
+  PRIVATE
+    librng::librng
+)

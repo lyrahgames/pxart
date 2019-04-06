@@ -3,6 +3,7 @@
 !docs
 !cmake
 !librng
+!rng
 !examples
 
 !CMakeLists.txt
