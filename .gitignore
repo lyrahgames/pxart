@@ -1,7 +1,11 @@
 *
 
 !docs
+!cmake
+!librng
+!examples
 
+!CMakeLists.txt
 !README.md
 
 !.gitignore
