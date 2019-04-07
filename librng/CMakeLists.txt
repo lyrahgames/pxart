@@ -6,11 +6,24 @@ add_executable(internal-tests)
 
 # librng library
 add_subdirectory(test)
+
 target_sources(librng
   INTERFACE
     middle_square_engine.hpp
     middle_square_weyl_engine.hpp
 )
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  target_sources(librng
+    INTERFACE
+      rdrand_engine.hpp
+  )
+  target_compile_options(librng
+    INTERFACE
+      -mrdrnd
+  )
+endif()
+
 target_include_directories(librng
   INTERFACE
     ..

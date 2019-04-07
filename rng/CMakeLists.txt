@@ -32,3 +32,16 @@ target_link_libraries(middle_square_weyl
     fmt::fmt
     librng::librng
 )
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  add_executable(rdrand)
+  target_sources(rdrand
+    PRIVATE
+      rdrand.cpp
+  )
+  target_link_libraries(rdrand
+    PRIVATE
+      fmt::fmt
+      librng::librng
+  )
+endif()
