@@ -9,6 +9,7 @@ add_subdirectory(test)
 target_sources(librng
   INTERFACE
     middle_square_engine.hpp
+    middle_square_weyl_engine.hpp
 )
 target_include_directories(librng
   INTERFACE

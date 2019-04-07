@@ -21,3 +21,14 @@ target_link_libraries(middle_square
     fmt::fmt
     librng::librng
 )
+
+add_executable(middle_square_weyl)
+target_sources(middle_square_weyl
+  PRIVATE
+    middle_square_weyl.cpp
+)
+target_link_libraries(middle_square_weyl
+  PRIVATE
+    fmt::fmt
+    librng::librng
+)
