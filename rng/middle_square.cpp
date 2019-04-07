@@ -1,32 +1,40 @@
-#include <cstdint>
-#include <random>
-#include <vector>
+#include <fmt/format.h>
 
+#include <librng/middle_square_engine.hpp>
 #include <librng/test/histogram.hpp>
 
 using namespace std;
+using namespace std::string_literals;
+using namespace fmt;
 
-struct middle_square_engine {
-  using result_type = uint32_t;
+int main(int argc, char** argv) {
+  const auto usage = format("usage: {} [<sample size> [<bin count>]]", argv[0]);
 
-  result_type operator()() noexcept {
-    state *= state;
-    return state = (state >> 16) & 0xffffffff;
+  int sample_size = 1000;
+  int bin_count = 15;
+
+  if (argc > 1) {
+    if ("help"s == argv[1]) {
+      print(usage);
+      return 0;
+    }
+
+    sample_size = stoi(argv[1]);
+    if (argc > 2) {
+      bin_count = stoi(argv[2]);
+      if (argc > 3) {
+        print("Too many arguments!\n{}\n", usage);
+        return -1;
+      }
+    }
   }
-  static constexpr result_type min() noexcept { return 0; }
-  static constexpr result_type max() noexcept { return 0xffffffff; }
 
-  uint64_t state = 0xfedcb2ed;
-};
+  print(
+      "sample size = {}\n"
+      "bin count = {}\n",
+      sample_size, bin_count);
 
-int main() {
-  middle_square_engine ms{};
-  random_device rd{};
-
-  // vector<decltype(ms)::result_type> data{};
-  // for (long i = 0; i < 10000; ++i) data.push_back(ms());
-  // rng::test::sample_analyzer info{data};
-
-  rng::test::histogram info{rd, 100000, 15};
-  cout << info << '\n';
+  rng::middle_square_engine rng{};
+  rng::test::histogram histogram{rng, sample_size, bin_count};
+  cout << histogram << '\n';
 }

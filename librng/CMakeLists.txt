@@ -6,9 +6,10 @@ add_executable(internal-tests)
 
 # librng library
 add_subdirectory(test)
-# target_sources(librng
-#   INTERFACE
-# )
+target_sources(librng
+  INTERFACE
+    middle_square_engine.hpp
+)
 target_include_directories(librng
   INTERFACE
     ..
