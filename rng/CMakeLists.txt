@@ -7,3 +7,13 @@ target_link_libraries(random_device_info
   PRIVATE
     librng::librng
 )
+
+add_executable(middle_square)
+target_sources(middle_square
+  PRIVATE
+    middle_square.cpp
+)
+target_link_libraries(middle_square
+  PRIVATE
+    librng::librng
+)

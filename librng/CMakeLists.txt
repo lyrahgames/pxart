@@ -1,10 +1,14 @@
-# librng library
 find_package(fmt REQUIRED)
+find_package(doctest REQUIRED)
+
 add_library(librng INTERFACE)
-target_sources(librng
-  INTERFACE
-    sample_analyzer.hpp
-)
+add_executable(internal-tests)
+
+# librng library
+add_subdirectory(test)
+# target_sources(librng
+#   INTERFACE
+# )
 target_include_directories(librng
   INTERFACE
     ..
@@ -20,8 +24,6 @@ target_link_libraries(librng
 add_library(librng::librng ALIAS librng)
 
 # internal tests
-find_package(doctest REQUIRED)
-add_executable(internal-tests)
 target_sources(internal-tests
   PRIVATE
     main.test.cpp

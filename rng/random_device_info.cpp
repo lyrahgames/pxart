@@ -2,7 +2,7 @@
 #include <random>
 #include <vector>
 
-#include <librng/sample_analyzer.hpp>
+#include <librng/test/sample_analyzer.hpp>
 
 using namespace std;
 
@@ -14,7 +14,7 @@ int main() {
 
   vector<decltype(distribution)::result_type> data{};
   for (long i = 0; i < 1000000; ++i) data.push_back(distribution(rng));
-  rng::sample_analyzer info{data};
+  rng::test::sample_analyzer info{data};
 
   cout << "random_device information:\n"
        << "entropy = " << rd.entropy() << '\n'
