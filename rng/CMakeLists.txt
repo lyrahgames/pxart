@@ -7,6 +7,7 @@ target_sources(random_device_info
 )
 target_link_libraries(random_device_info
   PRIVATE
+    fmt::fmt
     librng::librng
 )
 

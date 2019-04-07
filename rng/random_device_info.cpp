@@ -1,25 +1,50 @@
-#include <iostream>
+#include <fmt/format.h>
 #include <random>
-#include <vector>
 
-#include <librng/test/sample_analyzer.hpp>
+#include <librng/test/histogram.hpp>
+#include <librng/test/monty_hall_dilemma.hpp>
 
 using namespace std;
+using namespace std::string_literals;
+using namespace fmt;
 
-int main() {
-  random_device rd{};
-  mt19937 rng{rd()};
-  uniform_int_distribution<> distribution{0, 23};
-  // normal_distribution<> distribution{0, 100};
+int main(int argc, char** argv) {
+  const auto usage = format("usage: {} [<sample size> [<bin count>]]", argv[0]);
 
-  vector<decltype(distribution)::result_type> data{};
-  for (long i = 0; i < 1000000; ++i) data.push_back(distribution(rng));
-  rng::test::sample_analyzer info{data};
+  int sample_size = 1000;
+  int bin_count = 15;
 
-  cout << "random_device information:\n"
-       << "entropy = " << rd.entropy() << '\n'
-       << "min = " << rd.min() << '\n'
-       << "max = " << rd.max() << '\n';
+  if (argc > 1) {
+    if ("help"s == argv[1]) {
+      print(usage);
+      return 0;
+    }
 
-  cout << info << '\n';
+    sample_size = stoi(argv[1]);
+    if (argc > 2) {
+      bin_count = stoi(argv[2]);
+      if (argc > 3) {
+        print("Too many arguments!\n{}\n", usage);
+        return -1;
+      }
+    }
+  }
+
+  print(
+      "sample size = {}\n"
+      "bin count = {}\n",
+      sample_size, bin_count);
+
+  random_device rng{};
+  rng::test::histogram histogram{rng, sample_size, bin_count};
+  cout << histogram << '\n';
+
+  const auto [initial, second] =
+      rng::test::monty_hall_dilemma(rng, sample_size);
+  print(
+      "monty hall dilemma test with {} samples:\n"
+      "wins on initial guess: {} ~ {}\n"
+      "wins on second guess:  {} ~ {}\n",
+      sample_size, initial, static_cast<double>(initial) / sample_size, second,
+      static_cast<double>(second) / sample_size);
 }

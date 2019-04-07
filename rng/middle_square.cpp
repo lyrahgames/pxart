@@ -2,6 +2,7 @@
 
 #include <librng/middle_square_engine.hpp>
 #include <librng/test/histogram.hpp>
+#include <librng/test/monty_hall_dilemma.hpp>
 
 using namespace std;
 using namespace std::string_literals;
@@ -37,4 +38,14 @@ int main(int argc, char** argv) {
   rng::middle_square_engine rng{};
   rng::test::histogram histogram{rng, sample_size, bin_count};
   cout << histogram << '\n';
+
+  rng = rng::middle_square_engine{};
+  const auto [initial, second] =
+      rng::test::monty_hall_dilemma(rng, sample_size);
+  print(
+      "monty hall dilemma test with {} samples:\n"
+      "wins on initial guess: {} ~ {}\n"
+      "wins on second guess:  {} ~ {}\n",
+      sample_size, initial, static_cast<double>(initial) / sample_size, second,
+      static_cast<double>(second) / sample_size);
 }

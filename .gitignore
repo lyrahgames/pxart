@@ -4,7 +4,6 @@
 !cmake
 !librng
 !rng
-!examples
 
 !CMakeLists.txt
 !README.md

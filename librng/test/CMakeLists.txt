@@ -3,4 +3,5 @@ target_sources(librng
     sample_analyzer.hpp
     analyzer.hpp
     histogram.hpp
+    monty_hall_dilemma.hpp
 )

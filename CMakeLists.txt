@@ -4,4 +4,3 @@ enable_testing()
 
 add_subdirectory(librng)
 add_subdirectory(rng)
-add_subdirectory(examples)
