@@ -45,3 +45,11 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
       librng::librng
   )
 endif()
+
+add_executable(std_mt19937 std_mt19937.cpp)
+target_link_libraries(std_mt19937 PRIVATE librng::librng)
+
+find_package(TestU01 REQUIRED)
+add_executable(mws mws.cpp)
+target_include_directories(mws PRIVATE ${TestU01_INCLUDE_DIRS})
+target_link_libraries(mws PRIVATE ${TestU01_LIBRARIES} librng::librng)

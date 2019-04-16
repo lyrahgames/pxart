@@ -11,6 +11,7 @@ target_sources(librng
   INTERFACE
     middle_square_engine.hpp
     middle_square_weyl_engine.hpp
+    uniform_real_distribution.hpp
 )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
@@ -42,9 +43,13 @@ add_library(librng::librng ALIAS librng)
 target_sources(internal-tests
   PRIVATE
     main.test.cpp
+    uniform_real_distribution.test.cpp
 )
+
 target_link_libraries(internal-tests
   PRIVATE
     doctest::doctest
     librng::librng
 )
+
+add_test(internal-tests internal-tests)
