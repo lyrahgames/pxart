@@ -53,3 +53,7 @@ find_package(TestU01 REQUIRED)
 add_executable(mws mws.cpp)
 target_include_directories(mws PRIVATE ${TestU01_INCLUDE_DIRS})
 target_link_libraries(mws PRIVATE ${TestU01_LIBRARIES} librng::librng)
+
+add_executable(xoroshiro128plus xoroshiro128plus.cpp)
+target_include_directories(xoroshiro128plus PRIVATE ${TestU01_INCLUDE_DIRS})
+target_link_libraries(xoroshiro128plus PRIVATE ${TestU01_LIBRARIES} librng::librng)

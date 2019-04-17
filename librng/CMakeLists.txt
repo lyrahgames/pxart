@@ -12,6 +12,7 @@ target_sources(librng
     middle_square_engine.hpp
     middle_square_weyl_engine.hpp
     uniform_real_distribution.hpp
+    xoroshiro128plus.hpp
 )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
