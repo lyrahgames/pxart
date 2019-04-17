@@ -11,6 +11,10 @@
 
     \subsection{Performance of RNGs} % (fold)
     \label{sub:performance_of_rngs}
+      There are 7 or 8 standard methods to parallelize RNGs.
+      Explain the methods and their pros and cons.
+      Say something about if it is better to use them vectorized or in multiprocessor.
+
       \subsubsection{Vectorization} % (fold)
       \label{ssub:vectorization}
 
@@ -34,6 +38,15 @@
     \label{sub:high_level_language}
 
     % subsection high_level_language (end)
+
+    \subsection{Intel Intrinsics} % (fold)
+    \label{sub:intel_intrinsics}
+      Naming scheme
+      direct map to assembler instructions
+      references: intel intrinsic guide
+      advantages and disadvantages
+      library abstraction through xsimd or agner fogs vector library
+    % subsection intel_intrinsics (end)
 
     \subsection{Libraries} % (fold)
     \label{sub:libraries}
