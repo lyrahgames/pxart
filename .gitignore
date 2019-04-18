@@ -4,6 +4,7 @@
 !cmake
 !librng
 !rng
+!extern
 
 !CMakeLists.txt
 !README.md

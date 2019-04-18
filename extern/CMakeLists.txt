@@ -1,0 +1,4 @@
+add_library(randutils INTERFACE randutils.hpp)
+target_include_directories(randutils INTERFACE .)
+target_compile_features(randutils INTERFACE cxx_std_17)
+add_library(randutils::randutils ALIAS randutils)
