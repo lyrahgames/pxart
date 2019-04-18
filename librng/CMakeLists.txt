@@ -13,6 +13,7 @@ target_sources(librng
     middle_square_weyl_engine.hpp
     uniform_real_distribution.hpp
     xoroshiro128plus.hpp
+    linear_congruential_generator.hpp
 )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
