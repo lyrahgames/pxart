@@ -46,11 +46,15 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   )
 endif()
 
+find_package(Threads)
+
 add_executable(std_mt19937 std_mt19937.cpp)
-target_link_libraries(std_mt19937 PRIVATE librng::librng)
+target_compile_features(std_mt19937 PRIVATE cxx_std_17)
+target_link_libraries(std_mt19937 PRIVATE Threads::Threads)
 
 add_executable(std_random_device std_random_device.cpp)
 target_compile_features(std_random_device PRIVATE cxx_std_17)
+target_link_libraries(std_random_device PRIVATE Threads::Threads)
 
 add_executable(simd_test simd_test.cpp)
 target_compile_options(simd_test PRIVATE -mavx2)
