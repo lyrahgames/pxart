@@ -5,6 +5,7 @@
 !librng
 !rng
 !extern
+!bench
 
 !CMakeLists.txt
 !README.md
