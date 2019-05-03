@@ -60,10 +60,17 @@ add_executable(simd_test simd_test.cpp)
 target_compile_options(simd_test PRIVATE -mavx2)
 
 find_package(TestU01 REQUIRED)
+
 add_executable(mws mws.cpp)
-target_include_directories(mws PRIVATE ${TestU01_INCLUDE_DIRS})
-target_link_libraries(mws PRIVATE ${TestU01_LIBRARIES} librng::librng)
+target_link_libraries(mws
+  PRIVATE
+    librng::librng
+    TestU01::TestU01
+)
 
 add_executable(xoroshiro128plus xoroshiro128plus.cpp)
-target_include_directories(xoroshiro128plus PRIVATE ${TestU01_INCLUDE_DIRS})
-target_link_libraries(xoroshiro128plus PRIVATE ${TestU01_LIBRARIES} librng::librng)
+target_link_libraries(xoroshiro128plus
+  PRIVATE
+    librng::librng
+    TestU01::TestU01
+)

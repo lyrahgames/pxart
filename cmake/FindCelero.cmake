@@ -19,7 +19,7 @@
 #  CELERO_LIBRARIES          The Celero library
 #  CELERO_INCLUDE_DIRS       The location of Celero headers
 
-if(NOT CELRO_PREFIX)
+if(NOT CELERO_PREFIX)
 	set(CELERO_PREFIX $ENV{CELERO_PREFIX})
 endif()
 
@@ -31,7 +31,7 @@ find_path(CELERO_ROOT
 
 find_library(CELERO_LIBRARIES
     NAMES libcelero.so
-    HINTS ${CELERO_ROOT}/lib ${CELERO_ROOT}/lib64 
+    HINTS ${CELERO_ROOT}/lib ${CELERO_ROOT}/lib64
 )
 
 find_path(CELERO_INCLUDE_DIRS
@@ -49,4 +49,11 @@ mark_as_advanced(
     CELERO_LIBRARIES
     CELERO_INCLUDE_DIRS
     CELERO_ROOT
+)
+
+add_library(Celero::Celero UNKNOWN IMPORTED)
+set_target_properties(Celero::Celero
+  PROPERTIES
+    IMPORTED_LOCATION ${CELERO_LIBRARIES}
+    IMPORTED_INTERFACE ${CELERO_INCLUDE_DIRS}
 )

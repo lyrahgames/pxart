@@ -10,10 +10,5 @@ target_sources(main-benchmarks
 
 target_link_libraries(main-benchmarks
   PRIVATE
-    ${CELERO_LIBRARIES}
-)
-
-target_include_directories(main-benchmarks
-  PRIVATE
-    ${CELERO_INCLUDE_DIRS}
+    Celero::Celero
 )
