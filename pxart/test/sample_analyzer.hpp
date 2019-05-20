@@ -11,7 +11,7 @@
 
 #include <fmt/format.h>
 
-namespace rng::test {
+namespace pxart::test {
 
 template <typename Integer>
 class sample_analyzer {
@@ -144,4 +144,4 @@ std::ostream& operator<<(std::ostream& os, const sample_analyzer<Integer>& h) {
   return os;
 }
 
-}  // namespace rng::test
+}  // namespace pxart::test

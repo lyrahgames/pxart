@@ -9,7 +9,7 @@ using namespace std::string_literals;
 using namespace fmt;
 
 int main(int argc, char** argv) {
-  using rng_type = rng::middle_square_weyl_engine;
+  using rng_type = pxart::middle_square_weyl_engine;
 
   const auto usage = format("usage: {} [<sample size> [<bin count>]]", argv[0]);
 
@@ -38,12 +38,12 @@ int main(int argc, char** argv) {
       sample_size, bin_count);
 
   rng_type rng{};
-  rng::test::histogram histogram{rng, sample_size, bin_count};
+  pxart::test::histogram histogram{rng, sample_size, bin_count};
   cout << histogram << '\n';
 
   rng = rng_type{};
   const auto [initial, second] =
-      rng::test::monty_hall_dilemma(rng, sample_size);
+      pxart::test::monty_hall_dilemma(rng, sample_size);
   print(
       "monty hall dilemma test with {} samples:\n"
       "wins on initial guess: {} ~ {}\n"

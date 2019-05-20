@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace rng {
+namespace pxart {
 
 struct middle_square_engine {
   using result_type = uint32_t;
@@ -17,4 +17,4 @@ struct middle_square_engine {
   uint64_t state = 0xfedcb2ed;
 };
 
-}  // namespace rng
+}  // namespace pxart

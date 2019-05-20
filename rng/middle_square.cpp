@@ -35,13 +35,13 @@ int main(int argc, char** argv) {
       "bin count = {}\n",
       sample_size, bin_count);
 
-  rng::middle_square_engine rng{};
-  rng::test::histogram histogram{rng, sample_size, bin_count};
+  pxart::middle_square_engine rng{};
+  pxart::test::histogram histogram{rng, sample_size, bin_count};
   cout << histogram << '\n';
 
-  rng = rng::middle_square_engine{};
+  rng = pxart::middle_square_engine{};
   const auto [initial, second] =
-      rng::test::monty_hall_dilemma(rng, sample_size);
+      pxart::test::monty_hall_dilemma(rng, sample_size);
   print(
       "monty hall dilemma test with {} samples:\n"
       "wins on initial guess: {} ~ {}\n"

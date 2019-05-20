@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rng {
+namespace pxart {
 
 template <typename Real>
 struct uniform_real_distribution {
@@ -23,4 +23,4 @@ struct uniform_real_distribution {
   real_type a, b;
 };
 
-}  // namespace rng
+}  // namespace pxart

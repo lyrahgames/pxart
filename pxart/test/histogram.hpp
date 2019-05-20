@@ -9,7 +9,7 @@
 
 #include <fmt/format.h>
 
-namespace rng::test {
+namespace pxart::test {
 
 template <typename RNG>
 class histogram {
@@ -98,4 +98,4 @@ std::ostream& operator<<(std::ostream& os, const histogram<RNG>& h) {
   return os;
 }
 
-}  // namespace rng::test
+}  // namespace pxart::test

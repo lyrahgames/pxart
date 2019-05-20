@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace rng {
+namespace pxart {
 
 struct middle_square_weyl_engine {
   using result_type = uint32_t;
@@ -21,4 +21,4 @@ struct middle_square_weyl_engine {
   uint64_t weyl = 0;
 };
 
-}  // namespace rng
+}  // namespace pxart

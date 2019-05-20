@@ -36,11 +36,11 @@ int main(int argc, char** argv) {
       sample_size, bin_count);
 
   random_device rng{};
-  rng::test::histogram histogram{rng, sample_size, bin_count};
+  pxart::test::histogram histogram{rng, sample_size, bin_count};
   cout << histogram << '\n';
 
   const auto [initial, second] =
-      rng::test::monty_hall_dilemma(rng, sample_size);
+      pxart::test::monty_hall_dilemma(rng, sample_size);
   print(
       "monty hall dilemma test with {} samples:\n"
       "wins on initial guess: {} ~ {}\n"

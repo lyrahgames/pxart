@@ -3,7 +3,7 @@
 #include <random>
 #include <utility>
 
-namespace rng::test {
+namespace pxart::test {
 
 template <typename RNG>
 auto monty_hall_dilemma(RNG& rng, int iterations = 1'000'000) {
@@ -24,4 +24,4 @@ auto monty_hall_dilemma(RNG& rng, int iterations = 1'000'000) {
   return std::pair{initial_wins, switch_wins};
 }
 
-}  // namespace rng::test
+}  // namespace pxart::test

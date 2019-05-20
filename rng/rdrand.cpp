@@ -36,12 +36,12 @@ int main(int argc, char** argv) {
       "bin count = {}\n",
       sample_size, bin_count);
 
-  rng::rdrand_engine rng{};
-  rng::test::histogram histogram{rng, sample_size, bin_count};
+  pxart::rdrand_engine rng{};
+  pxart::test::histogram histogram{rng, sample_size, bin_count};
   cout << histogram << '\n';
 
   const auto [initial, second] =
-      rng::test::monty_hall_dilemma(rng, sample_size);
+      pxart::test::monty_hall_dilemma(rng, sample_size);
   print(
       "monty hall dilemma test with {} samples:\n"
       "wins on initial guess: {} ~ {}\n"

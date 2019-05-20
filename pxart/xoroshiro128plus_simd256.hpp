@@ -2,7 +2,7 @@
 
 #include <immintrin.h>
 
-namespace rng {
+namespace pxart {
 
 template <int A, int B, int C>
 struct xoroshiro128plus_simd256 {
@@ -30,4 +30,4 @@ struct xoroshiro128plus_simd256 {
 
 using xs128p_simd256 = xoroshiro128plus_simd256<24, 16, 37>;
 
-}  // namespace rng
+}  // namespace pxart

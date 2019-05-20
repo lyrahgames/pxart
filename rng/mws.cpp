@@ -6,7 +6,7 @@ extern "C" {
 #include <pxart/middle_square_weyl_engine.hpp>
 
 unsigned int middle_weyl() {
-  static rng::middle_square_weyl_engine rng;
+  static pxart::middle_square_weyl_engine rng;
   return rng();
 }
 

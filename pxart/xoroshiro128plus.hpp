@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 
-namespace rng {
+namespace pxart {
 
 template <typename UIntType, int A, int B, int C>
 struct xoroshiro128plus {
@@ -31,4 +31,4 @@ struct xoroshiro128plus {
 using xs128p = xoroshiro128plus<std::uint_fast64_t, 24, 16, 37>;
 using xs128p_2016 = xoroshiro128plus<std::uint_fast64_t, 55, 14, 36>;
 
-}  // namespace rng
+}  // namespace pxart

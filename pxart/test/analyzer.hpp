@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rng::test {
+namespace pxart::test {
 
 template <typename RNG>
 class analyzer {
@@ -13,4 +13,4 @@ class analyzer {
   rng_type rng_;
 };
 
-}  // namespace rng::test
+}  // namespace pxart::test

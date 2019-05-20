@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace rng {
+namespace pxart {
 
 struct rdrand_engine {
   using result_type = uint32_t;
@@ -18,4 +18,4 @@ struct rdrand_engine {
   static constexpr result_type max() noexcept { return 0xffffffff; }
 };
 
-}  // namespace rng
+}  // namespace pxart

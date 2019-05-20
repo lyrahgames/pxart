@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace rng {
+namespace pxart {
 
 template <typename UIntType, UIntType A, UIntType C, UIntType M>
 struct linear_congruential_generator {
@@ -36,4 +36,4 @@ using randu = linear_congruential_generator<uint_fast32_t, 65539, 0, 1u << 31>;
 using minstd_rand =
     linear_congruential_generator<uint_fast32_t, 48271, 0, (1u << 31) - 1>;
 
-}  // namespace rng
+}  // namespace pxart
