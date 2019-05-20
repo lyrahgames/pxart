@@ -51,9 +51,11 @@ else()
   endif()
 endif()
 
-add_library(TestU01::TestU01 UNKNOWN IMPORTED)
-set_target_properties(TestU01::TestU01
-  PROPERTIES
-    IMPORTED_LOCATION ${TestU01_LIBRARIES}
-    IMPORTED_INTERFACE ${TestU01_INCLUDE_DIRS}
-)
+if (TestU01_FOUND)
+  add_library(TestU01::TestU01 UNKNOWN IMPORTED)
+  set_target_properties(TestU01::TestU01
+    PROPERTIES
+      IMPORTED_LOCATION ${TestU01_LIBRARIES}
+      IMPORTED_INTERFACE ${TestU01_INCLUDE_DIRS}
+  )
+endif()
