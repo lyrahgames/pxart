@@ -1,0 +1,103 @@
+version: 2
+
+workflows:
+  version: 2
+  build_test_install:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - export_test:
+          requires:
+            - build
+      - install:
+          requires:
+            - build
+      - install_test:
+          requires:
+            - install
+
+jobs:
+  build:
+    docker:
+      - image: lyrahgames/cpp-test-tools:latest
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: |
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+
+  test:
+    docker:
+      - image: lyrahgames/cpp-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: test
+          command: |
+            cd build
+            ctest --verbose
+
+  export_test:
+    docker:
+      - image: lyrahgames/cpp-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: export_test
+          command: |
+            cd build
+            cmake ..
+            cd ../tests
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build .
+            ctest --verbose
+
+  install:
+    docker:
+      - image: lyrahgames/cpp-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: install
+          command: |
+            cd build
+            cmake --build . --target install
+      - persist_to_workspace:
+          root: /
+          paths:
+            - usr/local
+
+  install_test:
+    docker:
+      - image: lyrahgames/cpp-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /
+      - run:
+          name: install_test
+          command: |
+            cd tests
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build .
+            ctest --verbose

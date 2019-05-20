@@ -1,11 +1,13 @@
 *
 
+!.circleci
 !docs
 !cmake
 !pxart
 !rng
 !extern
 !bench
+!tests
 
 !CMakeLists.txt
 !README.md

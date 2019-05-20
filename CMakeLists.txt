@@ -40,6 +40,7 @@ endif()
 add_subdirectory(extern)
 add_subdirectory(pxart)
 add_subdirectory(rng)
+add_subdirectory(tests)
 add_subdirectory(bench)
 
 include(Uninstall)
