@@ -2,7 +2,7 @@ extern "C" {
 #include <TestU01.h>
 }
 
-#include <librng/xoroshiro128plus.hpp>
+#include <pxart/xoroshiro128plus.hpp>
 #include <random>
 
 int main(int argc, char* argv[]) {

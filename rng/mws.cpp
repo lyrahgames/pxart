@@ -3,7 +3,7 @@ extern "C" {
 #include <unif01.h>
 }
 
-#include <librng/middle_square_weyl_engine.hpp>
+#include <pxart/middle_square_weyl_engine.hpp>
 
 unsigned int middle_weyl() {
   static rng::middle_square_weyl_engine rng;

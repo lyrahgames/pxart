@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include <librng/uniform_real_distribution.hpp>
+#include <pxart/uniform_real_distribution.hpp>
 
 TEST_CASE("uniform_real_distribution") {
   const auto seed = std::random_device{}();

@@ -8,7 +8,7 @@ target_sources(random_device_info
 target_link_libraries(random_device_info
   PRIVATE
     fmt::fmt
-    librng::librng
+    pxart::pxart
 )
 
 add_executable(middle_square)
@@ -19,7 +19,7 @@ target_sources(middle_square
 target_link_libraries(middle_square
   PRIVATE
     fmt::fmt
-    librng::librng
+    pxart::pxart
 )
 
 add_executable(middle_square_weyl)
@@ -30,7 +30,7 @@ target_sources(middle_square_weyl
 target_link_libraries(middle_square_weyl
   PRIVATE
     fmt::fmt
-    librng::librng
+    pxart::pxart
 )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
@@ -42,7 +42,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   target_link_libraries(rdrand
     PRIVATE
       fmt::fmt
-      librng::librng
+      pxart::pxart
   )
 endif()
 
@@ -64,13 +64,13 @@ find_package(TestU01 REQUIRED)
 add_executable(mws mws.cpp)
 target_link_libraries(mws
   PRIVATE
-    librng::librng
+    pxart::pxart
     TestU01::TestU01
 )
 
 add_executable(xoroshiro128plus xoroshiro128plus.cpp)
 target_link_libraries(xoroshiro128plus
   PRIVATE
-    librng::librng
+    pxart::pxart
     TestU01::TestU01
 )

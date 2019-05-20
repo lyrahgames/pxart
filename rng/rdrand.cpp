@@ -1,9 +1,9 @@
 #include <fmt/format.h>
 #include <random>
 
-#include <librng/rdrand_engine.hpp>
-#include <librng/test/histogram.hpp>
-#include <librng/test/monty_hall_dilemma.hpp>
+#include <pxart/rdrand_engine.hpp>
+#include <pxart/test/histogram.hpp>
+#include <pxart/test/monty_hall_dilemma.hpp>
 
 using namespace std;
 using namespace std::string_literals;

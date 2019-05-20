@@ -33,6 +33,6 @@ if (NOT GENERATOR_IS_MULTI_CONFIG)
 endif()
 
 add_subdirectory(extern)
-add_subdirectory(librng)
+add_subdirectory(pxart)
 add_subdirectory(rng)
 add_subdirectory(bench)
