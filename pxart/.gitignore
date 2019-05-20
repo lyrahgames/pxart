@@ -2,3 +2,5 @@
 
 !*.cpp
 !*.hpp
+
+!Config.cmake.in

@@ -18,10 +18,7 @@ add_subdirectory(test)
 # )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-  # target_sources(${library_name}
-  #   INTERFACE
-  #     rdrand_engine.hpp
-  # )
+  # target_sources(${library_name} INTERFACE rdrand_engine.hpp)
   target_compile_options(${library_name} INTERFACE -mrdrnd)
 endif()
 
@@ -50,6 +47,7 @@ add_test(internal-tests internal-tests)
 
 # install
 include(GNUInstallDirs)
+
 install(
   TARGETS ${library_name}
   EXPORT ${library_name}Targets
@@ -57,19 +55,42 @@ install(
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+
 install(
   DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   FILES_MATCHING PATTERN "*.hpp"
 )
+
 install(
   EXPORT ${library_name}Targets
   NAMESPACE ${library_name}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${library_name}
 )
-install(
-  EXPORT pxartTargets
-  NAMESPACE ${library_name}::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${library_name}
-  FILE ${library_name}Config.cmake
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  Config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${library_name}Config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${library_name}
 )
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${library_name}Version.cmake
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${library_name}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${library_name}Version.cmake
+  DESTINATION
+    ${CMAKE_INSTALL_LIBDIR}/cmake/${library_name}
+)
+
+export(
+  TARGETS ${library_name}
+  NAMESPACE ${library_name}::
+  FILE ${library_name}Targets.cmake
+)
+
+export(PACKAGE ${library_name})
