@@ -119,8 +119,9 @@ jobs:
             # bash <(curl -s https://codecov.io/bash) -s code_coverage
             CXXFLAGS="-g -O0 -fprofile-arcs -ftest-coverage" LDFLAGS="-fprofile-arcs -ftest-coverage" cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
             cmake --build .
-            lcov -c -b .. -d . -o coverage.info -i
+            lcov -c -i -d . -o coverage_base.info
             ctest --verbose
-            lcov -c -b .. -d . -o coverage.info
-            genhtml coverage.info -o coverage
-            bash <(curl -s https://codecov.io/bash) -s coverage
+            lcov -c -d . -o coverage_test.info
+            lcov -a coverage_base.info -a coverage_test.info -o coverage_total.info
+            genhtml coverage_total.info -o coverage
+            bash <(curl -s https://codecov.io/bash)
