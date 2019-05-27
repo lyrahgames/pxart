@@ -34,7 +34,8 @@ add_library(${library_name}::${library_name} ALIAS ${library_name})
 target_sources(internal-tests
   PRIVATE
     main.test.cpp
-    uniform_real_distribution.test.cpp
+    # uniform_real_distribution.test.cpp
+    bit_reversal.test.cpp
 )
 
 target_link_libraries(internal-tests
