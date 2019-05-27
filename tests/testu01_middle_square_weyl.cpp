@@ -1,8 +1,6 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <pxart/middle_square_weyl_engine.hpp>
-// #include <random>
-// #include "testu01_helper.hpp"
 #include "testu01_utils.hpp"
 
 using namespace std;
@@ -48,6 +46,11 @@ int main(int argc, char* argv[]) {
     testu01_utils::set_rng([rng]() mutable { return bit_reversal(rng()); });
   else
     testu01_utils::set_rng(rng);
+
+  // testu01_utils::set_rng_object("pxart__msw", []() -> uint32_t {
+  //   static pxart::middle_square_weyl_engine rng{};
+  //   return rng();
+  // });
 
   testu01_utils::verbose(vm.count("verbose"));
   if (vm.count("small-crush")) testu01_utils::run_battery_small_crush();

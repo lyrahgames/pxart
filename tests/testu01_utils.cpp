@@ -1,8 +1,7 @@
-#include "testu01_utils.hpp"
-
 #include <cstdint>
 #include <memory>
 #include <random>
+#include <testu01_utils.hpp>
 
 extern "C" {
 #include <TestU01.h>
@@ -10,14 +9,15 @@ extern "C" {
 
 namespace testu01_utils {
 
+// We use a default constructed std::unique_ptr to hold an external random
+// number generator with a custom deleter function to enable RAII. These global
+// variables are kept inside an unnamed namespace to make them static.
 namespace {
-
 std::random_device rd{};
 std::unique_ptr<unif01_Gen, decltype(&unif01_DeleteExternGenBits)> rng_object{
-    unif01_CreateExternGenBits(const_cast<char*>("std random_device"),
+    unif01_CreateExternGenBits(const_cast<char*>("std__random_device"),
                                []() -> uint32_t { return rd(); }),
     &unif01_DeleteExternGenBits};
-
 }  // namespace
 
 void set_rng_object(const char* name, uint32_t(oracle)()) {
@@ -25,11 +25,17 @@ void set_rng_object(const char* name, uint32_t(oracle)()) {
   rng_object.reset(unif01_CreateExternGenBits(const_cast<char*>(name), oracle));
 }
 
-void verbose(bool v) { swrite_Basic = v; }
-void run_battery_small_crush() { bbattery_SmallCrush(rng_object.get()); }
-void run_battery_crush() { bbattery_Crush(rng_object.get()); }
-void run_battery_big_crush() { bbattery_BigCrush(rng_object.get()); }
-void run_test_linear_complexity() {
+void verbose(bool v) noexcept { swrite_Basic = v; }
+
+void run_battery_small_crush() noexcept {
+  bbattery_SmallCrush(rng_object.get());
+}
+
+void run_battery_crush() noexcept { bbattery_Crush(rng_object.get()); }
+
+void run_battery_big_crush() noexcept { bbattery_BigCrush(rng_object.get()); }
+
+void run_test_linear_complexity() noexcept {
   scomp_Res* res = scomp_CreateRes();
   const auto tmp = swrite_Basic;
   swrite_Basic = TRUE;
