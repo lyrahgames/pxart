@@ -19,6 +19,16 @@ workflows:
             - install
       - code_coverage
 
+  build_and_deploy_docs:
+    jobs:
+      - build_docs
+      - deploy_docs:
+          requires:
+            - build_docs
+          filters:
+            branches:
+              only: master
+
 jobs:
   build:
     docker:
@@ -125,3 +135,43 @@ jobs:
             lcov -a coverage_base.info -a coverage_test.info -o coverage_total.info
             genhtml coverage_total.info -o coverage
             bash <(curl -s https://codecov.io/bash)
+
+  build_docs:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r docs/main/requirements.txt
+      - run:
+          name: Build docs
+          command: |
+            cd docs/main
+            mkdocs build
+      - persist_to_workspace:
+          root: docs/main
+          paths: site
+
+  deploy_docs:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: docs/main
+      - run:
+          name: Disable jekyll builds
+          command: touch docs/main/site/.nojekyll
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "markuspawellek@gmail.com"
+            git config user.name "circleci"
+      - add_ssh_keys:
+          fingerprints:
+            - "3b:b3:b0:f5:a0:3a:73:28:49:e2:34:11:f2:3d:3e:3b"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist docs/main/site
