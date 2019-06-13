@@ -1,5 +1,2 @@
-add_library(randutils INTERFACE)
-target_sources(randutils INTERFACE randutils.hpp)
-target_include_directories(randutils INTERFACE .)
-target_compile_features(randutils INTERFACE cxx_std_17)
-add_library(randutils::randutils ALIAS randutils)
+add_subdirectory(randutils)
+add_subdirectory(perfevent)
