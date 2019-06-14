@@ -20,9 +20,10 @@ std::unique_ptr<unif01_Gen, decltype(&unif01_DeleteExternGenBits)> rng_object{
     &unif01_DeleteExternGenBits};
 }  // namespace
 
-void set_rng_object(const char* name, uint32_t(oracle)()) {
+void set_rng_object(const std::string& name, uint32_t(oracle)()) {
   rng_object.reset(nullptr);
-  rng_object.reset(unif01_CreateExternGenBits(const_cast<char*>(name), oracle));
+  rng_object.reset(
+      unif01_CreateExternGenBits(const_cast<char*>(name.c_str()), oracle));
 }
 
 void verbose(bool v) noexcept { swrite_Basic = v; }

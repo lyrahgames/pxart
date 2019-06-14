@@ -25,6 +25,7 @@ target_link_libraries(testu01_utils
     Boost::boost
   PRIVATE
     TestU01::TestU01
+    pxart::pxart
 )
 target_compile_features(testu01_utils PRIVATE cxx_std_17)
 
