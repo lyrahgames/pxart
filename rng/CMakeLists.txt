@@ -74,3 +74,10 @@ target_link_libraries(xoroshiro128plus
     pxart::pxart
     TestU01::TestU01
 )
+
+find_package(Boost REQUIRED COMPONENTS program_options)
+add_executable(rout rout.cpp)
+target_link_libraries(rout
+  PRIVATE
+    Boost::program_options
+)
