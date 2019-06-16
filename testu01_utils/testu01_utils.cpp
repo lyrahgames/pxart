@@ -1,7 +1,8 @@
+#include <testu01_utils/testu01_utils.hpp>
+
 #include <cstdint>
 #include <memory>
 #include <random>
-#include <testu01_utils.hpp>
 
 extern "C" {
 #include <TestU01.h>

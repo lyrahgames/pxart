@@ -5,6 +5,7 @@
 !cmake
 !pxart
 !rng
+!testu01_utils
 !extern
 !bench
 !tests
