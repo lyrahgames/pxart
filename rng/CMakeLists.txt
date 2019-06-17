@@ -77,6 +77,7 @@ target_link_libraries(xoroshiro128plus
 
 find_package(Boost REQUIRED COMPONENTS program_options)
 add_executable(rout rout.cpp)
+target_compile_features(rout PRIVATE cxx_std_17)
 target_link_libraries(rout
   PRIVATE
     Boost::program_options

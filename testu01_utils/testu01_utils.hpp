@@ -51,6 +51,11 @@ void run_test_linear_complexity() noexcept;
 // We only need std::optional if there is no default constructor (eg. lambda
 // expressions). Therefore we specialize the variable template for default
 // constructors to improve run-time performance while testing.
+//
+// We use global variables to further reduce the run-time overhead.
+// Using a local static variable to save the state of the random number
+// generator would require the program to check if the object was already
+// constructed in a thread-safe way every time.
 namespace detail {
 
 template <typename RNG, typename = void>
