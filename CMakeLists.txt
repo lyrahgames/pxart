@@ -17,8 +17,11 @@ include(DefaultBuildType)
 include(Uninstall)
 
 add_subdirectory(extern)
+
 add_subdirectory(pxart)
-add_subdirectory(rng)
 add_subdirectory(testu01_utils)
+add_subdirectory(rng)
+add_subdirectory(pxrun)
+
 add_subdirectory(tests)
 add_subdirectory(bench)

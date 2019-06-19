@@ -81,5 +81,9 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  // auto rng =
+  //     parsed_rng_type({std::mt19937{}, "std::19937"},
+  //                     {std::minstd_rand{}, "std::minstd_rand"}, rng_name);
+
   visit([printer](auto&& x) { printer.print(x); }, rng);
 }
