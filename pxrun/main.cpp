@@ -13,6 +13,7 @@
 #include <testu01_utils/testu01_utils.hpp>
 
 #include <pxrun/matrix.hpp>
+#include <pxrun/testu01.hpp>
 
 using namespace std;
 namespace po = boost::program_options;
@@ -54,20 +55,27 @@ int main(int argc, char* argv[]) {
   // Collect all unrecognized options for command arguments.
   vector<string> cmd_arguments =
       po::collect_unrecognized(parsed_values.options, po::include_positional);
-  cmd_arguments.erase(cmd_arguments.begin());  // Delete occurence of cmd.
+  if (!cmd_arguments.empty())
+    cmd_arguments.erase(cmd_arguments.begin());  // Delete occurence of cmd.
 
-  // if (rng_type) cout << "rng_type = " << *rng_type << "\n";
-  // if (cmd) cout << "cmd = " << *cmd << "\n";
+  // if (rng_type)
+  //   cout << "rng_type = " << *rng_type << "\n";
+  // else
+  //   cout << "No rng_type given.\n";
+  // if (cmd)
+  //   cout << "cmd = " << *cmd << "\n";
+  // else
+  //   cout << "No cmd given.\n";
   // if (!cmd_arguments.empty()) {
   //   cout << "cmd_arguments = ";
   //   for (auto& x : cmd_arguments) cout << x << "\t";
   //   cout << "\n";
-  // }
+  // } else
+  //   cout << "No cmd_arguments given.\n";
 
   // Filter out errors.
   if (help || !cmd) {
-    if (!help && !cmd)
-      cout << "Error: No random number generator was specified.\n";
+    if (!help && !cmd) cout << "Error: No command was specified.\n";
     cout << "Usage:\n"
          << argv[0] << " [Global Options] [rng] [cmd] [cmd options]\n\n"
          << visible_parameters;
@@ -97,9 +105,11 @@ int main(int argc, char* argv[]) {
   if (*cmd == "matrix") {
     pxrun::matrix module{cmd_arguments};
     visit([&](auto&& x) { module.run(x); }, rng);
+  } else if (*cmd == "testu01") {
+    pxrun::testu01 module{cmd_arguments};
+    visit([&](auto&& x) { module.run(x); }, rng);
+  } else {
+    cout << "The given command is not known!\n";
+    return -1;
   }
-  // else if (*cmd == "testu01") {
-  //   pxrun::testu01 module{cmd_arguments};
-  //   visit([&](auto&& x) { module.run(x); }, rng);
-  // }
 }

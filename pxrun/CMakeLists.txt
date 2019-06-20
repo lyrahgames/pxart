@@ -3,6 +3,7 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 add_executable(pxrun
   main.cpp
   matrix.cpp
+  testu01.cpp
 )
 
 target_include_directories(pxrun PRIVATE ..)

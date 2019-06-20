@@ -17,6 +17,8 @@ matrix::matrix(const std::vector<std::string>& args) {
   store(                         //
       command_line_parser{args}  //
           .options(parameters)
+          .positional(positional_options_description{})  // This will forbid
+                                                         // positional options.
           .run(),
       values);
   notify(values);
