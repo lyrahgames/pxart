@@ -1,0 +1,32 @@
+\documentclass{stdlocal}
+
+\usepackage{tabularx}
+
+\begin{document}
+  \section*{List of Abbreviations}
+  \phantomsection
+  \addcontentsline{toc}{section}{List of Abbreviations}
+
+  \begin{table}[H]
+    \center
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{lX}
+      \hline
+      \textbf{Abbreviation} & \textbf{Definition} \\
+      \hline
+      \hline
+      RNG & Random Number Generator \\
+      PRNG & Pseudorandom Number Generator \\
+      LCG & Linear Congruential Generator \\
+      MT & Mersenne Twister \\
+      MT19937 & Mersenne Twister with period $2^{19937}-1$ \\
+      PCG & Permuted Linear Congruential Generator \\
+      CPU & Central Processing Unit \\
+      GPU & Graphics Processing Unit \\
+      SIMD & Single Instruction, Multiple Data \\
+      SSE & Streaming SIMD Extensions \\
+      AVX & Advanced Vector Extensions \\
+      \hline
+    \end{tabularx}
+  \end{table}
+\end{document}
