@@ -15,8 +15,6 @@ struct xoroshiro128plus_simd256 {
   }
 
   constexpr result_type operator()() noexcept {
-    const auto s0 = state[0];
-    const auto s1 = state[1];
     state[1] = _mm256_xor_si256(state[0], state[1]);
     state[0] = _mm256_xor_si256(
         state[1], _mm256_xor_si256(_mm256_slli_epi64(state[1], parameters[1]),
