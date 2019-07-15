@@ -33,7 +33,10 @@
   \import{sections/}{evaluation.tex}
   \import{sections/}{conclusion.tex}
   \nocite{*}
-  \printbibliography[heading=bibintoc,title=References]
+  \printbibheading
+  % \printbibliography[heading=bibintoc,title=References]
+  \printbibliography[notkeyword={c++},heading=subbibliography,title={General}]
+  \printbibliography[keyword={c++},heading=subbibliography,title={Programming}]
 
   \appendix
   \pagenumbering{roman}
