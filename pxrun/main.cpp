@@ -10,6 +10,8 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
+#include <pxart/mt19937.hpp>
+
 #include <testu01_utils/testu01_utils.hpp>
 
 #include <pxrun/matrix.hpp>
@@ -83,10 +85,11 @@ int main(int argc, char* argv[]) {
   }
 
   // Set random number generator.
-  std::variant<          //
-      std::mt19937,      //
-      std::minstd_rand,  //
-      std::minstd_rand0>
+  std::variant<           //
+      std::mt19937,       //
+      std::minstd_rand,   //
+      std::minstd_rand0,  //
+      pxart::mt19937>
       rng;
   if (rng_type) {
     if (*rng_type == "std::mt19937")
@@ -95,6 +98,8 @@ int main(int argc, char* argv[]) {
       rng = std::minstd_rand{};
     else if (*rng_type == "std::minstd_rand0")
       rng = std::minstd_rand0{};
+    else if (*rng_type == "pxart::mt19937")
+      rng = pxart::mt19937{};
     else {
       cout << "The given random number generator is not known!\n";
       return -1;
