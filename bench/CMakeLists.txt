@@ -1,3 +1,4 @@
+find_package(Boost REQUIRED)
 find_package(Celero REQUIRED)
 
 add_executable(main-benchmarks)
@@ -15,3 +16,6 @@ target_link_libraries(main-benchmarks
 
 add_executable(perfevent_std_mt19937 std_mt19937.cpp)
 target_link_libraries(perfevent_std_mt19937 PRIVATE perfevent::perfevent)
+
+add_executable(gen gen.cpp)
+target_link_libraries(gen PRIVATE Celero::Celero perfevent::perfevent Boost::boost pxart::pxart)
