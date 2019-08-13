@@ -1,66 +1,90 @@
-\documentclass[crop=false]{standalone}
-\usepackage{standard}
-
+\documentclass{stdlocal}
 \begin{document}
-  \section{Background} % (fold)
-  \label{sec:background}
-    \subsection{Pseudorandom Number Generators} % (fold)
-    \label{sub:pseudorandom_number_generators}
-      \subsubsection*{Mathematical Preliminaries} % (fold)
-      \label{ssub:mathematical_preliminaries}
+\section{Background} % (fold)
+\label{sec:background}
+  % virtual subsection Introduction
+  To systematically approach the implementation of PRNGs, basic knowledge in the topics of stochastics and finite fields is administrable.
+  Together, these topics will give a deeper understanding of randomness in deterministic computer systems, a formal description of pseudorandom sequences and generators, and the mathematical foundation of Monte Carlo algorithms.
+  Based on such concepts, we are capable of scientifically analyzing PRNGs concerning their randomness properties.
+  Vectorization techniques can be conceptualized by the architecture of modern SIMD-capable multiprocessors and their instruction sets.
+  Esspecially the knowledge of typical instructions will make the design of a new API and its application to Monte Carlo Simulations clear.
+  The following sections will give an overview of the named topics.
 
-      % subsubsection* mathematical_preliminaries (end)
+  \subsection{Mathematical Preliminaries} % (fold)
+  \label{sub:mathematical_preliminaries}
+    \subsubsection*{Randomness} % (fold)
+    \label{ssub:randomness}
 
-      \subsubsection*{Random and Pseudorandom Sequences} % (fold)
-      \label{ssub:random_and_pseudorandom_sequences}
+    % subsubsection randomness (end)
 
-      % subsubsection* random_and_pseudorandom_sequences (end)
+    \subsubsection*{Stochastics} % (fold)
+    \label{ssub:stochastics}
 
-      \subsubsection*{Random and Pseudorandom Number Generators} % (fold)
-      \label{ssub:random_and_pseudorandom_number_generators}
+    % subsubsection stochastics (end)
 
-      % subsubsection* random_and_pseudorandom_number_generators (end)
+    \subsubsection*{Finite Fields} % (fold)
+    \label{ssub:finite_fields}
 
-      \subsubsection*{Baseline Examples} % (fold)
-      \label{ssub:baseline_examples}
+    % subsubsection finite_fields (end)
+  % subsection mathematical_preliminaries (end)
 
-      % subsubsection* baseline_examples (end)
-    % subsection pseudorandom_number_generators (end)
+  \subsection{Pseudorandom Number Generators} % (fold)
+  \label{sub:pseudorandom_number_generators}
+    \subsubsection*{Mathematical Preliminaries} % (fold)
+    \label{ssub:mathematical_preliminaries}
 
-    \subsection{SIMD-Capable Processors} % (fold)
-    \label{sub:simd-capable_processors}
-      \subsubsection*{Architecture of Modern Central Processing Units} % (fold)
-      \label{ssub:architecture_of_modern_central_processing_units}
+    % subsubsection* mathematical_preliminaries (end)
 
-      % subsubsection* architecture_of_modern_central_processing_units (end)
+    \subsubsection*{Random and Pseudorandom Sequences} % (fold)
+    \label{ssub:random_and_pseudorandom_sequences}
 
-      \subsubsection*{SIMD Instruction Sets and Efficiency} % (fold)
-      \label{ssub:simd_instruction_sets_and_efficiency}
+    % subsubsection* random_and_pseudorandom_sequences (end)
 
-      % subsubsection* simd_instruction_sets_and_efficiency (end)
+    \subsubsection*{Random and Pseudorandom Number Generators} % (fold)
+    \label{ssub:random_and_pseudorandom_number_generators}
 
-      \subsubsection*{SSE, AVX, AVX512} % (fold)
-      \label{ssub:sse_avx_avx512}
+    % subsubsection* random_and_pseudorandom_number_generators (end)
 
-      % subsubsection* sse_avx_avx512 (end)
-    % subsection simd-capable_processors (end)
+    \subsubsection*{Baseline Examples} % (fold)
+    \label{ssub:baseline_examples}
 
-    \subsection{Simulation in Physics and Mathematics} % (fold)
-    \label{sub:simulation_in_physics_and_mathematics}
-      \subsubsection*{Mathematical and Physical Preliminaries} % (fold)
-      \label{ssub:mathematical_and_physical_preliminaries}
+    % subsubsection* baseline_examples (end)
+  % subsection pseudorandom_number_generators (end)
 
-      % subsubsection* mathematical_and_physical_preliminaries (end)
+  \subsection{SIMD-Capable Processors} % (fold)
+  \label{sub:simd-capable_processors}
+    \subsubsection*{Architecture of Modern Central Processing Units} % (fold)
+    \label{ssub:architecture_of_modern_central_processing_units}
 
-      \subsubsection*{Baseline Model Problems} % (fold)
-      \label{ssub:baseline_model_problems}
+    % subsubsection* architecture_of_modern_central_processing_units (end)
 
-      % subsubsection* baseline_model_problems (end)
-    % subsection simulation_in_physics_and_mathematics (end)
+    \subsubsection*{SIMD Instruction Sets and Efficiency} % (fold)
+    \label{ssub:simd_instruction_sets_and_efficiency}
 
-    \subsection{Summary} % (fold)
-    \label{sub:summary}
+    % subsubsection* simd_instruction_sets_and_efficiency (end)
 
-    % subsection summary (end)
-  % section background (end)
+    \subsubsection*{SSE, AVX, AVX512} % (fold)
+    \label{ssub:sse_avx_avx512}
+
+    % subsubsection* sse_avx_avx512 (end)
+  % subsection simd-capable_processors (end)
+
+  \subsection{Simulation in Physics and Mathematics} % (fold)
+  \label{sub:simulation_in_physics_and_mathematics}
+    \subsubsection*{Mathematical and Physical Preliminaries} % (fold)
+    \label{ssub:mathematical_and_physical_preliminaries}
+
+    % subsubsection* mathematical_and_physical_preliminaries (end)
+
+    \subsubsection*{Baseline Model Problems} % (fold)
+    \label{ssub:baseline_model_problems}
+
+    % subsubsection* baseline_model_problems (end)
+  % subsection simulation_in_physics_and_mathematics (end)
+
+  \subsection{Summary} % (fold)
+  \label{sub:summary}
+
+  % subsection summary (end)
+% section background (end)
 \end{document}
