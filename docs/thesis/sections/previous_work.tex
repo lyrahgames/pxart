@@ -1,23 +1,37 @@
 \documentclass{stdlocal}
-
 \begin{document}
-  \section{Previous Work} % (fold)
-  \label{sec:previous_work}
-    The topic of PRNGs consists of several smaller parts.
-    From a mathematical point of view, one has to talk about their definition and construction as well as methods on how to test their randomness.
-    There have been a lot of publications concerning these issues.
-    Hence, I am not able to give you a detailed overview.
-    Instead, I will focus on the most relevant PRNGs and test suites, as well as some modern examples.
+\section{Previous Work} % (fold)
+\label{sec:previous_work}
+  \subsection{The C++ API and Further Progressions} % (fold)
+  \label{sub:the_c_api_and_further_progressions}
 
-    The creation of new PRNGs is sometimes understood to be black magic and can be hard since basically, one has to build a deterministic algorithm with a nearly non-deterministic output.
-    In \cite{kneusel2018} one can find numerous different families of PRNGs.
-    The most well-known ones are Linear Congruential Generators, Mersenne Twisters and Xorshift with its Variants.
-    Whereas LCGs tend to be fast but weak generators in \cite{oneill2014}, one can find a further developed promising family of algorithms, called PCGs.
-    \cite{widynski2019} describes another RNG based on the so-called middle square Weyl sequence.
-    All of these generators have certain advantages and disadvantages in different areas such as security, games, and simulations.
+  % subsection the_c_api_and_further_progressions (end)
 
-    After building a PRNG, one has to check if the generated sequence of random numbers fulfills certain properties.
-    In general, these properties will somehow measure the randomness of our RNG.
-    Typically, there are a lot of tests bundled inside a test suite such as TestU01 and Dieharder.
-  % section previous_work (end)
+  \subsection{Techniques for Vectorization and Parallelization} % (fold)
+  \label{sub:techniques_for_vectorization_and_parallelization}
+
+  % subsection techniques_for_vectorization_and_parallelization (end)
+
+  \subsection{Summary} % (fold)
+  \label{sub:summary}
+
+  % subsection summary (end)
+
+  The topic of PRNGs consists of several smaller parts.
+  From a mathematical point of view, one has to talk about their definition and construction as well as methods on how to test their randomness.
+  There have been a lot of publications concerning these issues.
+  Hence, I am not able to give you a detailed overview.
+  Instead, I will focus on the most relevant PRNGs and test suites, as well as some modern examples.
+
+  The creation of new PRNGs is sometimes understood to be black magic and can be hard since basically, one has to build a deterministic algorithm with a nearly non-deterministic output.
+  In \cite{kneusel2018} one can find numerous different families of PRNGs.
+  The most well-known ones are Linear Congruential Generators, Mersenne Twisters and Xorshift with its Variants.
+  Whereas LCGs tend to be fast but weak generators in \cite{oneill2014}, one can find a further developed promising family of algorithms, called PCGs.
+  \cite{widynski2019} describes another RNG based on the so-called middle square Weyl sequence.
+  All of these generators have certain advantages and disadvantages in different areas such as security, games, and simulations.
+
+  After building a PRNG, one has to check if the generated sequence of random numbers fulfills certain properties.
+  In general, these properties will somehow measure the randomness of our RNG.
+  Typically, there are a lot of tests bundled inside a test suite such as TestU01 and Dieharder.
+% section previous_work (end)
 \end{document}

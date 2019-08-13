@@ -1,51 +1,35 @@
-\documentclass[crop=false]{standalone}
-\usepackage{standard}
-
+\documentclass{stdlocal}
 \begin{document}
-  \section{Implementation} % (fold)
-  \label{sec:implementation}
-    \subsection{Project Structure} % (fold)
-    \label{sub:project_structure}
+\section{Implementation of Vectorized PRNGs} % (fold)
+\label{sec:implementation}
+  \subsection{Linear Congruential Generatiors} % (fold)
+  \label{sub:linear_congruential_generatiors}
 
-    % subsection project_structure (end)
-    \subsection{Tools and Libraries} % (fold)
-    \label{sub:tools_and_libraries}
-      godbolt
-      google benchmark
-      intel vtune amplifier
-      testu01
-      dieharder
-      practrand
-      cache miss measure by agner fog
-      different compilers
-    % subsection tools_and_libraries (end)
+  % subsection linear_congruential_generatiors (end)
 
-    \subsection{Interface} % (fold)
-    \label{sub:interface}
-      What do we want from the interface of our RNG?
-      It should make testing with given frameworks like TestU01, dieharder, ent and PractRand easy.
-      Benchmarking should be possible as well.
-      Therefore we need a good API and a good application interface.
-      Most of the time we want to generate uniform distributed real or integer numbers.
-      We need two helper functions.
-      So we see that the concept of a distribution makes things complicated.
-      We cannot specialize distributions for certain RNGs.
-      We cannot use lambda expressions as distributions.
-      Therefore we want to use only helper functions as distributions and not member functions.
-      So we do not have to specify a specialization and instead use the given standard but we are able to do it.
-      Therefore functors and old-distributions are distributions as well and hence we are compatible to the standard.
+  \subsection{Mersenne Twister} % (fold)
+  \label{sub:mersenne_twister}
 
-      Additionally, we have to be more specific about the concept of a random number engine.
-      The output of a random number engine of the current concept is magical unsigned integer which should be uniformly distributed in the interval [min,max].
-      But these magic numbers can result in certain problems if used the wrong way, see Melissa O'Neill Seeding Surprises.
-      Therefore the general idea is to always use the helper functions as new distributions which define min and max explicitly and make sure you really get those values.
-      This is also a good idea for the standard.
-      And it is compatible with the current standard.
+  % subsection mersenne_twister (end)
 
-      Now think of vector registers and multiprocessors.
-      The random number engine should provide ways to fill a range with random numbers such that it can perform generation more efficiently.
-      Think about the execution policies in C++17.
-      They should be provided as well.
-    % subsection interface (end)
-  % section implementation (end)
+  \subsection{Permuted Congruential Generators} % (fold)
+  \label{sub:permuted_congruential_generators}
+
+  % subsection permuted_congruential_generators (end)
+
+  \subsection{Xoroshiro} % (fold)
+  \label{sub:xoroshiro}
+
+  % subsection xoroshiro (end)
+
+  \subsection{Middle Square Weyl Generator} % (fold)
+  \label{sub:middle_square_weyl_generator}
+
+  % subsection middle_square_weyl_generator (end)
+
+  \subsection{Summary} % (fold)
+  \label{sub:summary}
+
+  % subsection summary (end)
+% section implementation (end)
 \end{document}

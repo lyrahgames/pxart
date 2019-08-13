@@ -40,12 +40,13 @@ Lots of PRNGs have been implemented by different libraries with different APIs.
 For example, STL, Boost, Intel MKL, RNGAVXLIB, Lemire, tinyrng,...
 STL, Boost and ... provide a large set of robust PRNGs which are not vectorized but well documented.
 Their API makes them likely to be used but shows many flaws.
+It does not allow to explicitly use the vectorization capabilities of a PRNG, gives you a bad default seeding and makes use of standard distributions difficult and not adjustable.
 Lemire and RNGAVXLIB provide open-source, vectorized implementations with bad documentation and difficult-to-use code.
 Intel MKL as well provides vectorized PRNGs but is not available open-source and uses difficult interfaces.
-There is not any easily-accessible open-source library which gives a coherent, easy-to-use and consistent interface for vectorized PRNGs.
+There is not any easily-accessible, portable, open-source library which gives a coherent, easy-to-use and consistent interface for vectorized PRNGs.
 
 In this thesis, we develop a new library, called pxart, in the C++ programming language.
-pxart vectorizes a handful of already known PRNGs and provides a new API for their usage to accommodate the disadvantages of the standard random library of the STL.
+pxart vectorizes a handful of already known PRNGs which partly do not exist as vectorized versions and provides a new API for their usage to accommodate the disadvantages of the standard random library of the STL.
 The library itself is header-only, open-source, and can be found on GitHub.
 It is easily installable on every operating system.
 Additionally, we compare the performance of our vectorized PRNGs to other already accessible implementations in Boost, Intel MKL, Lemire, RNGAVXLIB and others.
