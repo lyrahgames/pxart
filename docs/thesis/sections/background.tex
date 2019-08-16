@@ -179,61 +179,78 @@
   \subsection{Pseudorandom Number Generators} % (fold)
   \label{sub:pseudorandom_number_generators}
 
-    \subsubsection*{Random and Pseudorandom Sequences} % (fold)
-    \label{ssub:random_and_pseudorandom_sequences}
-      In the above subsection \ref{sub:mathematical_preliminaries} the theory of probability was introduced to make an examination of randomness possible.
-      Randomness is a difficult concept and drives many philosophical discussions.
-      According to \cite{volchan2002} and \cite[p.~1]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
-      But for our purposes, it would suffice to find a formal mathematical definition applicable to RNGs.
-      However, such a formal concept, which is also widely accepted and unique, has not been found yet \parencite{volchan2002}.
+    % \subsubsection*{Random and Pseudorandom Sequences} % (fold)
+    % \label{ssub:random_and_pseudorandom_sequences}
+    In the above subsection \ref{sub:mathematical_preliminaries} the theory of probability was introduced to make an examination of randomness possible.
+    Randomness is a difficult concept and drives many philosophical discussions.
+    According to \cite{volchan2002} and \cite[p.~1]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
+    But for our purposes, it would suffice to find a formal mathematical definition applicable to RNGs.
+    However, such a formal concept, which is also widely accepted and unique, has not been found yet \parencite{volchan2002}.
 
-      The first problem about randomness is the word itself.
-      It is unclear and vague because there is no intentional application.
-      To be more specific, we will observe randomness in form of random sequences of real numbers.
-      But as stated in \cite{volchan2002} the question if a sequence is random decides at infinity.
-      Following his explanation, \cite{volchan2002} makes clear that typical characterizations of a random sequence are closely associated with noncomputability.
-      The question if a sequence is random cannot be algorithmically decided.
-      Further, he proposed a more pragmatic principle: \enquote{if it acts randomly, it is random} --- the use of PRNGs.
+    The first problem about randomness is the word itself.
+    It is unclear and vague because there is no intentional application.
+    To be more specific, we will observe randomness in form of random sequences of real numbers.
+    But as stated in \cite{volchan2002} the question if a sequence is random decides at infinity.
+    Following his explanation, \cite{volchan2002} makes clear that typical characterizations of a random sequence are closely associated with noncomputability.
+    The question if a sequence is random cannot be algorithmically decided.
+    Further, he proposed a more pragmatic principle: \enquote{if it acts randomly, it is random} --- the use of PRNGs.
 
-      As a result, we will not use a formalized concept of randomness.
-      A computer is only capable of using finite sequences of values and for the development of RNGs on a computer, it is enough to measure the degree of randomness.
-      For this, we rely on probability theory and first define an abstract random sequence.
+    As a result, we will not use a formalized concept of randomness.
+    A computer is only capable of using finite sequences of values and for the development of RNGs, it is enough to measure and compare different properties of truly random sequences to a sequence of real numbers.
+    For this, we rely on probability theory and first define an abstract random sequence drawn from a random experiment.
 
-      \begin{definition}[Random Sequence]
-        Let $I$ be a countable index set and $(X_n)_{n\in I}$ be a sequence of iid real-valued random variables.
-        Then a realization of $(X_n)_{n\in I}$ is called a random sequence.
-      \end{definition}
+    \begin{definition}[Random Sequence]
+      Let $I$ be a countable index set and $(X_n)_{n\in I}$ be a sequence of iid real-valued random variables.
+      Then a realization of $(X_n)_{n\in I}$ is called a random sequence.
+    \end{definition}
     % subsubsection* random_and_pseudorandom_sequences (end)
 
-    \subsubsection*{Random and Pseudorandom Number Generators} % (fold)
-    \label{ssub:random_and_pseudorandom_number_generators}
-      \begin{definition}[Pseudorandom Number Generator]
-        A tuple $(S,s_0,T,U,G)$ is called a PRNG.
-        $S$ is a non-empty, finite set of states.
-        $s_0 \in S$ is the initial state.
-        $\function{T}{S}{S}$ is the transition function.
-        $U$ is a non-empty, finite set of output symbols.
-        $\function{G}{S}{U}$ is the output function which generates an output symbol for every state.
-      \end{definition}
+    % \subsubsection*{Random and Pseudorandom Number Generators} % (fold)
+    % \label{ssub:random_and_pseudorandom_number_generators}
+    As stated above, the problem remains that it is not possible to generate a truly random sequence in a deterministic computer system.
+    Therefore we will rely on so-called pseudorandom sequences.
+    These are sequences of values generated by a PRNG.
 
-      \begin{definition}[Pseudorandom Sequence of PRNG]
-        $(s_n)_{n\in\setNatural}$ is the respective sequence of states
-        \[
-          s_{n+1} \define T(s_n)
-        \]
-        Pseudorandom sequence $(u_n)_{n\in\setNatural}$
-        \[
-          u_n = G(s_n)
-        \]
-      \end{definition}
+    \begin{definition}[Pseudorandom Number Generator]
+      A tuple $(S,s_0,T,U,G)$ is called a PRNG.
+      $S$ is a non-empty, finite set of states.
+      $s_0 \in S$ is the initial state.
+      $\function{T}{S}{S}$ is the transition function.
+      $U$ is a non-empty, finite set of output symbols.
+      $\function{G}{S}{U}$ is the output function which generates an output symbol for every state.
+    \end{definition}
 
-      \begin{alignat*}{3}
-        s_0 \xrightarrow{T} &s_1 \xrightarrow{T} &&s_2 \xrightarrow{T} &&\ldots \\
-        G &\downarrow &&\downarrow \\
-        &u_1 &&u_2 &&\ldots
-      \end{alignat*}
+    \begin{definition}[Pseudorandom Sequence of PRNG]
+      $(s_n)_{n\in\setNatural}$ is the respective sequence of states
+      \[
+        s_{n+1} \define T(s_n)
+      \]
+      Pseudorandom sequence $(u_n)_{n\in\setNatural}$
+      \[
+        u_n = G(s_n)
+      \]
+    \end{definition}
+
+    \begin{alignat*}{3}
+      s_0 \xrightarrow{T} &s_1 \xrightarrow{T} &&s_2 \xrightarrow{T} &&\ldots \\
+      G &\downarrow &&\downarrow \\
+      &u_1 &&u_2 &&\ldots
+    \end{alignat*}
     % subsubsection* random_and_pseudorandom_number_generators (end)
   % subsection pseudorandom_number_generators (end)
+
+  \subsection{Simulation in Physics and Mathematics} % (fold)
+  \label{sub:simulation_in_physics_and_mathematics}
+    \subsubsection*{Mathematical and Physical Preliminaries} % (fold)
+    \label{ssub:mathematical_and_physical_preliminaries}
+
+    % subsubsection* mathematical_and_physical_preliminaries (end)
+
+    \subsubsection*{Baseline Model Problems} % (fold)
+    \label{ssub:baseline_model_problems}
+
+    % subsubsection* baseline_model_problems (end)
+  % subsection simulation_in_physics_and_mathematics (end)
 
   \subsection{SIMD-Capable Processors} % (fold)
   \label{sub:simd-capable_processors}
@@ -252,19 +269,6 @@
 
     % subsubsection* sse_avx_avx512 (end)
   % subsection simd-capable_processors (end)
-
-  \subsection{Simulation in Physics and Mathematics} % (fold)
-  \label{sub:simulation_in_physics_and_mathematics}
-    \subsubsection*{Mathematical and Physical Preliminaries} % (fold)
-    \label{ssub:mathematical_and_physical_preliminaries}
-
-    % subsubsection* mathematical_and_physical_preliminaries (end)
-
-    \subsubsection*{Baseline Model Problems} % (fold)
-    \label{ssub:baseline_model_problems}
-
-    % subsubsection* baseline_model_problems (end)
-  % subsection simulation_in_physics_and_mathematics (end)
 
   \subsection{Summary} % (fold)
   \label{sub:summary}
