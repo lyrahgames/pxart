@@ -178,23 +178,31 @@
 
   \subsection{Pseudorandom Number Generators} % (fold)
   \label{sub:pseudorandom_number_generators}
-    PRNGs were first introduced by Neumann.
-    A further discussion about randomness will make clear why the design of PRNGs can be seen as art.
 
     \subsubsection*{Random and Pseudorandom Sequences} % (fold)
     \label{ssub:random_and_pseudorandom_sequences}
-      Originating in gambling and physical processes, randomness is a difficult concept and drives many philosophical discussions.
-      Typically humans have a bad idea of randomness.
-      Randomness makes only sense when it is applied to a sequence of values.
-      Because we want to generate random numbers we only need a formal mathematical structure to work with.
-      However, a widely accepted unique formal concept has not been found.
+      In the above subsection \ref{sub:mathematical_preliminaries} the theory of probability was introduced to make an examination of randomness possible.
+      Randomness is a difficult concept and drives many philosophical discussions.
+      According to \cite{volchan2002} and \cite[p.~1]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
+      But for our purposes, it would suffice to find a formal mathematical definition applicable to RNGs.
+      However, such a formal concept, which is also widely accepted and unique, has not been found yet \parencite{volchan2002}.
+
+      The first problem about randomness is the word itself.
+      It is unclear and vague because there is no intentional application.
+      To be more specific, we will observe randomness in form of random sequences of real numbers.
       But as stated in \cite{volchan2002} the question if a sequence is random decides at infinity.
-      A random sequence, in general, is not computable or compressible by an algorithm.
-      Even the methods to test this kind of randomness cannot be computed.
-      For the development of RNGs on a computer, we cannot use such concepts.
-      A computer in our sense is only capable of using finite sequences and has to compute its randomness to check it.
-      Therefore, again as stated in \cite{volchan2002}, we will stick to 'if it looks random, it is random'.
-      In \cite{kneusel2018} the concept of randomness was simplified.
+      Following his explanation, \cite{volchan2002} makes clear that typical characterizations of a random sequence are closely associated with noncomputability.
+      The question if a sequence is random cannot be algorithmically decided.
+      Further, he proposed a more pragmatic principle: \enquote{if it acts randomly, it is random} --- the use of PRNGs.
+
+      As a result, we will not use a formalized concept of randomness.
+      A computer is only capable of using finite sequences of values and for the development of RNGs on a computer, it is enough to measure the degree of randomness.
+      For this, we rely on probability theory and first define an abstract random sequence.
+
+      \begin{definition}[Random Sequence]
+        Let $I$ be a countable index set and $(X_n)_{n\in I}$ be a sequence of iid real-valued random variables.
+        Then a realization of $(X_n)_{n\in I}$ is called a random sequence.
+      \end{definition}
     % subsubsection* random_and_pseudorandom_sequences (end)
 
     \subsubsection*{Random and Pseudorandom Number Generators} % (fold)
