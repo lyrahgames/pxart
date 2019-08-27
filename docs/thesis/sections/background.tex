@@ -15,23 +15,23 @@
     \subsubsection*{Probability Theory} % (fold)
     \label{ssub:stochastics}
       The observation of random experiments resulted in the construction of probability theory.
-      But probability theory itself does not use a further formalized concept of randomness \parencite{schmidt2009}.
+      But probability theory itself does not use a further formalized concept of randomness \autocite{schmidt2009}.
       % Randomness itself plays a minor role in probability theory and is used in form of realizations of random variables.
-      In fact, it allows us to observe randomness without defining it \parencite{volchan2002}.
+      In fact, it allows us to observe randomness without defining it \autocite{volchan2002}.
       % Actually, typical formalizations rely on probability theory.
       % This connection makes the development of RNGs possible.
       % Hence, in the following we will give only the formal definition of relevant structures without further discussions and will postpone an examination of randomness to the next subsection.
       Hence, we will postpone an examination of truly random sequences to the next section.
 
-      According to \cite{schmidt2009}, Kolmogorov embedded probability theory in the theory of measure and integration.
+      According to \textcite{schmidt2009}, Kolmogorov embedded probability theory in the theory of measure and integration.
       Albeit it heavily relies on measure-theoretical structures, probability theory is one of the most important applications of measure and integration theory.
-      Therefore we will assume basic knowledge in this topic and refer to \cite{schmidt2009} and \cite{elstrodt2011} for a more detailed introduction to measure spaces, measurable functions, and integrals.
+      Therefore we will assume basic knowledge in this topic and refer to \textcite{schmidt2009} and \textcite{elstrodt2011} for a more detailed introduction to measure spaces, measurable functions, and integrals.
       Propositions and theorems will be given without proof.
 
       The underlying structure of probability theory, which connects it to measure theory, is the probability space.
       It is a measure space with a finite and normalized measure.
       This gives access to all the usual results of measure theory and furthermore unifies discrete and continuous distributions.
-      \parencite[p.~193~ff.]{schmidt2009}
+      \autocite[p.~193~ff.]{schmidt2009}
 
       \begin{definition}[Probability Space]
         A probability space is a measure space $\roundBrackets{\Omega, \mathscr{F}, P}$ such that $P(\Omega)=1$.
@@ -41,7 +41,7 @@
       % For our purposes, the set of possible outcomes $\Omega$ will be a finite or countable infinite set.
       % Hence, we can choose $\mathscr{F}$ to be the power set $\mathscr{P}(\Omega)$.
       Due to the complex definition of a measure space, it is convenient to not have to explicitly specify the probability space when analyzing random experiments.
-      Instead, we use random variables which are essentially measurable functions on a probability space \parencite[p.~194]{schmidt2009}.
+      Instead, we use random variables which are essentially measurable functions on a probability space \autocite[p.~194]{schmidt2009}.
       For complicated cases, these will serve as observables for specific properties and will make the analysis much more intuitive.
 
       \begin{definition}[Random Variable]
@@ -59,13 +59,13 @@
       From now on, if a random variable is defined then, if not stated otherwise, it is assumed there exists a proper probability space $(\Omega,\mathscr{F},P)$ and measurable space $(\Sigma, \mathscr{A})$.
 
       Another important concept of stochastics is known as independence.
-      In \cite{schmidt2009} it is defined for a family of events, a family of sets of events, and a family of random variables.
+      In \textcite{schmidt2009} it is defined for a family of events, a family of sets of events, and a family of random variables.
       If we think of random variables as observables then their independence means that their outcomes do not influence each other.
       % It makes only sense in the context of probability theory
       For our purposes, the general definition of all three forms of independence is distracting.
       In a computer, it makes no sense to talk about infinite sequences.
       Therefore the following definition of independence takes only a finite sequence of random variables into account.
-      Furthermore, to make it more understandable, this definition uses a theorem from \cite[p.~238]{schmidt2009} which characterizes the independence of random variables.
+      Furthermore, to make it more understandable, this definition uses a theorem from \textcite[p.~238]{schmidt2009} which characterizes the independence of random variables.
       % Here, we will use a simpler equivalent definition  because, for a computer, all we need are finite sequences of random variables.
 
       \begin{definition}[Independence]
@@ -82,9 +82,9 @@
       \end{definition}
 
       Typical observations of random sequences include the estimation of the expectation value and the variance.
-      Both of these values are needed for analyzing PRNGs and the development of Monte Carlo simulations \parencite[p.~30~ff.]{landau2015}.
+      Both of these values are needed for analyzing PRNGs and the development of Monte Carlo simulations \autocite[p.~30~ff.]{landau2015}.
       Due to their deep connection to the integral, both of these moments are defined for real-valued random variables.
-      We give the usual definitions based on \cite[p.~274~ff.]{schmidt2009} in a simplified form.
+      We give the usual definitions based on \textcite[p.~274~ff.]{schmidt2009} in a simplified form.
 
       \begin{definition}[Expectation Value and Variance]
         Let $X$ be a real-valued random variable such that $\integral{\Omega}{}{\absolute{X}}{P}<\infty$.
@@ -97,7 +97,7 @@
       \end{definition}
 
       To not rely on the underlying probability space directly, we want to be able to compute the expectation value through the respective distribution of the random variable.
-      The theory of measure and integration gives the following proposition, also known as rule of substitution \parencite[p.~276]{schmidt2009}.
+      The theory of measure and integration gives the following proposition, also known as rule of substitution \autocite[p.~276]{schmidt2009}.
 
       \begin{proposition}[Substitution]
         Let $X$ be real-valued random variable and $\function{f}{\setReal}{\setReal}$ a measurable function such that $\integral{\Omega}{}{\absolute{f}}{P_X} < \infty$.
@@ -114,8 +114,8 @@
       The distribution of real-valued random variables is univariate and as a result can be described by so-called cumulative distribution functions (CDFs).
       The CDF intuitively characterizes the distribution and simplifies the analysis.
       Further, it can be proven that every CDF belongs to a univariate distribution.
-      According to \cite[p.~246]{schmidt2009}, this is the theorem of correspondence.
-      Sometimes it is even possible to define a probability density; a function that is the Lebesgue density of the respective distribution \parencite[p.~255]{schmidt2009}.
+      According to \textcite[p.~246]{schmidt2009}, this is the theorem of correspondence.
+      Sometimes it is even possible to define a probability density; a function that is the Lebesgue density of the respective distribution \autocite[p.~255]{schmidt2009}.
 
       \begin{definition}[Probability Density and Cumulative Distribution Function]
         Let $X$ be a real-valued random variable.
@@ -146,23 +146,23 @@
       % \end{theorem}
 
       As well as CDFs, probability densities can greatly simplify computations which are based on absolute continuous random variables.
-      The following proposition, obtained from \cite{schmidt2009}, shows the simplified computation of an expectation value through a Lebesgue integral.
+      The following proposition, obtained from \textcite{schmidt2009}, shows the simplified computation of an expectation value through a Lebesgue integral.
 
       \begin{proposition}[Chaining]
-        Let $X$ be a real-valued random variable with probability density $p$.
+        Let $X$ be a real-valued random variable with $p$ as its probability density.
         If $\function{f}{\setReal}{\setReal}$ is a measurable function such that $\expect \absolute{f\circ X} < \infty$ then
         \[
-          \expect \absolute{f\composition X} = \integral{\setReal}{}{f(x)p(x)}{λ(x)}\ .
+          \expect \roundBrackets{f\composition X} = \integral{\setReal}{}{f(x)p(x)}{λ(x)}\ .
         \]
       \end{proposition}
 
       A last important theorem to name is the strong law of large numbers (SLLN).
-      According to \cite[p.~13]{graham2013}, the principles of Monte Carlo methods are based on this theorem.
+      According to \textcite[p.~13]{graham2013}, the principles of Monte Carlo methods are based on this theorem.
       Please note, there exist many more variations of this theorem.
-      We will again use a simplified version from \cite{graham2013}.
+      We will again use a simplified version from \textcite{graham2013}.
 
       \begin{theorem}[Strong Law of Large Numbers]
-        Let $(X_n)_{n\in\setNatural}$ be a sequence of iid. real-valued random variables with finite expectation value $μ$.
+        Let $(X_n)_{n\in\setNatural}$ be a sequence of iid real-valued random variables with finite expectation value $μ$.
         Then the following equation holds $P$-almost everywhere.
         \[
           \lim_{n\to\infty} \frac{1}{n}\sum_{i=1}^n X_i = μ
@@ -183,15 +183,15 @@
     % \label{ssub:random_and_pseudorandom_sequences}
     In the above subsection \ref{sub:mathematical_preliminaries} the theory of probability was introduced to make an examination of randomness possible.
     Randomness is a difficult concept and drives many philosophical discussions.
-    According to \cite{volchan2002} and \cite[p.~1]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
+    According to \textcite{volchan2002} and \textcite[\ppno~10-11]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
     But for our purposes, it would suffice to find a formal mathematical definition applicable to RNGs.
-    However, such a formal concept, which is also widely accepted and unique, has not been found yet \parencite{volchan2002}.
+    However, such a formal concept, which is also widely accepted and unique, has not been found yet \autocite{volchan2002}.
 
     The first problem about randomness is the word itself.
     It is unclear and vague because there is no intentional application.
     To be more specific, we will observe randomness in form of random sequences of real numbers.
-    But as stated in \cite{volchan2002} the question if a sequence is random decides at infinity.
-    Following his explanation, \cite{volchan2002} makes clear that typical characterizations of a random sequence are closely associated with noncomputability.
+    But as stated in \textcite{volchan2002} the question if a sequence is random decides at infinity.
+    Following his explanation, \textcite{volchan2002} makes clear that typical characterizations of a random sequence are closely associated with noncomputability.
     The question if a sequence is random cannot be algorithmically decided.
     Further, he proposed a more pragmatic principle: \enquote{if it acts randomly, it is random} --- the use of PRNGs.
 
@@ -272,6 +272,8 @@
 
   \subsection{Summary} % (fold)
   \label{sub:summary}
+
+    \textcite{volchan2002,kneusel2018}
 
   % subsection summary (end)
 % section background (end)
