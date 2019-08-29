@@ -18,7 +18,7 @@ all: $(TARGET)
 
 $(TARGET): $(DEPENDENCIES)
 	$(MAKE) -C $(PACKAGE_FOLDER)
-	latexmk -f -pdf -cd $(SOURCE)
+	latexmk -f -pdf -cd -latexoption="-synctex=1" $(SOURCE)
 ifneq ($(TARGET),$(TEMPORARY))
 	mv $(TEMPORARY) $(TARGET)
 endif
