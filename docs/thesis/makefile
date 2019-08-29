@@ -4,6 +4,7 @@ PACKAGE_FOLDER = utilities
 
 DEPENDENCIES = $(shell find . -name "*.tex")
 DEPENDENCIES += $(shell find $(PACKAGE_FOLDER)/ -name "*")
+DEPENDENCIES += ${wildcard *.bib}
 SOURCE_BASE = $(basename $(SOURCE))
 TEMPORARY = $(addsuffix .pdf,$(SOURCE_BASE))
 SOURCE_CACHE = $(filter-out ./$(SOURCE) ./$(TARGET),$(shell find . -maxdepth 1 -name "$(SOURCE_BASE)*"))

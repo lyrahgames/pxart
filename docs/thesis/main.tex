@@ -6,11 +6,20 @@
 \let\oldpagenumbering\pagenumbering
 \renewcommand*\pagenumbering[1]{\cleardoublepage\oldpagenumbering{#1}}
 
-
-\bibliography{references}
-
 \title{Design and Implementation of Vectorized Pseudorandom Number Generators and their Application to Simulation in Physics}
 \author{Markus Pawellek}
+
+\hypersetup{
+  pdftex,
+  % pdfauthor={Your Name},
+  % pdftitle={The Title},
+  % pdfsubject={\@title},
+  pdfkeywords={RNG; Random Number Generator; PRNG; Pseudorandom Number Generator; C++; SIMD; SSE; AVX; AVX2; Monte Carlo},
+  % pdfproducer={Latex with hyperref},
+  % pdfcreator={pdflatex, or other tool}
+}
+
+\bibliography{references}
 
 \begin{document}
   \selectlanguage{english}
