@@ -210,6 +210,7 @@
     % \label{ssub:random_and_pseudorandom_number_generators}
     \subsubsection*{Pseudorandom Sequences}
     Generating a truly random sequence in a deterministic computer system is impossible.
+    An RNG which is able to generate such a sequence is called a true random number generator (TRNG) and is typically implemented as a device drawing random samples from an essentially non-deterministic physical process, like temperature fluctuations.
     But the given abstract definition of a random sequence in terms of probability theory helps to assess the randomness properties of a given sequence produced by a computer.
     Typically, a computer-generated sequence which fulfills various conditions about randomness will be called a pseudorandom sequence.
     For computer programming and simulations, the usage of a truly random sequence would even introduce severe disadvantages in contrast to a pseudorandom sequence.
@@ -278,8 +279,8 @@
     \subsubsection*{Linear Congruential Generator} % (fold)
     \label{ssub:linear_congruential_generator}
       \begin{definition}[Linear Congruential Generator]
-        Let $m\in\setNatural$ with $m\geq 2$ and $a,b\in\setInteger_m$.
-        We define the PRNG $\mathrm{LCG}(m,a,b) \define (S,T,U,G)$
+        Let $m\in\setNatural$ with $m\geq 2$ and $a,c\in\setInteger_m$.
+        We define the PRNG $\mathrm{LCG}(m,a,c) \define (S,T,U,G)$
         \[
           S \define U \define \setInteger_m
           \separate
@@ -291,7 +292,7 @@
           T(x) \define a x + c
         \]
         Multiplication and addition are understood in the sense of $\setInteger_m$.
-        We call $\mathrm{LCG}(m,a,b)$ the linear congruential generator with modulus $m$, multiplier $a$ and increment $c$.
+        We call $\mathrm{LCG}(m,a,c)$ the linear congruential generator with modulus $m$, multiplier $a$ and increment $c$.
       \end{definition}
     % subsubsection linear_congruential_generator (end)
 
@@ -349,12 +350,43 @@
 
     \subsubsection*{Permuted Congruential Generator} % (fold)
     \label{ssub:permuted_congruential_generator}
-
+      \begin{definition}[Permuted Congruential Generator]
+        Given $\mathscr{G}\define \mathrm{LCG}(b,a,c)$ with transition function $T$.
+        Let $t\in\setInteger_{b}$ and $\function{f_c}{\setInteger_{2^{b-t}}}{\setInteger_{2^{b-t}}}$ be a permutation for all $c \in \setInteger_{2^t}$.
+        \[
+          S \define \setInteger_{2^b}
+          \separate
+          U \define \setInteger_{2^{b-t}}
+        \]
+        \[
+          G \define π_2 \circ f_* \circ \mathrm{split}_t
+        \]
+        \[
+          f_*(a,b) \define (a,f_a(b))
+        \]
+        $\mathrm{PCG}(\mathscr{G},t,\set{f_c}{c\in\setInteger_{2^t}}) \define (S,T,U,G)$
+      \end{definition}
     % subsubsection permuted_congruential_generator (end)
 
     \subsubsection*{Xorshift and Variants} % (fold)
     \label{ssub:xorshift_and_variants}
-
+      \begin{definition}[Xoroshiro128+]
+        Let $a,b,c \in \setInteger_{64}$.
+        \[
+          S \define \setInteger_{2^{64}}^2
+          \separate
+          U \define \setInteger_{2^{64}}
+        \]
+        \[
+          T(x,y) \define (x \circlearrowleft a \oplus f(x,y) \oplus (f(x,y) \leftarrow b), f(x,y) \circlearrowleft c)
+        \]
+        \[
+          f(x,y) \define x \oplus y
+        \]
+        \[
+          G(x,y) \define x + y
+        \]
+      \end{definition}
     % subsubsection xorshift_and_variants (end)
 
     \subsubsection*{Middle Square Weyl Sequence RNG} % (fold)
@@ -421,6 +453,7 @@
   \label{sub:summary}
 
     \textcite{volchan2002,kneusel2018}
+    \autocites[1]{volchan2002}[2]{kneusel2018}
 
   % subsection summary (end)
 % section background (end)
