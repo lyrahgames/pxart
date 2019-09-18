@@ -276,13 +276,33 @@
       \label{fig:scheme-pseudorandom-sequence}
     \end{figure}
 
-    Using a TRNG is like consulting an oracle.
+    Using a TRNG in a computer system is like consulting an oracle.
     We are calling a function with no arguments which returns a different value for every call.
+    Let $(u_n)_{n\in\setNatural}$ be the respective pseudorandom sequence of a PRNG $\mathscr{G}$ with a given seed.
+    Then in a computer $\mathscr{G}$ can be interpreted as a function with no parameters which produces the pseudorandom sequence $(u_n)_{n\in\setNatural}$ in the following way.
+    Hereby, we understand $\leftarrow$ as the assignment operator that assigns a value given on the right-hand side to the variable given on the left-hand side.
+    \[
+      u_1 \leftarrow \mathscr{G}()
+      \separate
+      u_2 \leftarrow \mathscr{G}()
+      \separate
+      u_3 \leftarrow \mathscr{G}()
+      \separate
+      \ldots
+    \]
     A PRNG has to artificially model this behavior by an internal state.
     Every function call must change this state according to the transition function.
-    In general the output set should be smaller than the set of states.
-    Otherwise, PRNGs are predictable and insecure.
-    \autocite{oneill2014}
+    Consequently, if a PRNG should be used as an oracle in that sense, the set of states and the transition function in its definition are obligatory.
+
+    It will be shown that the number of different states a PRNG can reach greatly affects the randomness of a respective pseudorandom sequence.
+    A larger set of states is not a guarantee that the output of a PRNG will look more like a truly random sequence, but at least gives the opportunity to better mask its deterministic nature \autocite{oneill2014}.
+    Therefore the number of states in general is much bigger than the number of different outputs.
+    Through the usage of output symbols together with a generator function a PRNG can take advantage of a large set of states while returning only a few different values.
+    This idea has two important implications.
+    A generator function which shrinks the set of states to a smaller space of output symbols makes the PRNG less predictable and more secure \autocite{oneill2014}.
+    The generator function would not be bijective and as a result we as consumers would not be able to draw conclusions about the current state of the PRNG based on its given output.
+    Both properties are highly appreciated because they mimic the behavior of TRNGs.
+    Hence, the set of output symbols and the generator in the definition of PRNGs is as important as the set of states and the transition function.
 
     The following paragraphs will provide examples of an application of this definition to deepen the understanding.
 
