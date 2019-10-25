@@ -12,7 +12,7 @@
 
   \subsection{Mathematical Preliminaries} % (fold)
   \label{sub:mathematical_preliminaries}
-    \subsubsection*{Probability Theory} % (fold)
+    \subsubsection{Probability Theory} % (fold)
     \label{ssub:stochastics}
       The observation of random experiments resulted in the construction of probability theory.
       But probability theory itself does not use a further formalized concept of randomness \autocite{schmidt2009}.
@@ -37,7 +37,6 @@
         A probability space is a measure space $\roundBrackets{\Omega, \mathscr{F}, P}$ such that $P(\Omega)=1$.
         In this case, we call $P$ the probability measure, $\mathscr{F}$ the set of all events, and $\Omega$ the set of all possible outcomes of a random experiment.
       \end{definition}
-
       % For our purposes, the set of possible outcomes $\Omega$ will be a finite or countable infinite set.
       % Hence, we can choose $\mathscr{F}$ to be the power set $\mathscr{P}(\Omega)$.
       Due to the complex definition of a measure space, it is convenient to not have to explicitly specify the probability space when analyzing random experiments.
@@ -55,7 +54,6 @@
         Two random variables are identically distributed if they have the same distribution.
         Additionally, we say that $X$ is a real-valued random variable if $\Sigma = \setReal$ and $\mathscr{A} = \mathscr{B}(\setReal)$.
       \end{definition}
-
       From now on, if a random variable is defined then, if not stated otherwise, it is assumed there exists a proper probability space $(\Omega,\mathscr{F},P)$ and measurable space $(\Sigma, \mathscr{A})$.
 
       Another important concept of stochastics is known as independence.
@@ -80,7 +78,6 @@
           P_X = \bigotimes_{i=1}^n P_{X_i}
         \]
       \end{definition}
-
       Typical observations of random sequences include the estimation of the expectation value and the variance.
       Both of these values are needed for analyzing PRNGs and the development of Monte Carlo simulations \autocite[p.~30~ff.]{landau2014}.
       Due to their deep connection to the integral, both of these moments are defined for real-valued random variables.
@@ -95,7 +92,6 @@
           \var X \define \expect\roundBrackets{X - \expect X}^2
         \]
       \end{definition}
-
       To not rely on the underlying probability space directly, we want to be able to compute the expectation value through the respective distribution of the random variable.
       The theory of measure and integration gives the following proposition, also known as rule of substitution \autocite[p.~276]{schmidt2009}.
 
@@ -110,7 +106,6 @@
           \expect X = \integral{\setReal}{}{x}{P_X(x)}
         \]
       \end{proposition}
-
       The distribution of real-valued random variables is univariate and as a result can be described by so-called cumulative distribution functions (CDFs).
       The CDF intuitively characterizes the distribution and simplifies the analysis.
       Further, it can be proven that every CDF belongs to a univariate distribution.
@@ -130,7 +125,6 @@
           P_X(A) = \integral{A}{}{p(x)}{λ(x)}\ .
         \]
       \end{definition}
-
       % \begin{theorem}[Correspondence]
       %   Let $X$ be a real-valued random variable.
       %   There exists a unique monotone non-decreasing, right-continuous function $\function{F_X}{\setReal}{[0,1]}$ with
@@ -144,7 +138,6 @@
       %     P_X((a,b]) = F(b) - F(a)
       %   \]
       % \end{theorem}
-
       As well as CDFs, probability densities can greatly simplify computations which are based on absolute continuous random variables.
       The following proposition, obtained from \textcite{schmidt2009}, shows the simplified computation of an expectation value through a Lebesgue integral.
 
@@ -155,7 +148,6 @@
           \expect \roundBrackets{f\composition X} = \integral{\setReal}{}{f(x)p(x)}{λ(x)}\ .
         \]
       \end{proposition}
-
       A last important theorem to name is the strong law of large numbers (SLLN).
       According to \textcite[p.~13]{graham2013}, the principles of Monte Carlo methods are based on this theorem.
       Please note, there exist many more variations of this theorem.
@@ -170,8 +162,8 @@
       \end{theorem}
     % subsubsection stochastics (end)
 
-    \subsubsection*{Finite Fields} % (fold)
-    \label{ssub:finite_fields}
+    % \subsubsection{Finite Fields} % (fold)
+    % \label{ssub:finite_fields}
 
     % subsubsection finite_fields (end)
   % subsection mathematical_preliminaries (end)
@@ -179,9 +171,7 @@
   \subsection{Pseudorandom Number Generators} % (fold)
   \label{sub:pseudorandom_number_generators}
 
-    % \subsubsection*{Random and Pseudorandom Sequences} % (fold)
-    % \label{ssub:random_and_pseudorandom_sequences}
-    \subsubsection*{Random Sequences}
+    \subsubsection{Random Sequences}
     In the above subsection \ref{sub:mathematical_preliminaries} the theory of probability was introduced to make an examination of randomness possible.
     Randomness is a difficult concept and drives many philosophical discussions.
     According to \textcite{volchan2002} and \textcite[\ppno~10-11]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
@@ -212,15 +202,14 @@
       Let $I$ be a countable index set and $(X_n)_{n\in I}$ be a sequence of iid real-valued random variables.
       Then a realization of $(X_n)_{n\in I}$ is called a random sequence.
     \end{definition}
-
     % A system which generates an arbitrarily long abstract random sequence is called a true random number generator (TRNG).
     Generating a truly random sequence in a deterministic computer system is impossible.
     An RNG which is able to generate such a sequence is called a true random number generator (TRNG) and is typically implemented as a device drawing random samples from an essentially non-deterministic physical process, like temperature fluctuations \autocite{intel-drng}.
-    % subsubsection* random_and_pseudorandom_sequences (end)
+    % subsubsection random_and_pseudorandom_sequences (end)
 
-    % \subsubsection*{Random and Pseudorandom Number Generators} % (fold)
+    % \subsubsection{Random and Pseudorandom Number Generators} % (fold)
     % \label{ssub:random_and_pseudorandom_number_generators}
-    \subsubsection*{Pseudorandom Sequences}
+    \subsubsection{Pseudorandom Sequences}
     The given abstract definition of a random sequence in terms of probability theory helps to assess the randomness properties of a given sequence produced by a computer.
     Typically, a computer-generated sequence which fulfills various conditions about randomness will be called a pseudorandom sequence.
     The respective structure and algorithm which produced the sequence is then called a PRNG.
@@ -244,7 +233,6 @@
       Let $\mathscr{G}\define (S,T,U,G)$ be a tuple consisting of a non-empty, finite set of states $S$, a transition function $\function{T}{S}{S}$, a non-empty, finite set of output symbols $U$ and an output function $\function{G}{S}{U}$.
       In this case $\mathscr{G}$ is called a PRNG.
     \end{definition}
-
     Given a PRNG and a seed value as an initial state, producing a sequence of pseudorandom numbers can be done by periodically applying the transition function on the current state and then extracting the output through the generator function \autocite{barash2017,lecuyer1994,lecuyer2015}.
     Here, we will use this method as the generalization of a pseudorandom sequence.
     Figure \ref{fig:scheme-pseudorandom-sequence} shows this process schematically.
@@ -260,7 +248,6 @@
         u_n \define G(s_n)
       \]
     \end{definition}
-
     \begin{figure}
       \center
       \begin{minipage}[b]{0.5\textwidth}
@@ -277,7 +264,6 @@
       }
       \label{fig:scheme-pseudorandom-sequence}
     \end{figure}
-
     In the definition we have used a recursive formulation.
     For theoretical discussions and the initialization of multiple streams of pseudorandom numbers an explicit variation seems to be more adequate.
     The following lemma will be given without a proof, but it can be shown by mathematical induction.
@@ -291,6 +277,7 @@
       \]
     \end{lemma}
 
+    \subsubsection{Explanation of the Concept}
     Using a TRNG in a computer system is like consulting an oracle \autocite{mueller2012}.
     We are calling a function with no arguments which returns a different value for every call.
     Let $(u_n)_{n\in\setNatural}$ be the respective pseudorandom sequence of a PRNG $\mathscr{G}$ with a given seed.
@@ -325,6 +312,7 @@
     The generator function $G$ cannot be a permutation but should not distort the distribution either.
     Hence, a uniform function which maps to every output value the same number of input values is a perfect candidate \autocite{oneill2014}.
 
+    \subsubsection{Randomization}
     The goal of PRNGs is to imitate the properties of TRNGs as much as possible \autocite{lecuyer1994} and at the same time retaining executability by a computer system and reproducibility for a given seed \autocite{lecuyer2015}.
     These restrictions make a pseudorandom sequence completely predictable and characterizable by its seed.
     So up until now, we have not introduced any kind of randomness to the definition of a PRNG.
@@ -346,29 +334,224 @@
     Typically, the distribution of seed values $P_X$ is chosen so that it is uniformly distributed in a certain subset of $S$ \autocite{matsumoto1998,oneill2014,lecuyer1994,lecuyer2015,bauke2007}.
     This makes sure that no bias will be introduced by the randomization.
 
+    \subsubsection{Limitations and Mathematical Properties}
     As was already discussed, PRNGs have certain advantages in comparison with TRNGs.
     But they are also yielding essential and intrinsic limitations.
-    Since the set of states in a PRNG is finite, every respective pseudorandom sequence has to be ultimately periodic \autocite{lecuyer1994}.
-    \begin{lemma}[Pseudorandom Sequences are Ultimately Periodic]
-      Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $s_0\in S$ its initial state.
-      Then the respective pseudorandom sequence $(u_n)_{n\in\setNatural}$ is ultimately periodic, that is there exist $ρ,τ\in\setNatural$ with $ρ\leq \# S$ such that for all $n\in\setNatural$ with $n\geq τ$ the following holds.
+    From the previous paragraph, it becomes clear that all the samples of a randomized pseudorandom sequence are not stochastically independent.
+    In general, this means the output of a PRNG can consist of certain regular patterns or artifacts \autocite{lecuyer1994,oneill2014}.
+    In \textcite{lecuyer1994} these artifacts are also called the lattice structure.
+    % Such patterns can be visualized by so-called randograms.
+    % The typical approach to prevent the user of a PRNG to observe this dependence is to construct a complex generator function that scrambles the output.
+    For applications that are using a large amount of random numbers, such patterns will introduce bias in the evaluated outputs.
+    Hence, we will discuss a few mathematical properties a PRNG should fulfill to reduce the lattice structure as much as possible.
+
+    \paragraph{Periodicity}
+    Since the set of states in a PRNG is finite, every respective pseudorandom sequence has to be periodic or ultimately periodic \autocite{lecuyer1994}.
+    First, a rigorous definition of this concept should be given.
+
+    \begin{definition}[Periodic and Ultimately Periodic Sequences]
+      Let $U$ be a non-empty set and $(u_n)_{n\in\setNatural}$ be a sequence in $U$.
+      Assume there exist $ρ,τ\in\setNatural$ such that for all $n\in\setNatural$ with $n\geq τ$ the following holds.
       \[
         u_{n+ρ} = u_n
       \]
-      We call ρ the period and τ the transient.
+      Then $(u_n)$ is called ultimately periodic with period ρ and transient τ.
+      In particular, if τ equals to $1$ we call $(u_n)$ periodic with period ρ.
+    \end{definition}
+    This means an ultimately periodic sequence will be periodic after it reached its transient and is therefore a more general concept.
+    Every periodic sequence is ultimately periodic but not vice versa.
+
+    \begin{lemma}[Pseudorandom Sequences are Ultimately Periodic]
+      Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $s_0\in S$ its initial state.
+      Then the respective pseudorandom sequence $(u_n)_{n\in\setNatural}$ is ultimately periodic.
+      In this case, for the period ρ and the transient τ the following holds.
+      \[
+        τ \leq \# S
+        \separate
+        ρ \leq \# S - τ + 1
+      \]
+      In particular, if $T$ is bijective $(u_n)$ will be periodic.
     \end{lemma}
     Thus, every pseudorandom sequence will repeat itself after it reached a certain point.
+    The period and the transient are greatly affected by the number of states and the transition function of the PRNG.
+    To get a better insight, we will examine the following idealized examples with different transition functions.
+    Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG defined as follows.
+    \[
+      S \define U \define \setInteger_4
+      \separate
+      G \define \identity
+    \]
+    For a seed $s_0 \in S$ the respective pseudorandom sequence $(u_n)_{n\in\setNatural}$ with period ρ and transient τ will be shown in the following way.
+    Hereby, all elements of the sequence are written consecutively and the periodic part is characterized by an overline.
+    \[
+      (u_n) = u_1u_2\ldots u_{τ-1} \overline{u_τ\ldots u_{τ+ρ-1}}
+    \]
+    To the left of the examples, schemes of the current transition function are displayed to make the examples more understandable.
+    The boxes are used in place of $S$ and the set of arrows characterizes the transition function.
+
+    \medskip
+    \begin{minipage}{0.25\textwidth}
+      \includegraphics[width=\textwidth]{figures/periodicity_example_a.pdf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.73\textwidth}
+      \[
+        T(x) \define
+        \begin{cases}
+          1 &: x \in \set{0,2}{} \\
+          0 &: x = 1 \\
+          2 &: x = 3
+        \end{cases}
+      \]
+      \[
+        (u_n) =
+        \begin{cases}
+          \overline{10} &: s_0 \in \set{0,2}{} \\
+          \overline{01} &: s_0 = 1 \\
+          2\overline{10} &: s_0 = 3
+        \end{cases}
+      \]
+    \end{minipage}
+    \smallskip
+    \par
+    \noindent
+    The first example shows a transition function which is not bijective but it does not map any element of $S$ to itself.
+    Hence, in all cases we get a period of $2$.
+    The transient varies between $1$ and $2$ and depends on the seed value.
+
+    \medskip
+    \begin{minipage}{0.25\textwidth}
+      \includegraphics[width=\textwidth]{figures/periodicity_example_b.pdf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.73\textwidth}
+      \[
+        T(x) \define
+        \begin{cases}
+          x + 1 &: x < 3 \\
+          3 &: x = 3
+        \end{cases}
+      \]
+      \[
+        (u_n) =
+        \begin{cases}
+          12\overline{3} &: s_0 = 0 \\
+          2\overline{3} &: s_0 = 1 \\
+          \overline{3} &: s_0 \geq 2 \\
+        \end{cases}
+      \]
+    \end{minipage}
+    \smallskip
+
+    \noindent
+    In the second example, again a non-bijective transition function is used.
+    This time the value $3$ is mapped to itself and as a consequence the period for all possible sequences is $1$.
+    As before, the transient varies with respect to the seed value.
+
+    \medskip
+    \begin{minipage}{0.25\textwidth}
+      \includegraphics[width=\textwidth]{figures/periodicity_example_c.pdf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.73\textwidth}
+      \[
+        T(x) \define x + 1 \mod 4
+      \]
+      \[
+        (u_n) =
+        \begin{cases}
+          \overline{1230} &: s_0 = 0 \\
+          \overline{2301} &: s_0 = 1 \\
+          \overline{3012} &: s_0 = 2 \\
+          \overline{0123} &: s_0 = 3
+        \end{cases}
+      \]
+    \end{minipage}
+    \smallskip
+
+    \noindent
+    In the third example, a bijective transition function is used.
+    The period is maximized and reaches the number of states which is $4$.
+    In all cases the transient is $1$ and therefore all sequences are periodic.
+
+    \noindent
     This behavior greatly constrains the possible randomness of a sequence.
     Especially for simulations, using a PRNG which is repeating itself while in use introduces unwanted regularities resulting in an incorrect output.
     As a consequence, developers of PRNGs try to construct a large period by adjusting the number of states and the transition function.
     For example, the MT19937 is a PRNG with an extremely large period of $2^{19937}-1$ \autocite{matsumoto1998}.
 
-    The following paragraphs will provide concrete examples of an application of this definition to deepen the understanding.
-    A typical implementation...
-    % subsubsection* random_and_pseudorandom_number_generators (end)
 
-    \subsubsection*{Linear Congruential Generator} % (fold)
-    \label{ssub:linear_congruential_generator}
+    \paragraph{Equidistribution}
+    A PRNG should try to mimic as many features as possible from a TRNG.
+    This includes the uniformity of its output which is used for Monte-Carlo methods and other simulations.
+    Because we are dealing with actual values instead of random variables we have to clarify what an equidistributed sequence means.
+    For this we will rely on probability theory again.
+
+    \begin{definition}[Equidistributed Sequence]
+      Let $U$ be a non-empty, finite set of values and μ be a probability measure on the measurable space $(U,\mathscr{P}(U))$.
+      A sequence $(u_n)_{n\in\setNatural}$ in $U$ is equidistributed with respect to μ if for every measurable function $\function{X}{U}{\setReal}$ the following is true.
+      \[
+        \lim_{n\to\infty} \frac{1}{n} \sum_{k=1}^n X(u_k) = \integral{U}{}{X}{μ} = \expect X = \sum_{u\in U} f(u) μ(\set{u}{})
+      \]
+      If μ is not specified, we assume it to be the uniform distribution over $U$.
+    \end{definition}
+    The idea is that every possible output value should be reached the same amount of times.
+    This concept was generalized so that it holds at infinity.
+    Please note the following equations.
+    \[
+      \integral{U}{}{X}{μ} = \expect X = \sum_{u\in U} f(u) μ(\set{u}{})
+    \]
+    The given definition can be directly applied to PRNGs.
+
+    \begin{definition}[Equidistribution]
+      Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $S_0 \subset S$ a set of seeds.
+      $\mathscr{G}$ is said to be equidistributed with respect to $S_0$ if for all seeds $s_0 \in S_0$ the respective pseudorandom sequence is equidistributed.
+    \end{definition}
+    A PRNG is called equidistributed if every possible pseudorandom sequence is equidistributed.
+
+    \paragraph{Multidimensional Equidistribution}
+    Typical Monte-Carlo Simulations need to construct random vectors.
+    Due to the shown dependence of successive values of pseudorandom sequence not every PRNG is suited for such applications.
+    The following property quantifies in how many dimensions a PRNG can be used.
+
+    \begin{definition}[Multidimensional Equidistribution]
+      Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $S_0 \subset S$ a set of seeds and $k \in \setNatural$.
+      \[
+        v_n \define (u_i)_{i\in I_n}
+        \separate
+        I_n \define \set{τ + (n-1)k + p}{p\in\setNatural, p \leq k}
+      \]
+      $\mathscr{G}$ is said to be $k$-dimensional equidistributed with respect to $S_0$ if for all $τ\in\setNatural_0$ and seeds $s_0\in S_0$ the respective $k$-dimensional, pseudorandom vector sequence $(v_n)$ is equidistributed on $U^k$.
+    \end{definition}
+    For some typical examples we refer to images and references.
+
+    \paragraph{Linearity}
+    \begin{definition}[Linearity]
+
+    \end{definition}
+
+    \paragraph{Discrepancy}
+
+    \paragraph{Predictability and Security}
+
+
+    \subsubsection{Implementation-Specific Performance}
+    \paragraph{Seekability}
+
+
+    \subsubsection{Analyzation}
+    visualization, proof, experiments, benchmarks (runtime), test suites, code analyzation
+
+    statistical quality and performance vs implementation quality and performance
+
+    Visualizations: randograms 2d and 3d, histograms, simulation plots and images
+
+    Period and Uniformity, Empirical Testing, predictability and Security, Speed, Memory Size, Code Size, Output Range, Seekability, multiple streams, k-dimensional equidistribution, theoretical support, repeatability, portability, ease of implementation
+    % subsubsection random_and_pseudorandom_number_generators (end)
+
+    \subsubsection{Examples}
+    % \subsubsection{Linear Congruential Generator} % (fold)
+    % \label{ssub:linear_congruential_generator}
       \begin{definition}[Linear Congruential Generator]
         Let $m\in\setNatural$ with $m\geq 2$ and $a,c\in\setInteger_m$.
         We define the PRNG $\mathrm{LCG}(m,a,c) \define (S,T,U,G)$
@@ -387,8 +570,8 @@
       \end{definition}
     % subsubsection linear_congruential_generator (end)
 
-    \subsubsection*{Mersenne Twister} % (fold)
-    \label{ssub:mersenne_twister}
+    % \subsubsection{Mersenne Twister} % (fold)
+    % \label{ssub:mersenne_twister}
       \begin{definition}[Mersenne Twister]
         Let $w, n, m\in \setNatural$ and $r\in\setNatural_0$ with $m \leq n$ and $r < w$.
         Further, let $a,b,c \in \setInteger_2^w$ and $u,s,t,l \in \setInteger_w$.
@@ -439,8 +622,8 @@
       \end{definition}
     % subsubsection mersenne_twister (end)
 
-    \subsubsection*{Permuted Congruential Generator} % (fold)
-    \label{ssub:permuted_congruential_generator}
+    % \subsubsection{Permuted Congruential Generator} % (fold)
+    % \label{ssub:permuted_congruential_generator}
       \begin{definition}[Permuted Congruential Generator]
         Given $\mathscr{G}\define \mathrm{LCG}(b,a,c)$ with transition function $T$.
         Let $t\in\setInteger_{b}$ and $\function{f_c}{\setInteger_{2^{b-t}}}{\setInteger_{2^{b-t}}}$ be a permutation for all $c \in \setInteger_{2^t}$.
@@ -459,8 +642,8 @@
       \end{definition}
     % subsubsection permuted_congruential_generator (end)
 
-    \subsubsection*{Xorshift and Variants} % (fold)
-    \label{ssub:xorshift_and_variants}
+    % \subsubsection{Xorshift and Variants} % (fold)
+    % \label{ssub:xorshift_and_variants}
       \begin{definition}[Xoroshiro128+]
         Let $a,b,c \in \setInteger_{64}$.
         \[
@@ -480,8 +663,8 @@
       \end{definition}
     % subsubsection xorshift_and_variants (end)
 
-    \subsubsection*{Middle Square Weyl Sequence RNG} % (fold)
-    \label{ssub:middle_square_weyl_sequence_rng}
+    % \subsubsection{Middle Square Weyl Sequence RNG} % (fold)
+    % \label{ssub:middle_square_weyl_sequence_rng}
       \begin{definition}[Middle Square Weyl Sequence RNG]
         Let $s\in\setInteger_{2^{64}}$ be an odd constant.
         The middle square Weyl sequence RNG $\mathrm{MSWS}(s)\define(S,T,U,G)$ is defined as a PRNG in the following way.
@@ -511,33 +694,33 @@
 
   \subsection{Simulation in Physics and Mathematics} % (fold)
   \label{sub:simulation_in_physics_and_mathematics}
-    \subsubsection*{Mathematical and Physical Preliminaries} % (fold)
+    \subsubsection{Mathematical and Physical Preliminaries} % (fold)
     \label{ssub:mathematical_and_physical_preliminaries}
 
-    % subsubsection* mathematical_and_physical_preliminaries (end)
+    % subsubsection mathematical_and_physical_preliminaries (end)
 
-    \subsubsection*{Baseline Model Problems} % (fold)
+    \subsubsection{Baseline Model Problems} % (fold)
     \label{ssub:baseline_model_problems}
 
-    % subsubsection* baseline_model_problems (end)
+    % subsubsection baseline_model_problems (end)
   % subsection simulation_in_physics_and_mathematics (end)
 
   \subsection{SIMD-Capable Processors} % (fold)
   \label{sub:simd-capable_processors}
-    \subsubsection*{Architecture of Modern Central Processing Units} % (fold)
+    \subsubsection{Architecture of Modern Central Processing Units} % (fold)
     \label{ssub:architecture_of_modern_central_processing_units}
 
-    % subsubsection* architecture_of_modern_central_processing_units (end)
+    % subsubsection architecture_of_modern_central_processing_units (end)
 
-    \subsubsection*{SIMD Instruction Sets and Efficiency} % (fold)
+    \subsubsection{SIMD Instruction Sets and Efficiency} % (fold)
     \label{ssub:simd_instruction_sets_and_efficiency}
 
-    % subsubsection* simd_instruction_sets_and_efficiency (end)
+    % subsubsection simd_instruction_sets_and_efficiency (end)
 
-    \subsubsection*{SSE, AVX, AVX512} % (fold)
+    \subsubsection{SSE, AVX, AVX512} % (fold)
     \label{ssub:sse_avx_avx512}
 
-    % subsubsection* sse_avx_avx512 (end)
+    % subsubsection sse_avx_avx512 (end)
   % subsection simd-capable_processors (end)
 
   \subsection{Summary} % (fold)
