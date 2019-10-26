@@ -346,7 +346,7 @@
     Hence, we will discuss a few mathematical properties a PRNG should fulfill to reduce the lattice structure as much as possible.
 
     \paragraph{Periodicity}
-    Since the set of states in a PRNG is finite, every respective pseudorandom sequence has to be periodic or ultimately periodic \autocite{lecuyer1994}.
+    Since the set of states in a PRNG is finite, every respective pseudorandom sequence has to be periodic or ultimately periodic \autocite{lecuyer1994,bauke2007}.
     First, a rigorous definition of this concept should be given.
 
     \begin{definition}[Periodic and Ultimately Periodic Sequences]
@@ -358,8 +358,9 @@
       Then $(u_n)$ is called ultimately periodic with period ρ and transient τ.
       In particular, if τ equals to $1$ we call $(u_n)$ periodic with period ρ.
     \end{definition}
-    This means an ultimately periodic sequence will be periodic after it reached its transient and is therefore a more general concept.
-    Every periodic sequence is ultimately periodic but not vice versa.
+    This means an ultimately periodic sequence will be periodic after it reached its transient.
+    Every periodic sequence is therefore ultimately periodic but not vice versa and as another consequence, the given concept is more general than the typical one of a periodic sequence.
+    In the following lemma we show its application to pseudorandom sequences.
 
     \begin{lemma}[Pseudorandom Sequences are Ultimately Periodic]
       Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $s_0\in S$ its initial state.
@@ -382,15 +383,15 @@
       G \define \identity
     \]
     For a seed $s_0 \in S$ the respective pseudorandom sequence $(u_n)_{n\in\setNatural}$ with period ρ and transient τ will be shown in the following way.
-    Hereby, all elements of the sequence are written consecutively and the periodic part is characterized by an overline.
+    Hereby, all elements of the sequence up to the end of the first period are written consecutively and the periodic part is marked by an overline.
     \[
-      (u_n) = u_1u_2\ldots u_{τ-1} \overline{u_τ\ldots u_{τ+ρ-1}}
+      (u_n) = u_1\ldots u_{τ-1} \overline{u_τ\ldots u_{τ+ρ-1}}
     \]
-    To the left of the examples, schemes of the current transition function are displayed to make the examples more understandable.
-    The boxes are used in place of $S$ and the set of arrows characterizes the transition function.
+    To the left of the examples, a scheme of their respective transition function is displayed to make the originating sequences together with their periods and transients more understandable.
+    The boxes are used in place of the set of states $S$ whereas arrows characterize the transition function $T$.
 
     \medskip
-    \begin{minipage}{0.25\textwidth}
+    \begin{minipage}{0.2\textwidth}
       \includegraphics[width=\textwidth]{figures/periodicity_example_a.pdf}
     \end{minipage}
     \hfill
@@ -402,8 +403,9 @@
           0 &: x = 1 \\
           2 &: x = 3
         \end{cases}
-      \]
-      \[
+        \separate
+      % \]
+      % \[
         (u_n) =
         \begin{cases}
           \overline{10} &: s_0 \in \set{0,2}{} \\
@@ -412,15 +414,15 @@
         \end{cases}
       \]
     \end{minipage}
-    \smallskip
+    \medskip
     \par
     \noindent
-    The first example shows a transition function which is not bijective but it does not map any element of $S$ to itself.
+    The first example shows a transition function which is not bijective but does not map any element of $S$ to itself.
     Hence, in all cases we get a period of $2$.
     The transient varies between $1$ and $2$ and depends on the seed value.
 
     \medskip
-    \begin{minipage}{0.25\textwidth}
+    \begin{minipage}{0.2\textwidth}
       \includegraphics[width=\textwidth]{figures/periodicity_example_b.pdf}
     \end{minipage}
     \hfill
@@ -431,8 +433,9 @@
           x + 1 &: x < 3 \\
           3 &: x = 3
         \end{cases}
-      \]
-      \[
+      % \]
+      % \[
+      \separate
         (u_n) =
         \begin{cases}
           12\overline{3} &: s_0 = 0 \\
@@ -441,7 +444,7 @@
         \end{cases}
       \]
     \end{minipage}
-    \smallskip
+    \medskip
 
     \noindent
     In the second example, again a non-bijective transition function is used.
@@ -449,15 +452,16 @@
     As before, the transient varies with respect to the seed value.
 
     \medskip
-    \begin{minipage}{0.25\textwidth}
+    \begin{minipage}{0.2\textwidth}
       \includegraphics[width=\textwidth]{figures/periodicity_example_c.pdf}
     \end{minipage}
     \hfill
     \begin{minipage}{0.73\textwidth}
       \[
         T(x) \define x + 1 \mod 4
-      \]
-      \[
+      % \]
+      % \[
+      \separate
         (u_n) =
         \begin{cases}
           \overline{1230} &: s_0 = 0 \\
@@ -467,19 +471,56 @@
         \end{cases}
       \]
     \end{minipage}
-    \smallskip
+    \medskip
 
     \noindent
     In the third example, a bijective transition function is used.
-    The period is maximized and reaches the number of states which is $4$.
-    In all cases the transient is $1$ and therefore all sequences are periodic.
+    The period is maximized and reaches the number of states.
+    In all cases the transient is $1$ and as a result all sequences are periodic.
+
+    \medskip
+    \begin{minipage}{0.2\textwidth}
+      \includegraphics[width=\textwidth]{figures/periodicity_example_d.pdf}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.73\textwidth}
+      \[
+        T(x) \define
+        \begin{cases}
+          x &: x \in \set{0,3}{} \\
+          2 &: x = 1 \\
+          1 &: x = 2
+        \end{cases}
+      % \]
+      % \[
+      \separate
+        (u_n) =
+        \begin{cases}
+          \overline{0} &: s_0 = 0 \\
+          \overline{21} &: s_0 = 1 \\
+          \overline{12} &: s_0 = 2 \\
+          \overline{3} &: s_0 = 3
+        \end{cases}
+      \]
+    \end{minipage}
+    \medskip
 
     \noindent
-    This behavior greatly constrains the possible randomness of a sequence.
+    The last example shows again a bijective transition function $T$.
+    The transient is again always $1$ and all possible pseudorandom sequences are purely periodic.
+    But this time, $T$ maps the values $0$ and $3$ to themselves.
+    Hence, the period becomes dependent on the initial value and differs between the smallest possible value $1$ and $2$.\\
+    The periodic behavior of pseudorandom sequences greatly constrains the possible randomness of a PRNG.
     Especially for simulations, using a PRNG which is repeating itself while in use introduces unwanted regularities resulting in an incorrect output.
     As a consequence, developers of PRNGs try to construct a large period by adjusting the number of states and the transition function.
-    For example, the MT19937 is a PRNG with an extremely large period of $2^{19937}-1$ \autocite{matsumoto1998}.
-
+    For example, the MT19937 is a PRNG with an extremely large period of $2^{19937}-1$ if not used with a seed value of zero \autocite{matsumoto1998}.
+    The use of a bijective transition function is not enough to ensure the maximal period.
+    Values that are mapped to themselves result in the smallest possible period even if the transient of the sequence could be large.
+    Especially for linear PRNGs that are mapping $0$ to itself, developers tend to exclude such states from the seeding process to always obtain the maximal period \autocite{marsaglia2003,blackman2019}.
+    As a counter-example, the so-called \enquote{Middle Square RNG} which was developed by Von Neumann in the early days of computer science should be named \autocites[\ppno~12-15]{kneusel2018}{widynski2019}.
+    This PRNG computed the square of its current state and returned the middle digits as next random number.
+    It was well known to suffer from the \enquote{zero mechanism} --- once some digits become zero, all following return values would be zero as well \autocites[\ppno~12-15]{kneusel2018}{widynski2019}.
+    So besides a large state space and a bijective transition function, the largest possible permutation cycle should be reached when advancing the state of a PRNG.
 
     \paragraph{Equidistribution}
     A PRNG should try to mimic as many features as possible from a TRNG.
