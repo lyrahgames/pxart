@@ -8,6 +8,7 @@ DEPENDENCIES += ${wildcard *.bib}
 SOURCE_BASE = $(basename $(SOURCE))
 TEMPORARY = $(addsuffix .pdf,$(SOURCE_BASE))
 SOURCE_CACHE = $(filter-out ./$(SOURCE) ./$(TARGET),$(shell find . -maxdepth 1 -name "$(SOURCE_BASE)*"))
+SOURCE_CACHE := $(addsuffix ",$(addprefix ",$(SOURCE_CACHE)))
 
 $(info $(DEPENDENCIES))
 $(info $(SOURCE_CACHE))
