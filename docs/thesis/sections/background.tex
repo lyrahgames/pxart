@@ -250,13 +250,14 @@
     \end{definition}
     \begin{figure}
       \center
-      \begin{minipage}[b]{0.5\textwidth}
-      \begin{alignat*}{3}
-        s_0 \xrightarrow{T} &s_1 \xrightarrow{T} &&s_2 \xrightarrow{T} &&\ldots \\
-        G &\downarrow &&\downarrow \\
-        &u_1 &&u_2 &&\ldots
-      \end{alignat*}
-      \end{minipage}
+      % \begin{minipage}[b]{0.5\textwidth}
+      % \begin{alignat*}{3}
+      %   s_0 \xrightarrow{T} &s_1 \xrightarrow{T} &&s_2 \xrightarrow{T} &&\ldots \\
+      %   G &\downarrow &&\downarrow \\
+      %   &u_1 &&u_2 &&\ldots
+      % \end{alignat*}
+      % \end{minipage}
+      \includegraphics[width=0.7\textwidth]{figures/sequence_generation_scheme.pdf}
       \caption[Generation of a Pseudorandom Sequence]{%
         The figure shows a scheme about the generation of a pseudorandom sequence for a given PRNG $\mathscr{G}\define (S,T,U,G)$ and seed value $s_0\in S$.
         The internal state is advanced by the transition function $T$ through a recurrence relation.
