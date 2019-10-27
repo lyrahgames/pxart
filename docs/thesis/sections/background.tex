@@ -351,28 +351,67 @@
 
     \begin{definition}[Periodic and Ultimately Periodic Sequences]
       Let $U$ be a non-empty set and $(u_n)_{n\in\setNatural}$ be a sequence in $U$.
-      Assume there exist $ρ,τ\in\setNatural$ such that for all $n\in\setNatural$ with $n\geq τ$ the following holds.
+      Assume there exist $ρ,τ\in\setNatural$ such that for all $n\in\setNatural_0$ the following holds.
       \[
-        u_{n+ρ} = u_n
+        u_{τ+n+ρ} = u_{τ+n}
       \]
-      Then $(u_n)$ is called ultimately periodic with period ρ and transient τ.
+      Then $(u_n)$ is called ultimately periodic.
+      The smallest possible values for ρ and τ, such that the equation holds, are called period and transient respectively.
+       % with period ρ and transient τ.
       In particular, if τ equals to $1$ we call $(u_n)$ periodic with period ρ.
     \end{definition}
     This means an ultimately periodic sequence will be periodic after it reached its transient.
     Every periodic sequence is therefore ultimately periodic but not vice versa and as another consequence, the given concept is more general than the typical one of a periodic sequence.
-    In the following lemma we show its application to pseudorandom sequences.
+    Please note that the values for ρ and τ are not unique.
+    Let $ρ^*$ be the period and $τ^*$ be the transient.
+    Then the equation given in the above definition holds for all values ρ and τ with respect to $m\in\setNatural$ and $n\in\setNatural_0$ in the following sense.
+    \[
+      ρ = mρ^*
+      \separate
+      τ = τ^* + n
+    \]
+    Choosing the minimal values allows us to talk about a unique transient and a unique period.
+    In the following lemma we show the application of the definition to pseudorandom sequences.
 
     \begin{lemma}[Pseudorandom Sequences are Ultimately Periodic]
       Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $s_0\in S$ its initial state.
       Then the respective pseudorandom sequence $(u_n)_{n\in\setNatural}$ is ultimately periodic.
       In this case, for the period ρ and the transient τ the following holds.
       \[
-        τ \leq \# S
-        \separate
-        ρ \leq \# S - τ + 1
+        1 \leq ρ + τ - 1 \leq \# S
       \]
       In particular, if $T$ is bijective $(u_n)$ will be periodic.
     \end{lemma}
+    \begin{proof}
+      Let $(s_n)_{n\in\setNatural}$ be the respective sequence of states and $N\define \# S$ the number of different states.
+      $T$ maps all elements of $S$ to at most $N$ other elements of $S$.
+      Therefore at least the element $s_N$ has to be mapped to an element $s_k$ for $k\in\setNatural$ with $k\leq N$ which was already reached.
+      % Hence, there exist $n,k\in\setNatural$ with $k\leq n\leq N$ such that $T(s_n) = s_k$.
+      Hence, we conclude the following.
+      \[
+        \exists n,k\in\setNatural, k\leq n\leq N: \quad T(s_n) = s_k
+      \]
+      % Assume $T$ maps $s_n$ to a state $s_k$ with $k\in\setNatural$ and $k < n$.
+      We choose $n$ and $k$ appropriately and define the following values.
+      \[
+        ρ \define n - k + 1
+        \separate
+        τ \define k
+      \]
+      Now let $i\in\setNatural_0$ be arbitrary and apply the definition.
+      We get the following chain of equations which show that $(u_n)$ is ultimately periodic.
+      \[
+        \begin{aligned}
+          u_{τ+i+ρ} &= u_{n+1+i} = G \circ T^{n+1+i}(s_0) = G \circ T^i\circ T^{n+1}(s_0) \\
+          &= G \circ T^i(s_k) = G \circ T^i \circ T^k(s_0) = G \circ T^{i+k}(s_0) = u_{k+i} = u_{τ+i}
+        \end{aligned}
+      \]
+      The inequality can be shown by directly inserting the values into the definition.
+      \[
+        1 \leq ρ + τ - 1 = n \leq N = \# S
+      \]
+      This proofs the given lemma.
+    \end{proof}
     Thus, every pseudorandom sequence will repeat itself after it reached a certain point.
     The period and the transient are greatly affected by the number of states and the transition function of the PRNG.
     To get a better insight, we will examine the following idealized examples with different transition functions.
