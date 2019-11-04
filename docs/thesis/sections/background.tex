@@ -741,6 +741,7 @@
       \]
     \end{corollary}
     As a consequence, multidimensional equidistribution is greatly affected by the set of output symbols and the generator function.
+    Furthermore, according to the formula, for $k$-dimensional equidistribution with $k\geq 2$, the set of output symbols has to be smaller than the set of states.
     In practice, the seed of a pseudorandom sequence defines the translation of its corresponding vector sequence.
     For the full period, the definition of multidimensional equidistribution given here is equivalent to the typical definition given in \textcite{lecuyer1994}.
     If the corresponding vector sequence consists of a smaller period then the given concept is stronger than the typical one.
@@ -836,11 +837,100 @@
     % \end{definition}
 
     \paragraph{Linearity}
-    \begin{definition}[Linearity]
+    According to \textcite{lecuyer2015}, the transition function of most PRNGs can be viewed as linear recurrence modulo some prime number.
+    Thus, such PRNGs are called linear and exhibit certain advantages and disadvantages in comparison to non-linear PRNGs.
+    The linearity property makes a theoretical and statistical analysis of respective pseudorandom sequences much easier \autocite{lecuyer2015,blackman2019,bauke2007}.
+    Hence, linear PRNGs are mathematically well-founded and understood.
+    But exactly this makes them vulnerable to certain empirical tests and applications, such as the linear-complexity and the matrix-rank tests, which exploit linearity \autocite{lecuyer2015,oneill2014,lemire2019}.
+    In general, linear PRNGs suffer from too much regularity in their output.
+    Nevertheless, many well-known and widely used PRNGs are linear.
+    This is due to the fact that while offering more features they tend to be faster and easier to implement than their counterparts \autocite{lecuyer2015,blackman2019}.
+    To name a few examples, the MT19937 \autocite{matsumoto1998}, Xorshift RNGs \autocite{marsaglia2003,vigna2016,vigna2017}, and WELL generators \autocite{panneton2006} are all linear PRNGs.
+    We will first introduce a rigorous concept of linearity to understand their underlying theory.
 
+    \begin{definition}[Linear and Scrambled Linear PRNG]
+      Let $m\in\setPrime$ and $\mathscr{G}\define(S,T,U,G)$ be a PRNG.
+      We call $\mathscr{G}$ linear modulo $m$ if $S$ and $U$ are finite-dimensional vector spaces over the finite field $\mathds{F}_m$ and $T$ and $G$ are linear transformations.
+      In this case, we identify $T$ and $G$ with their respective matrices such that $T \in \mathds{F}_m^{p\times p}$ and $G \in \mathds{F}_m^{q\times p}$, whereas $p\define\dim S$ and $q\define\dim U$.
+      If $G$ cannot be represented by a linear transformation we say $\mathscr{G}$ is a scrambled linear PRNG modulo $m$.
     \end{definition}
+    The state and output space have to be vector spaces over a finite field such that linear transformations are well-defined.
+    The definition makes sure that for linear PRNGs both, the transition and the generator function, are linear transformations.
+    This property is strong and tends to reduce the statistical performance of the PRNG.
+    Therefore in practice, often at least the generator function is chosen to be non-linear \autocite{blackman2019}.
+    Examples for scrambled linear PRNGs are given by some generators of the PCG family \autocite{oneill2014} and the Xoroshiro128+ \autocite{blackman2019}.
+    Due to their non-linear generator function, these PRNGs are more difficult to analyze.
+    As a consequence, the following lemma about the equidistribution and periodicity applies only to linear PRNGs and may under certain circumstances serve as a foundation for a further theoretical analysis of scrambled linear PRNGs \autocite{lecuyer2015,bauke2007}.
 
-    \paragraph{Discrepancy}
+    \begin{lemma}[Period and Equidistribution of a Linear PRNG]
+      For $m\in\setPrime$, let $\mathscr{G}\define(S,T,U,G)$ be a linear PRNG modulo $m$ with $p\define\dim S$.
+      Furthermore, let the characteristic polynomial of $T$ be a primitive polynomial over $\mathds{F}_m$ and let $G$ be a full rank matrix with $q\define \rank G$.
+      Then for all seeds $s_0\in S\setminus\set{0}{}$ the respective pseudorandom  sequences $(u_n)_{n\in\setNatural}$ are periodic with period $m^p - 1$ and for all elements $u \in U$ the following holds.
+      \[
+        n_u \define \#\set{n\in\setNatural}{n\leq m^p-1, u_n = u} =
+        \begin{cases}
+          m^{p-q}-1 &: u = 0 \\
+          m^{p-q} &: \mathrm{else}
+        \end{cases}
+      \]
+      In particular, the sequence $(u_n)$ is equidistributed with respect to the following probability measure μ.
+      \[
+        \function{μ}{\mathscr{P}(U)}{[0,1]}
+        \separate
+        μ(\set{u}{}) \define \frac{n_u}{m^p - 1}
+      \]
+    \end{lemma}
+    We will give no proof for this lemma.
+    For linear PRNGs, it is not possible to get an equidistribution on the complete output space $U$.
+    Instead the zero element is always reached once less often, introducing bias in the respective probability distribution μ.
+    But for big values of $p$, this bias is neglectable as the following limit states.
+    \[
+      \lim_{p\to\infty}\frac{1}{m^p-1} = 0
+    \]
+    Apart from this, by reaching the maximal period, a linear PRNG gives us the equidistribution of its output values for free.
+    Hence, both properties, equidistribution and maximal periodicity, can be mathematically proven by showing that the characteristic polynomial of $T$ is a primitive polynomial over the underlying field.
+    This gives us a general tool for the analyzation of linear PRNGs and explains their widespread use.
+
+    \noindent
+    Let us again consider an example to further highlight the usage of linear PRNGs.
+    For this, let $\mathscr{G}\define (S,T,U,G)$ be a linear PRNG modulo $2$, $s_0\in S$ its initial state, $(u_n)_{n\in\setNatural}$ the respective pseudorandom sequence and $(s_n)_{n\in\setNatural}$ the respective sequence of states.
+    Sequences will again be denoted by writing their elements consecutively with their periodic part marked by an overline.
+    In this example, column vectors will be written as row vectors without spaces or commas.
+    \[
+      S \define \mathds{F}_2^3
+      \separate
+      U \define \mathds{F}_2^2
+      \separate
+      s_0 \define (001)
+    \]
+    \[
+      T \define
+      \begin{pmatrix}
+        0 & 1 & 0 \\
+        0 & 0 & 1 \\
+        1 & 0 & 1
+      \end{pmatrix}
+      \separate
+      G \define
+      \begin{pmatrix}
+        0 & 1 & 0 \\
+        0 & 0 & 1
+      \end{pmatrix}
+    \]
+    In this example, $G$ has full rank and the characteristic polynomial of $T$ is given by the following expression which is a primitive polynomial over $\mathds{F}_2$.
+    \[
+      p_T(x) = \det(T - xI) = x^3 + x^2 + 1
+    \]
+    As a result, we will get the maximal period of $7$ elements for the state and output sequence.
+    \[
+      (s_n) = \overline{(001)(011)(111)(110)(101)(010)(100)}
+    \]
+    \[
+      (u_n) = \overline{(11)(11)(10)(01)(10)(00)(01)}
+    \]
+    In one period, $(u_n)$ reaches the elements $(01)$, $(10)$ and $(11)$ exactly two times whereas $(00)$ only appears one time.
+
+    % \paragraph{Discrepancy}
 
     \paragraph{Predictability and Security}
 
@@ -879,6 +969,10 @@
         We call $\mathrm{LCG}(m,a,c)$ the linear congruential generator with modulus $m$, multiplier $a$ and increment $c$.
       \end{definition}
     % subsubsection linear_congruential_generator (end)
+
+      \begin{definition}[Linear Feedback Shift Registers]
+
+      \end{definition}
 
     % \subsubsection{Mersenne Twister} % (fold)
     % \label{ssub:mersenne_twister}
