@@ -1,0 +1,164 @@
+\documentclass{stdlocal}
+\begin{document}
+\section{Mathematical Preliminaries} % (fold)
+\label{sub:mathematical_preliminaries}
+  To systematically approach the implementation of PRNGs, basic knowledge in the topics of stochastics and finite fields is administrable.
+  Together, these topics will give a deeper understanding of randomness in deterministic computer systems, a formal description of pseudorandom sequences and generators, and the mathematical foundation of Monte Carlo algorithms.
+  Based on them, we are capable of scientifically analyzing PRNGs concerning their randomness properties.
+
+  \subsection{Probability Theory} % (fold)
+  \label{ssub:stochastics}
+    The observation of random experiments resulted in the construction of probability theory.
+    But probability theory itself does not use a further formalized concept of randomness \autocite{schmidt2009}.
+    % Randomness itself plays a minor role in probability theory and is used in form of realizations of random variables.
+    In fact, it allows us to observe randomness without defining it \autocite{volchan2002}.
+    % Actually, typical formalizations rely on probability theory.
+    % This connection makes the development of RNGs possible.
+    % Hence, in the following we will give only the formal definition of relevant structures without further discussions and will postpone an examination of randomness to the next section.
+    Hence, we will postpone an examination of truly random sequences to the next section.
+
+    According to \textcite{schmidt2009}, Kolmogorov embedded probability theory in the theory of measure and integration.
+    Albeit it heavily relies on measure-theoretical structures, probability theory is one of the most important applications of measure and integration theory.
+    Therefore we will assume basic knowledge in this topic and refer to \textcite{schmidt2009} and \textcite{elstrodt2011} for a more detailed introduction to measure spaces, measurable functions, and integrals.
+    Propositions and theorems will be given without proof.
+
+    The underlying structure of probability theory, which connects it to measure theory, is the probability space.
+    It is a measure space with a finite and normalized measure.
+    This gives access to all the usual results of measure theory and furthermore unifies discrete and continuous distributions.
+    \autocite[p.~193~ff.]{schmidt2009}
+
+    \begin{definition}[Probability Space]
+      A probability space is a measure space $\roundBrackets{\Omega, \mathscr{F}, P}$ such that $P(\Omega)=1$.
+      In this case, we call $P$ the probability measure, $\mathscr{F}$ the set of all events, and $\Omega$ the set of all possible outcomes of a random experiment.
+    \end{definition}
+    % For our purposes, the set of possible outcomes $\Omega$ will be a finite or countable infinite set.
+    % Hence, we can choose $\mathscr{F}$ to be the power set $\mathscr{P}(\Omega)$.
+    Due to the complex definition of a measure space, it is convenient to not have to explicitly specify the probability space when analyzing random experiments.
+    Instead, we use random variables which are essentially measurable functions on a probability space \autocite[p.~194]{schmidt2009}.
+    For complicated cases, these will serve as observables for specific properties and will make the analysis much more intuitive.
+
+    \begin{definition}[Random Variable]
+      Let $(\Omega,\mathscr{F},P)$ be a probability space and $(\Sigma,\mathscr{A})$ a measurable space.
+      A measurable function $\function{X}{\Omega}{\Sigma}$ is called a random variable.
+
+      In this case, we denote with $P_X\define P\composition\inverse{X}$ the distribution and with $(\Sigma,\mathscr{A},P_X)$ the probability space of $X$.
+      % We call $X(ω)$ for $ω\in\Omega$ a realization of $X$.
+      % Let $\function{Y}{\Omega}{\Sigma}$ be another random variable.
+      % $X$ and $Y$ are identically distributed if $P_X = P_Y$.
+      Two random variables are identically distributed if they have the same distribution.
+      Additionally, we say that $X$ is a real-valued random variable if $\Sigma = \setReal$ and $\mathscr{A} = \mathscr{B}(\setReal)$.
+    \end{definition}
+    From now on, if a random variable is defined then, if not stated otherwise, it is assumed there exists a proper probability space $(\Omega,\mathscr{F},P)$ and measurable space $(\Sigma, \mathscr{A})$.
+
+    Another important concept of stochastics is known as independence.
+    In \textcite{schmidt2009} it is defined for a family of events, a family of sets of events, and a family of random variables.
+    If we think of random variables as observables then their independence means that their outcomes do not influence each other.
+    % It makes only sense in the context of probability theory
+    For our purposes, the general definition of all three forms of independence is distracting.
+    In a computer, it makes no sense to talk about infinite sequences.
+    Therefore the following definition of independence takes only a finite sequence of random variables into account.
+    Furthermore, to make it more understandable, this definition uses a theorem from \textcite[p.~238]{schmidt2009} which characterizes the independence of random variables.
+    % Here, we will use a simpler equivalent definition  because, for a computer, all we need are finite sequences of random variables.
+
+    \begin{definition}[Independence]
+      % Let $(\Omega,\mathscr{F},P)$ be a probability space.
+      % Two events $A, B \in \mathscr{F}$ are independent if $P(A\cap B)=P(A)P(B)$.
+      % Let $(\Sigma_i,\mathscr{A}_i)$ for $i\in\set{1,2}{}$ be measurable spaces and $X_i$ random variables with $X\define X_1\times X_2$.
+      % They are called independent if $P_X = P_{X_1} \otimes P_{X_2}$.
+      Let $n\in\setNatural$ and $X_i$ be a random variable for all $i\in\setNatural$ with $i\leq n$.
+      We denote the respective random vector with $X \define \roundBrackets{X_i}_{i=1}^n$.
+      Then these random variables are independent if the following equation holds.
+      \[
+        P_X = \bigotimes_{i=1}^n P_{X_i}
+      \]
+    \end{definition}
+    Typical observations of random sequences include the estimation of the expectation value and the variance.
+    Both of these values are needed for analyzing PRNGs and the development of Monte Carlo simulations \autocite[p.~30~ff.]{landau2014}.
+    Due to their deep connection to the integral, both of these moments are defined for real-valued random variables.
+    We give the usual definitions based on \textcite[p.~274~ff.]{schmidt2009} in a simplified form.
+
+    \begin{definition}[Expectation Value and Variance]
+      Let $X$ be a real-valued random variable such that $\integral{\Omega}{}{\absolute{X}}{P}<\infty$.
+      Then the expectation value $\expect X$ and variance $\var X$ of $X$ is defined in the following way.
+      \[
+        \expect X \define \integral{\Omega}{}{X(ω)}{P(ω)}
+        \separate
+        \var X \define \expect\roundBrackets{X - \expect X}^2
+      \]
+    \end{definition}
+    To not rely on the underlying probability space directly, we want to be able to compute the expectation value through the respective distribution of the random variable.
+    The theory of measure and integration gives the following proposition, also known as rule of substitution \autocite[p.~276]{schmidt2009}.
+
+    \begin{proposition}[Substitution]
+      Let $X$ be real-valued random variable and $\function{f}{\setReal}{\setReal}$ a measurable function such that $\integral{\Omega}{}{\absolute{f}}{P_X} < \infty$.
+      Then the following equation holds.
+      \[
+        \expect(f\composition X) = \integral{\setReal}{}{f(x)}{P_X(x)}
+      \]
+      In particular, if $\expect \absolute{X} < \infty$ then the above equation can be reformulated as follows.
+      \[
+        \expect X = \integral{\setReal}{}{x}{P_X(x)}
+      \]
+    \end{proposition}
+    The distribution of real-valued random variables is univariate and as a result can be described by so-called cumulative distribution functions (CDFs).
+    The CDF intuitively characterizes the distribution and simplifies the analysis.
+    Further, it can be proven that every CDF belongs to a univariate distribution.
+    According to \textcite[p.~246]{schmidt2009}, this is the theorem of correspondence.
+    Sometimes it is even possible to define a probability density; a function that is the Lebesgue density of the respective distribution \autocite[p.~255]{schmidt2009}.
+
+    \begin{definition}[Probability Density and Cumulative Distribution Function]
+      Let $X$ be a real-valued random variable.
+      Then the respective cumulative distribution function is defined as follows.
+      \[
+        \function{F_X}{\setReal}{[0,1]}
+        \separate
+        F_X(x) \define P_X((-\infty,x])
+      \]
+      We call the function $\function{p}{\setReal}{[0,\infty)}$ a probability density of $X$ if for all $A\in\mathscr{B}(\setReal)$
+      \[
+        P_X(A) = \integral{A}{}{p(x)}{λ(x)}\ .
+      \]
+    \end{definition}
+    % \begin{theorem}[Correspondence]
+    %   Let $X$ be a real-valued random variable.
+    %   There exists a unique monotone non-decreasing, right-continuous function $\function{F_X}{\setReal}{[0,1]}$ with
+    %   \[
+    %     \lim_{x\rightarrow -\infty} F_X(x) = 0
+    %     \separate
+    %     \lim_{x\rightarrow +\infty} F_X(x) = 1
+    %   \]
+    %   such that
+    %   \[
+    %     P_X((a,b]) = F(b) - F(a)
+    %   \]
+    % \end{theorem}
+    As well as CDFs, probability densities can greatly simplify computations which are based on absolute continuous random variables.
+    The following proposition, obtained from \textcite{schmidt2009}, shows the simplified computation of an expectation value through a Lebesgue integral.
+
+    \begin{proposition}[Chaining]
+      Let $X$ be a real-valued random variable with $p$ as its probability density.
+      If $\function{f}{\setReal}{\setReal}$ is a measurable function such that $\expect \absolute{f\circ X} < \infty$ then
+      \[
+        \expect \roundBrackets{f\composition X} = \integral{\setReal}{}{f(x)p(x)}{λ(x)}\ .
+      \]
+    \end{proposition}
+    A last important theorem to name is the strong law of large numbers (SLLN).
+    According to \textcite[p.~13]{graham2013}, the principles of Monte Carlo methods are based on this theorem.
+    Please note, there exist many more variations of this theorem.
+    We will again use a simplified version from \textcite{graham2013}.
+
+    \begin{theorem}[Strong Law of Large Numbers]
+      Let $(X_n)_{n\in\setNatural}$ be a sequence of iid real-valued random variables with finite expectation value $μ$.
+      Then the following equation holds $P$-almost everywhere.
+      \[
+        \lim_{n\to\infty} \frac{1}{n}\sum_{i=1}^n X_i = μ
+      \]
+    \end{theorem}
+  % subsection stochastics (end)
+
+  \subsection{Number Theory and Finite Fields} % (fold)
+  \label{ssub:finite_fields}
+
+  % subsection finite_fields (end)
+% section mathematical_preliminaries (end)
+\end{document}

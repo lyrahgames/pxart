@@ -33,12 +33,17 @@
   \pagenumbering{roman}
   \tableofcontents
   \listoffigures
+  \listofmath
+  \addcontentsline{toc}{section}{\listofmathcall}
   \import{sections/}{abbreviations.tex}
   \import{sections/}{symbol_table.tex}
 
   \pagenumbering{arabic}
   \import{sections/}{introduction.tex}
-  \import{sections/}{background.tex}
+  \import{sections/}{mathematical_preliminaries.tex}
+  \import{sections/}{simulations.tex}
+  \import{sections/}{processors.tex}
+  \import{sections/}{pseudorandom_number_generators.tex}
   \import{sections/}{previous_work.tex}
   \import{sections/}{api_design.tex}
   \import{sections/}{testing_framework.tex}
