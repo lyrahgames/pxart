@@ -1,14 +1,148 @@
 \documentclass{stdlocal}
 \begin{document}
-  \section{Simulations in Physics and Mathematics} % (fold)
-  \label{sub:simulation_in_physics_and_mathematics}
-    \subsection{Physical Problems} % (fold)
-    \label{sub:physical_problems}
+\section{Physical Simulations and Monte Carlo Methods} % (fold)
+\label{sub:simulation_in_physics_and_mathematics}
+  For our purposes, it is enough to explain the application of PRNGs to some given simulation procedures because there is no generic approach on how to randomize an arbitrary physical problem.
+  Hence, we will not provide an excessive explanation on the theory of Monte Carlo methods and their application to general physical problems.
+  Instead, the focus lies on the understanding of basic concepts and their implementation with respect to well-chosen examples.
 
-    % subsection physical_problems (end)
-    \subsection{Monte Carlo Methods} % (fold)
-    \label{sub:monte_carlo_methods}
+  As mentioned in the introduction, the simulation of physical and mathematical systems can be quite time intensive.
+  Many degrees of freedom in a resulting partial differential equation makes the problem infeasible to solve deterministically \autocite{landau2014}.
+  This is typically called the \enquote{curse of dimensionality} \autocite{mueller2012}.
+  As a consequence, we rely on probability theory to estimate the respective solutions and speed-up the simulation.
+  Such randomized algorithms are in general called Monte Carlo methods \autocite{mueller2012,landau2014}.
 
-    % subsection monte_carlo_methods (end)
-  % section simulation_in_physics_and_mathematics (end)
+  \begin{definition}[Monte Carlo Method]
+    % A Monte Carlo method is an algorithm that uses the realization of random variables, also called random samples, to generate its result.
+    A Monte Carlo method is a random variable that computes its result based on given random variables according to an algorithm.
+    We call the realization of a Monte Carlo method a run or its execution.
+  \end{definition}
+  We will not give a rigorous definition of an algorithm but refer to \textcite{hromkovic2011} for detailed information.
+  With this definition, the output of an execution of a Monte Carlo method is interpreted as a realization of random variables.
+  In contrast to a deterministic algorithm, calling a Monte Carlo method twice with identical input arguments will not necessarily produce the same output again.
+  This behavior lets them overcome the curse of dimensionality and as a result they represent an efficient family of generalized algorithms to solve high-dimensional problems.
+
+  To get the idea behind Monte Carlo methods, the observation of direct simulations as given in \textcite{mueller2012} will serve perfectly.
+  For some dimension $d\in\setReal$, we want to approximate a value $r\in\setReal^d$ by a Monte Carlo method.
+  Direct simulation needs an already existent sequence of iid random variables with their expectation value equal to $r$ which we interpret as random samples.
+  But this does not impose strong restrictions because we are mostly able to find such random variables.
+
+  \begin{lemma}[Direct Simulation]
+    Let $d\in\setNatural$, $r\in\setReal^d$ and $(X_n)_{n\in\setNatural}$ a sequence of $\setReal^d$-valued iid random variables in $\setIntegrable^2\roundBrackets{\setReal^d,λ}$ with $\expect X_n = r$ for all $n\in\setNatural$.
+    In this case, construct the following random variable for all $n\in\setNatural$.
+    \[
+      D_n \define \frac{1}{n}\sum_{k=1}^n X_k
+    \]
+    Then for arbitrary sample counts $n\in\setNatural$ the random variable $D_n$ is a Monte Carlo method which fulfills the following equations.
+    \[
+      \expect D_n = r
+      % \separate
+      % \var D_n = \frac{\var X_k}{n}
+      \separate
+      \stddev(D_n) = \frac{\stddev(X_1)}{\sqrt{n}}
+      \separate
+      \lim_{n\to\infty} \stddev(D_n) = 0
+    \]
+    % Using the SLLN, we get the following almost everywhere.
+    Furthermore, the following limit holds almost everywhere.
+    \[
+      \lim_{n\to\infty} D_n = r
+    \]
+  \end{lemma}
+  Again, we will give no proof of this lemma and instead refer to \textcite{mueller2012}.
+  Please note that the last limit follows from Theorem \ref{theorem:slln} the SLLN.
+  The expectation value of the given method is always the result that we wanted to compute.
+  This is not a special property.
+  But looking at the standard deviation, the error of the direct simulation becomes smaller for a bigger sample count.
+  Using a large number of samples will therefore estimate the actual result much more precisely.
+  Additionally, the error is decreasing with $\frac{1}{\sqrt{n}}$.
+  Hence, the error rate is independent of the given dimension which explains the overcoming of the curse of dimensionality.
+
+  \subsection{Monte Carlo Integration and the Computation of $π$} % (fold)
+  \label{sub:monte_carlo_integration_and_the_computation_of_}
+    Many simulations involve the calculation of multidimensional integrals.
+    As a consequence, the so-called Monte Carlo integration forms the natural application of the direct simulation.
+    We want to estimate the integral of a function.
+    For given uniformly distributed random variables, we will construct a sequence of random variables such that their expectation value will coincide with the integral.
+
+    \begin{definition}[Monte Carlo Integration]
+    \label{definition:monte-carlo-integration}
+      Let $d\in\setNatural$ be the dimension, $U\subset\setReal^d$ be a measurable and bounded subset, such that $0 < λ(U) < \infty$, and $f\in\setIntegrable^2(U,λ)$ the function to be integrated.
+      Furthermore, let $(X_n)_{n\in\setNatural}$ be a sequence of iid, $U$-valued, and uniformly distributed random variables.
+      Then the Monte Carlo integration of $f$ with $n$ samples on the domain $U$ is given by the following expression.
+      \[
+        \mathrm{MCI}_n(f) \define \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k
+      \]
+    \end{definition}
+    The domain of definition has to be restricted so that the method has a chance of reducing the overall estimation error.
+    Additionally, the function $f$ should be square-integrable such that we are able to get an upper bound on the standard deviation.
+    The following lemma will show that Monte Carlo integration is indeed a Monte Carlo method with the properties of a direct simulation.
+
+    \begin{lemma}[Monte Carlo Integration Estimates Value of Integral]
+      Choose the same setting as in the above definition \ref{definition:monte-carlo-integration}.
+      In this case for all $n\in\setNatural$, the Monte Carlo integration $\mathrm{MCI}_n(f)$ is a Monte Carlo method and the following statements for the expectation value and standard deviation are fulfilled.
+      \[
+        \expect \mathrm{MCI}_n(f) = \integral{U}{}{f}{λ}
+        \separate
+        \stddev\boxBrackets{\mathrm{MCI}_n(f)} \leq \sqrt{\frac{λ(U)}{n} \integral{U}{}{f^2}{λ}}
+      \]
+    \end{lemma}
+    \begin{proof}
+      Let $p$ the probability density of $X_n$.
+      Because the random variables are uniformly distributed on $U$, we can express it as follows.
+      \[
+        \function{p}{U}{[0,\infty)}
+        \separate
+        p(x) \define \frac{1}{λ(U)}
+      \]
+      By using substitution and chaining from propositions \ref{proposition:substitution} and \ref{proposition:chaining}, the expectation value can be directly computed.
+      \[
+        \begin{aligned}[t]
+          \expect \mathrm{MCI}_n(f)
+          &= \expect \boxBrackets{ \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k }
+          = \frac{λ(U)}{n} \sum_{k=1}^n \expect(f\circ X_k) \\
+          &= λ(U) \integral{U}{}{f(x) p(x)}{λ(x)}
+          = \integral{U}{}{f}{λ}
+        \end{aligned}
+      \]
+      For the standard deviation, first the variance will be observed.
+      Since the sequence of random variables is stochastically independent, the sum can be taken out of the argument.
+      Afterwards, we again apply substitution and chaining.
+      \[
+        \begin{aligned}
+          \var \mathrm{MCI}_n(f) &= \var\boxBrackets{ \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k } = \frac{λ(U)^2}{n^2} \sum_{k=1}^n \var\roundBrackets{f\circ X_k} \\
+          &= \frac{λ(U)^2}{n^2} \sum_{k=1}^n \expect\roundBrackets{f\circ X_k}^2 - \boxBrackets{\expect\roundBrackets{f\circ X_k}}^2 \\
+          &\leq \frac{λ(U)^2}{n^2} \sum_{k=1}^n \expect\roundBrackets{f\circ X_k}^2 = \frac{λ(U)^2}{n} \integral{U}{}{f^2(x) p(x)}{λ(x)} \\
+          &= \frac{λ(U)}{n} \integral{U}{}{f^2}{λ}
+        \end{aligned}
+      \]
+      The inequality is now inferred by the definition of the standard deviation which proofs the lemma.
+      \[
+        \stddev\boxBrackets{\mathrm{MCI}_n(f)} = \sqrt{\var \mathrm{MCI}_n(f)} \leq \sqrt{\frac{λ(U)}{n} \integral{U}{}{f^2}{λ}}
+      \]
+    \end{proof}
+    In the proof, we basically applied the lemma about the direct simulation.
+    So we get the same convergence rate for the expectation value with respect to the standard deviation.
+    To get a deeper understanding of this method, consider the estimation of $π$ by Monte Carlo integration.
+    For this, we would like to compute the area of a quarter of a circle which is strongly related to π.
+    Computing the area of a subset is in general done by integration.
+    Therefore we choose $d=2$ and $U\define [0,1]^2$ with $λ(U) = 1$.
+    Thus, the random variable $X_n$ will be uniformly distributed on $[0,1]^2$ for all $n\in\setNatural$.
+    The last part consists of the construction of the function $f$.
+    First, define the set which characterizes the quarter of the unit circle.
+    \[
+      G \define \set{x \in [0,1]^2}{\norm{x} \leq 1}
+      \separate
+      λ(G) = \frac{π}{4}
+    \]
+    Based on this set, the function $f$ can be expressed through the use of the characteristic function of $G$.
+    \[
+      f \define 4\cdot\mathds{1}_G
+      \separate
+      \integral{U}{}{f}{λ} = 4 \integral{[0,1]^2}{}{\mathds{1}_G}{λ} = 4\cdotλ(G) = π
+    \]
+    Simulating the integral of $f$ will therefore give us an estimation of π.
+
+  % subsection monte_carlo_integration_and_the_computation_of_ (end)
+% section simulation_in_physics_and_mathematics (end)
 \end{document}
