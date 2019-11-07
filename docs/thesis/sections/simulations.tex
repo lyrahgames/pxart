@@ -79,6 +79,7 @@
     The following lemma will show that Monte Carlo integration is indeed a Monte Carlo method with the properties of a direct simulation.
 
     \begin{lemma}[Monte Carlo Integration Estimates Value of Integral]
+    \label{lemma:monte-carlo-integration}
       Choose the same setting as in the above definition \ref{definition:monte-carlo-integration}.
       In this case for all $n\in\setNatural$, the Monte Carlo integration $\mathrm{MCI}_n(f)$ is a Monte Carlo method and the following statements for the expectation value and standard deviation are fulfilled.
       \[
@@ -88,7 +89,7 @@
       \]
     \end{lemma}
     \begin{proof}
-      Let $p$ the probability density of $X_n$.
+      Let $p$ be the probability density of $X_n$.
       Because the random variables are uniformly distributed on $U$, we can express it as follows.
       \[
         \function{p}{U}{[0,\infty)}
@@ -125,6 +126,59 @@
     So we get the same convergence rate for the expectation value with respect to the standard deviation.
     To get a deeper understanding of this method, consider the estimation of $π$ by Monte Carlo integration.
     For this, we would like to compute the area of a quarter of a circle which is strongly related to π.
+    Figure \ref{fig:pi-computation-points} shows the execution of the following process for different realizations.
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.32\linewidth}
+        \center
+        \includegraphics[width=\linewidth]{../../../examples/monte_carlo_pi_100_87.pdf}
+        \caption{%
+          \quad
+          \begin{minipage}[t]{0.5\linewidth}
+            $n = 100$ \\
+            $s = 87$ \\
+            $μ = 3.48$ \\
+            $ε \approx 1.07 \cdot 10^{-1}$
+          \end{minipage}
+        }
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.32\linewidth}
+        \center
+        \includegraphics[width=\linewidth]{../../../examples/monte_carlo_pi_1000_765.pdf}
+        \caption{%
+          \quad
+          \begin{minipage}[t]{0.5\linewidth}
+            $n = 1000$ \\
+            $s = 765$ \\
+            $μ = 3.06$ \\
+            $ε \approx 2.60 \cdot 10^{-2}$
+          \end{minipage}
+        }
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.32\linewidth}
+        \center
+        \includegraphics[width=\linewidth]{../../../examples/monte_carlo_pi_10000_7856.pdf}
+        \caption{%
+          \quad
+          \begin{minipage}[t]{0.5\linewidth}
+            $n = 10000$ \\
+            $s = 7856$ \\
+            $μ = 3.1424$ \\
+            $ε \approx 2.57 \cdot 10^{-4}$
+          \end{minipage}
+        }
+      \end{subfigure}
+      \caption[Monte Carlo Integration and the Computation of π]{%
+        The figures show the sample points for different realizations of the Monte Carlo integration $\mathrm{MCI}_n(f)$ for the computation of π.
+        Points that lie in the quarter of the unit circle are shown in a blue color whereas other points are shown in orange color.
+        The unit circle is represented by a black line.
+        The result of the realizations is expressed by the sample mean μ and the relative error with respect to π is expressed by ε.
+        The variable $s$ names the count of samples that lie in the unit circle.
+      }
+      \label{fig:pi-computation-points}
+    \end{figure}
     Computing the area of a subset is in general done by integration.
     Therefore we choose $d=2$ and $U\define [0,1]^2$ with $λ(U) = 1$.
     Thus, the random variable $X_n$ will be uniformly distributed on $[0,1]^2$ for all $n\in\setNatural$.
@@ -135,13 +189,55 @@
       \separate
       λ(G) = \frac{π}{4}
     \]
-    Based on this set, the function $f$ can be expressed through the use of the characteristic function of $G$.
+    Based on this set, the function $f$ can be expressed through the use of the characteristic function of $G$ and by scaling its value.
     \[
       f \define 4\cdot\mathds{1}_G
       \separate
       \integral{U}{}{f}{λ} = 4 \integral{[0,1]^2}{}{\mathds{1}_G}{λ} = 4\cdotλ(G) = π
     \]
     Simulating the integral of $f$ will therefore give us an estimation of π.
+    For a more detailed analysis, we will also compute the exact standard deviation of this Monte Carlo integration by using the above lemma \ref{lemma:monte-carlo-integration}.
+    \[
+      \integral{U}{}{f^2}{λ} = 16 \integral{[0,1]^2}{}{\mathds{1}_G}{λ} = 16\cdot λ(G) = 4π
+    \]
+    \[
+      \begin{aligned}
+        \var\roundBrackets{f\circ X_1}
+        &= \expect\roundBrackets{f\circ X_1}^2 - \boxBrackets{\expect\roundBrackets{f\circ X_1}}^2
+        = \integral{U}{}{f^2}{λ} - \roundBrackets{\integral{U}{}{f}{λ}}^2 \\
+        &= 4π - π^2 = π(4-π)
+      \end{aligned}
+    \]
+    \[
+      \stddev\roundBrackets{\mathrm{MCI}_n(f)} = \sqrt{\frac{π(4-π)}{n}} \leq 2\sqrt{\frac{π}{n}}
+    \]
+    In figure \ref{fig:pi-computation-plots}, we can see this behavior for some actual simulations.
+    By taking a larger amount of samples, the volume of the quarter of the unit circle becomes more occupied as can be seen in figure \ref{fig:pi-computation-points}.
+    As a consequence, the estimation of π will be more precise.
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.49\linewidth}
+        \center
+        \includegraphics[width=\linewidth]{../../../examples/monte_carlo_pi_plot.pdf}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.49\linewidth}
+        \center
+        \includegraphics[width=\linewidth]{../../../examples/monte_carlo_pi_plot_error.pdf}
+      \end{subfigure}
+      \caption[Monte Carlo Integration Plots for the Computation of π]{%
+        Each of the diagrams shows two different versions, colored in orange and blue, of realizations of the Monte Carlo integration $\mathrm{MCI}_n(f)$ for the computation of π for different values of $n$.
+        The left one displays the estimated value of π and the right one displays its relative error with respect to π.
+        Hereby the black line shows the exact relative standard deviation with respect to π of the Monte Carlo integration.
+      }
+      \label{fig:pi-computation-plots}
+    \end{figure}
+
+    To use the described Monte Carlo integration for estimating π, an actual implementation in C++ is needed.
+    The following code block provides a basic approach.
+    It uses templates to generalize the usage of different RNGs and different real number types.
+    \inputCodeBlock[title=monte\_carlo\_pi.hpp]{code/monte_carlo_pi.hpp}
+    The application of the given library function is shown in the following source file.
+    \inputCodeBlock[title=monte\_carlo\_pi.cpp]{code/monte_carlo_pi.cpp}
 
   % subsection monte_carlo_integration_and_the_computation_of_ (end)
 % section simulation_in_physics_and_mathematics (end)

@@ -10,6 +10,7 @@
 !extern
 !bench
 !tests
+!examples
 
 !CMakeLists.txt
 !README.md
