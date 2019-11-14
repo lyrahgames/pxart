@@ -14,6 +14,14 @@ struct xoroshiro128plus_simd256 {
                            _mm256_srli_epi64(x, 64 - k));
   }
 
+  xoroshiro128plus_simd256() = default;
+  template <typename RNG>
+  explicit xoroshiro128plus_simd256(RNG& rng)
+      : state{_mm256_set_epi32(rng(), rng(), rng(), rng(), rng(), rng(), rng(),
+                               rng()),
+              _mm256_set_epi32(rng(), rng(), rng(), rng(), rng(), rng(), rng(),
+                               rng())} {}
+
   constexpr result_type operator()() noexcept {
     state[1] = _mm256_xor_si256(state[0], state[1]);
     state[0] = _mm256_xor_si256(

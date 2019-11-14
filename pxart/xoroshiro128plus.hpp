@@ -15,6 +15,14 @@ struct xoroshiro128plus {
     return (x << k) | (x >> (64 - k));
   }
 
+  xoroshiro128plus() = default;
+  template <typename RNG>
+  explicit xoroshiro128plus(RNG& rng)
+      : s{(static_cast<uint_type>(rng()) << 32) | static_cast<uint_type>(rng()),
+          (static_cast<uint_type>(rng()) << 32) |
+              static_cast<uint_type>(rng())} {}
+  xoroshiro128plus(uint_type x, uint_type y) : s{x, y} {}
+
   constexpr result_type operator()() noexcept {
     s[1] ^= s[0];
     s[0] = rotate_left(s[0], parameters[0]) ^ s[1] ^ (s[1] << parameters[1]);

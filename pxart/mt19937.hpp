@@ -13,6 +13,12 @@ struct mt19937 {
   static constexpr int_type LOWER_MASK = 0x7fffffffUL;
   static constexpr int_type mag01[2] = {0x0UL, MATRIX_A};
 
+  mt19937() = default;
+  template <typename RNG>
+  explicit mt19937(RNG& rng) {
+    for (auto i = N; i > 0; --i) state[N - i] = rng();
+  }
+
   constexpr void init(int_type s) noexcept {
     state[0] = s & 0xffffffffUL;
     for (int i = 1; i < N; ++i) {
@@ -22,15 +28,22 @@ struct mt19937 {
   }
 
   constexpr uint32_t operator()() noexcept {
-    int_type y{};
+    const auto generator = [](auto y) {
+      y ^= (y >> 11);
+      y ^= (y << 7) & 0x9d2c5680UL;
+      y ^= (y << 15) & 0xefc60000UL;
+      y ^= (y >> 18);
+      return y;
+    };
 
     if (state_index >= N) {
-      if (state_index == N + 1) init(5489);
+      int_type y{};
+      // if (state_index == N + 1) init(5489);
       for (int k = 0; k < N - M; ++k) {
         y = (state[k] & UPPER_MASK) | (state[k + 1] & LOWER_MASK);
         state[k] = state[k + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
       }
-      for (int k = 0; k < N - 1; ++k) {
+      for (int k = N - M; k < N - 1; ++k) {
         y = (state[k] & UPPER_MASK) | (state[k + 1] & LOWER_MASK);
         state[k] = state[k + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
       }
@@ -39,13 +52,11 @@ struct mt19937 {
       state_index = 0;
     }
 
-    y = state[state_index++];
-    y ^= (y >> 11);
-    y ^= (y << 7) & 0x9d2c5680UL;
-    y ^= (y << 15) & 0xefc60000UL;
-    y ^= (y >> 18);
-    return y;
+    return generator(state[state_index++]);
   }
+
+  constexpr int_type min() noexcept { return 0; }
+  constexpr int_type max() noexcept { return 0xffffffff; }
 
   int_type state[N];
   int state_index = N + 1;
