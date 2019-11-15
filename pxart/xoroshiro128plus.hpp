@@ -22,6 +22,9 @@ struct xoroshiro128plus {
           (static_cast<uint_type>(rng()) << 32) |
               static_cast<uint_type>(rng())} {}
   xoroshiro128plus(uint_type x, uint_type y) : s{x, y} {}
+  xoroshiro128plus(uint32_t x, uint32_t y, uint32_t z, uint32_t w)
+      : s{(static_cast<uint64_t>(y) << 32) | x,
+          (static_cast<uint64_t>(w) << 32) | z} {}
 
   constexpr result_type operator()() noexcept {
     s[1] ^= s[0];
