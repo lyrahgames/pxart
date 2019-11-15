@@ -2,8 +2,6 @@
 
 #include <immintrin.h>
 
-#include <iostream>
-
 namespace pxart {
 
 struct mt19937_simd256 {
@@ -61,7 +59,7 @@ struct mt19937_simd256 {
         _mm256_storeu_si256(reinterpret_cast<__m256i*>(state_ptr + N), result);
       }
 
-      for (int k = 8; k < N - M; k += 8) {
+      for (int k = 8; k < N - M - ((N - M) % 8); k += 8) {
         const auto load =
             _mm256_loadu_si256(reinterpret_cast<__m256i*>(state_ptr + k + M));
         const auto tmp2 = transform(k);
@@ -70,13 +68,14 @@ struct mt19937_simd256 {
       }
 
       {
-        const int k = ((N - M) / 8) * 8;
+        // const int k = ((N - M) / 8) * 8;
+        const int k = 224;
         const auto load1 =
             _mm256_loadu_si256(reinterpret_cast<__m256i*>(state_ptr + k + M));
         const auto load2 =
             _mm256_loadu_si256(reinterpret_cast<__m256i*>(state + 5));
         const auto tmp2 = transform(k);
-        const auto load = _mm256_blend_epi32(load1, load2, 0b00011111);
+        const auto load = _mm256_blend_epi32(load1, load2, 0b11111000);
         const auto result = _mm256_xor_si256(load, tmp2);
         _mm256_storeu_si256(reinterpret_cast<__m256i*>(state_ptr + k), result);
       }
@@ -88,11 +87,11 @@ struct mt19937_simd256 {
       // y = (state_ptr[N - 1] & UPPER_MASK) | (state_ptr[0] & LOWER_MASK);
       // state_ptr[N - 1] = state_ptr[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
 
-      for (int k = ((N - M) / 8 + 1) * 8; k < N; ++k) {
-        // std::cout << k << " test\n";
+      // for (int k = ((N - M) / 8 + 1) * 8; k < N; ++k) {
+      for (int k = 232; k < N; k += 8) {
+        const auto tmp2 = transform(k);
         const auto load = _mm256_loadu_si256(
             reinterpret_cast<__m256i*>(state_ptr + (k + M - N)));
-        const auto tmp2 = transform(k);
         const auto result = _mm256_xor_si256(load, tmp2);
         _mm256_storeu_si256(reinterpret_cast<__m256i*>(state_ptr + k), result);
       }
@@ -104,8 +103,9 @@ struct mt19937_simd256 {
     // y ^= (y << 7) & 0x9d2c5680UL;
     // y ^= (y << 15) & 0xefc60000UL;
     // y ^= (y >> 18);
-    auto y = _mm256_loadu_si256(
-        reinterpret_cast<__m256i*>(&state_ptr[state_index++]));
+    auto y =
+        _mm256_loadu_si256(reinterpret_cast<__m256i*>(&state_ptr[state_index]));
+    state_index += 8;
     y = _mm256_xor_si256(y, _mm256_srli_epi32(y, 11));
     y = _mm256_xor_si256(y, _mm256_and_si256(_mm256_slli_epi32(y, 7),
                                              _mm256_set1_epi32(0x9d2c5680)));
