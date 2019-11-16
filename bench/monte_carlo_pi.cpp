@@ -5,6 +5,7 @@
 #include <iostream>
 #include <pxart/monte_carlo/pi.hpp>
 #include <pxart/mt19937.hpp>
+#include <pxart/mt19937_simd128.hpp>
 #include <pxart/mt19937_simd256.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus_simd256.hpp>
@@ -131,6 +132,13 @@ int main(int argc, char** argv) {
     PerfEventBlock e(n, params, true);
     celero::DoNotOptimizeAway(
         pi = pxart::monte_carlo::simd::vprng::pi(rng1, rng2, n));
+  }
+  cout << "pi = " << pi << "\n";
+  {
+    params.setParam("name", "pxart::mt19937_simd128");
+    pxart::mt19937_simd128 rng{rd};
+    PerfEventBlock e(n, params, true);
+    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd128::pi(rng, n));
   }
   cout << "pi = " << pi << "\n";
 }

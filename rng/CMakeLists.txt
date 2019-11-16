@@ -87,6 +87,10 @@ add_executable(mt19937_simd256_test mt19937_simd256.test.cpp)
 target_link_libraries(mt19937_simd256_test PRIVATE pxart::pxart)
 target_compile_options(mt19937_simd256_test PRIVATE -O3 -march=native)
 
+add_executable(mt19937_simd128_test mt19937_simd128.test.cpp)
+target_link_libraries(mt19937_simd128_test PRIVATE pxart::pxart)
+target_compile_options(mt19937_simd128_test PRIVATE -O3 -march=native)
+
 add_executable(xs128p_simd256_test xs128p_simd256.test.cpp)
 target_link_libraries(xs128p_simd256_test PRIVATE pxart::pxart)
 target_compile_options(xs128p_simd256_test PRIVATE -O3 -march=native)
