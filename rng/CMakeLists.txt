@@ -114,3 +114,7 @@ target_compile_options(msws_simd256_test PRIVATE -O3 -march=native)
 add_executable(msws_simd128_test msws_simd128.test.cpp)
 target_link_libraries(msws_simd128_test PRIVATE pxart::pxart)
 target_compile_options(msws_simd128_test PRIVATE -O3 -march=native)
+
+add_executable(uniform_int_test uniform_int.test.cpp)
+target_link_libraries(uniform_int_test PRIVATE pxart::pxart)
+target_compile_options(uniform_int_test PRIVATE -O3 -march=native)
