@@ -106,3 +106,11 @@ target_compile_options(uniform_float_simd256_test PRIVATE -O3 -march=native)
 add_executable(uniform_double_test uniform_double.test.cpp)
 target_link_libraries(uniform_double_test PRIVATE pxart::pxart)
 target_compile_options(uniform_double_test PRIVATE -O3 -march=native)
+
+add_executable(msws_simd256_test msws_simd256.test.cpp)
+target_link_libraries(msws_simd256_test PRIVATE pxart::pxart)
+target_compile_options(msws_simd256_test PRIVATE -O3 -march=native)
+
+add_executable(msws_simd128_test msws_simd128.test.cpp)
+target_link_libraries(msws_simd128_test PRIVATE pxart::pxart)
+target_compile_options(msws_simd128_test PRIVATE -O3 -march=native)
