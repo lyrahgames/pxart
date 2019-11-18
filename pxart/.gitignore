@@ -1,5 +1,6 @@
 !monte_carlo
 !test
+!utilities
 
 !*.cpp
 !*.hpp

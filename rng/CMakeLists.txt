@@ -83,6 +83,10 @@ target_link_libraries(rout
     Boost::program_options
 )
 
+add_executable(mt19937_test mt19937.test.cpp)
+target_link_libraries(mt19937_test PRIVATE pxart::pxart)
+target_compile_options(mt19937_test PRIVATE -O3 -march=native)
+
 add_executable(mt19937_simd256_test mt19937_simd256.test.cpp)
 target_link_libraries(mt19937_simd256_test PRIVATE pxart::pxart)
 target_compile_options(mt19937_simd256_test PRIVATE -O3 -march=native)

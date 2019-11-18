@@ -10,4 +10,4 @@ endif()
 add_executable(main_tests main.cpp)
 target_link_libraries(main_tests PRIVATE pxart::pxart)
 
-add_test(main_tests main_tests)
+# add_test(main_tests main_tests)

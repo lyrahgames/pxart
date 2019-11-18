@@ -36,7 +36,10 @@ target_sources(internal-tests
     main.test.cpp
     # uniform_real_distribution.test.cpp
     bit_reversal.test.cpp
+    mt19937.test.cpp
 )
+
+add_subdirectory(utilities)
 
 target_link_libraries(internal-tests
   PRIVATE
