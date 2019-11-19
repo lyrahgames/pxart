@@ -9,6 +9,7 @@ add_executable(internal-tests)
 add_subdirectory(test)
 add_subdirectory(utilities)
 add_subdirectory(simd256)
+add_subdirectory(simd128)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   target_compile_options(${library_name} INTERFACE -mrdrnd)
