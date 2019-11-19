@@ -8,6 +8,7 @@
 #include <pxart/mt19937.hpp>
 #include <pxart/mt19937_simd128.hpp>
 #include <pxart/mt19937_simd256.hpp>
+#include <pxart/simd256/mt19937.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus_simd256.hpp>
 #include <random>
@@ -122,6 +123,13 @@ int main(int argc, char** argv) {
   {
     params.setParam("name", "pxart::mt19937_simd256");
     pxart::mt19937_simd256 rng{rd};
+    PerfEventBlock e(n, params, true);
+    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng, n));
+  }
+  cout << "pi = " << pi << "\n";
+  {
+    params.setParam("name", "pxart::simd256::mt19937");
+    pxart::simd256::mt19937 rng{rd};
     PerfEventBlock e(n, params, true);
     celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng, n));
   }

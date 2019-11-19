@@ -1,6 +1,7 @@
 !monte_carlo
 !test
 !utilities
+!simd256
 
 !*.cpp
 !*.hpp

@@ -7,18 +7,10 @@ add_library(${library_name} INTERFACE)
 add_executable(internal-tests)
 
 add_subdirectory(test)
-
-# target_sources(${library_name}
-#   INTERFACE
-#     middle_square_engine.hpp
-#     middle_square_weyl_engine.hpp
-#     uniform_real_distribution.hpp
-#     xoroshiro128plus.hpp
-#     linear_congruential_generator.hpp
-# )
+add_subdirectory(utilities)
+add_subdirectory(simd256)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-  # target_sources(${library_name} INTERFACE rdrand_engine.hpp)
   target_compile_options(${library_name} INTERFACE -mrdrnd)
 endif()
 
@@ -28,18 +20,16 @@ target_include_directories(${library_name}
 )
 target_compile_features(${library_name} INTERFACE cxx_std_17)
 target_link_libraries(${library_name} INTERFACE fmt::fmt)
+target_compile_options(${library_name} INTERFACE -march=native)
 add_library(${library_name}::${library_name} ALIAS ${library_name})
 
 # internal tests
 target_sources(internal-tests
   PRIVATE
     main.test.cpp
-    # uniform_real_distribution.test.cpp
     bit_reversal.test.cpp
     mt19937.test.cpp
 )
-
-add_subdirectory(utilities)
 
 target_link_libraries(internal-tests
   PRIVATE
