@@ -1,5 +1,5 @@
 #pragma once
-#include <immintrin.h>
+#include <emmintrin.h>
 
 #include <pxart/algorithm.hpp>
 #include <pxart/mt19937.hpp>

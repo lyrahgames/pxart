@@ -1,10 +1,11 @@
 #include <cstdint>
 #include <iostream>
 #include <pxart/mt19937.hpp>
-#include <pxart/mt19937_simd256.hpp>
 #include <random>
 #include <sstream>
 #include <string>
+
+#include "mt19937_simd256.hpp"
 
 struct seeder {
   template <typename RNG>
