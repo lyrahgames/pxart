@@ -68,12 +68,12 @@ target_link_libraries(mws
     TestU01::TestU01
 )
 
-add_executable(xoroshiro128plus xoroshiro128plus.cpp)
-target_link_libraries(xoroshiro128plus
-  PRIVATE
-    pxart::pxart
-    TestU01::TestU01
-)
+# add_executable(xoroshiro128plus xoroshiro128plus.cpp)
+# target_link_libraries(xoroshiro128plus
+#   PRIVATE
+#     pxart::pxart
+#     TestU01::TestU01
+# )
 
 find_package(Boost REQUIRED COMPONENTS program_options)
 add_executable(rout rout.cpp)
@@ -95,9 +95,9 @@ add_executable(mt19937_simd128_test mt19937_simd128.test.cpp)
 target_link_libraries(mt19937_simd128_test PRIVATE pxart::pxart)
 target_compile_options(mt19937_simd128_test PRIVATE -O3 -march=native)
 
-add_executable(xs128p_simd256_test xs128p_simd256.test.cpp)
-target_link_libraries(xs128p_simd256_test PRIVATE pxart::pxart)
-target_compile_options(xs128p_simd256_test PRIVATE -O3 -march=native)
+# add_executable(xs128p_simd256_test xs128p_simd256.test.cpp)
+# target_link_libraries(xs128p_simd256_test PRIVATE pxart::pxart)
+# target_compile_options(xs128p_simd256_test PRIVATE -O3 -march=native)
 
 add_executable(uniform_float_test uniform_float.test.cpp)
 target_link_libraries(uniform_float_test PRIVATE pxart::pxart)

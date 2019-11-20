@@ -2,13 +2,11 @@
 
 #include <algorithm>
 // #include <any>
+#include <boost/type_index.hpp>
 #include <cstdint>
 #include <optional>
+#include <pxart/utilities/bit_reversal.hpp>
 #include <string>
-
-#include <boost/type_index.hpp>
-
-#include <pxart/bit_reversal.hpp>
 
 // TestU01 allows only one instance of an external random number generator.
 // Hence, we will use hidden global and static variables together with some

@@ -1,6 +1,7 @@
 #include <doctest/doctest.h>
+
 #include <limits>
-#include <pxart/bit_reversal.hpp>
+#include <pxart/utilities/bit_reversal.hpp>
 
 using namespace pxart;
 
