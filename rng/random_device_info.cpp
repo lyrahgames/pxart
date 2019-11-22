@@ -1,8 +1,9 @@
 #include <fmt/format.h>
+
 #include <random>
 
-#include <pxart/test/histogram.hpp>
-#include <pxart/test/monty_hall_dilemma.hpp>
+#include "test/histogram.hpp"
+#include "test/monty_hall_dilemma.hpp"
 
 using namespace std;
 using namespace std::string_literals;

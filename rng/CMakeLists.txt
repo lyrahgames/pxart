@@ -1,5 +1,7 @@
 find_package(fmt REQUIRED)
 
+add_subdirectory(test)
+
 add_executable(random_device_info)
 target_sources(random_device_info
   PRIVATE

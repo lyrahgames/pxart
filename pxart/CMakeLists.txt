@@ -1,12 +1,10 @@
 get_filename_component(library_name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-find_package(fmt REQUIRED)
 find_package(doctest REQUIRED)
 
 add_library(${library_name} INTERFACE)
 add_executable(internal-tests)
 
-add_subdirectory(test)
 add_subdirectory(utilities)
 add_subdirectory(simd256)
 add_subdirectory(simd128)
@@ -20,7 +18,6 @@ target_include_directories(${library_name}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>
 )
 target_compile_features(${library_name} INTERFACE cxx_std_17)
-target_link_libraries(${library_name} INTERFACE fmt::fmt)
 target_compile_options(${library_name} INTERFACE -march=native)
 add_library(${library_name}::${library_name} ALIAS ${library_name})
 

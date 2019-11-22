@@ -1,9 +1,8 @@
 #include <fmt/format.h>
 
-#include <pxart/test/histogram.hpp>
-#include <pxart/test/monty_hall_dilemma.hpp>
-
 #include "middle_square_engine.hpp"
+#include "test/histogram.hpp"
+#include "test/monty_hall_dilemma.hpp"
 
 using namespace std;
 using namespace std::string_literals;
