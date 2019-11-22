@@ -30,6 +30,7 @@ target_sources(internal-tests
     main.test.cpp
     mt19937.test.cpp
     xoroshiro128plus.test.cpp
+    msws.test.cpp
 )
 
 target_link_libraries(internal-tests

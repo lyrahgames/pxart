@@ -3,11 +3,13 @@
 #include <PerfEvent.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <iostream>
-#include <pxart/middle_square_weyl_engine.hpp>
+// #include <pxart/middle_square_weyl_engine.hpp>
 #include <pxart/monte_carlo/pi.hpp>
+#include <pxart/msws.hpp>
 #include <pxart/mt19937.hpp>
 #include <pxart/rdrand_engine.hpp>
 #include <pxart/simd128/mt19937.hpp>
+#include <pxart/simd256/msws.hpp>
 #include <pxart/simd256/mt19937.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus_simd256.hpp>
@@ -148,9 +150,31 @@ int main(int argc, char** argv) {
     celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd128::pi(rng, n));
   }
   cout << "pi = " << pi << "\n";
+  // {
+  //   params.setParam("name", "pxart::middle_square_weyl_engine");
+  //   pxart::middle_square_weyl_engine rng{rd};
+  //   PerfEventBlock e(n, params, true);
+  //   celero::DoNotOptimizeAway(pi = pxart::monte_carlo::pi<float>(rng, n));
+  // }
+  // cout << "pi = " << pi << "\n";
+  // {
+  //   params.setParam("name", "pxart::simd256::msws");
+  //   pxart::simd256::msws rng{rd};
+  //   PerfEventBlock e(n, params, true);
+  //   celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng,
+  //   n));
+  // }
+  // cout << "pi = " << pi << "\n";
+  // {
+  //   params.setParam("name", "pxart::simd128::msws");
+  //   pxart::simd128::msws rng{rd};
+  //   PerfEventBlock e(n, params, true);
+  //   celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd128::pi(rng, n));
+  // }
+  // cout << "pi = " << pi << "\n";
   {
-    params.setParam("name", "pxart::middle_square_weyl_engine");
-    pxart::middle_square_weyl_engine rng{rd};
+    params.setParam("name", "pxart::msws");
+    pxart::msws rng{rd};
     PerfEventBlock e(n, params, true);
     celero::DoNotOptimizeAway(pi = pxart::monte_carlo::pi<float>(rng, n));
   }
@@ -160,13 +184,6 @@ int main(int argc, char** argv) {
     pxart::simd256::msws rng{rd};
     PerfEventBlock e(n, params, true);
     celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng, n));
-  }
-  cout << "pi = " << pi << "\n";
-  {
-    params.setParam("name", "pxart::simd128::msws");
-    pxart::simd128::msws rng{rd};
-    PerfEventBlock e(n, params, true);
-    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd128::pi(rng, n));
   }
   cout << "pi = " << pi << "\n";
 }
