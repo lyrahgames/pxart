@@ -11,7 +11,7 @@ struct xoroshiro128plus {
   using uint_type = uint64_t;
   using simd_type = __m128i;
   using result_type = simd_type;
-  static constexpr size_t simd_size = 4;
+  static constexpr size_t simd_size = sizeof(simd_type) / sizeof(uint_type);
   static constexpr size_t word_size = 64;
   static constexpr size_t rotation_a = 24;
   static constexpr size_t shift_b = 16;
