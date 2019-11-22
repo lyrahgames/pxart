@@ -59,10 +59,13 @@ constexpr void xoroshiro128plus::jump() noexcept {
   uint_type result1 = 0;
   for (int i = 0; i < 2; i++) {
     for (size_t b = 0; b < word_size; b++) {
-      if (mask[i] & (1ul << b)) {
-        result0 ^= s0;
-        result1 ^= s1;
-      }
+      // if (mask[i] & (1ul << b)) {
+      //   result0 ^= s0;
+      //   result1 ^= s1;
+      // }
+      const auto tmp = (mask[i] & (1ul << b)) ? (~uint_type{}) : (0);
+      result0 ^= s0 & tmp;
+      result1 ^= s1 & tmp;
       operator()();
     }
   }
