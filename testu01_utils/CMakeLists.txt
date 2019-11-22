@@ -16,11 +16,11 @@ target_link_libraries(testu01_utils
 target_compile_features(testu01_utils PRIVATE cxx_std_17)
 add_library(testu01_utils::testu01_utils ALIAS testu01_utils)
 
-add_executable(testu01_test main.cpp)
-target_link_libraries(testu01_test
-  PRIVATE
-    pxart::pxart
-    Boost::boost
-    Boost::program_options
-    testu01_utils::testu01_utils
-)
+# add_executable(testu01_test main.cpp)
+# target_link_libraries(testu01_test
+#   PRIVATE
+#     pxart::pxart
+#     Boost::boost
+#     Boost::program_options
+#     testu01_utils::testu01_utils
+# )

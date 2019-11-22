@@ -3,7 +3,6 @@
 #include <PerfEvent.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <iostream>
-// #include <pxart/middle_square_weyl_engine.hpp>
 #include <pxart/monte_carlo/pi.hpp>
 #include <pxart/msws.hpp>
 #include <pxart/mt19937.hpp>
@@ -14,7 +13,6 @@
 #include <pxart/simd256/mt19937.hpp>
 #include <pxart/simd256/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus.hpp>
-#include <pxart/xoroshiro128plus_simd256.hpp>
 #include <random>
 #include <sstream>
 #include <string>
@@ -122,27 +120,30 @@ int main(int argc, char** argv) {
   //   n));
   // }
   // cout << "pi = " << pi << "\n";
-  {
-    params.setParam("name", "pxart::xs128p_simd256");
-    pxart::xs128p_simd256 rng{rd};
-    PerfEventBlock e(n, params, true);
-    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng, n));
-  }
-  cout << "pi = " << pi << "\n";
-  {
-    params.setParam("name", "pxart::xs128p_simd256 x 2");
-    pxart::xs128p_simd256 rng1{rd};
-    pxart::xs128p_simd256 rng2{rd};
-    PerfEventBlock e(n, params, true);
-    celero::DoNotOptimizeAway(
-        pi = pxart::monte_carlo::simd::vprng::pi(rng1, rng2, n));
-  }
-  cout << "pi = " << pi << "\n";
+  // {
+  //   params.setParam("name", "pxart::xs128p_simd256");
+  //   pxart::xs128p_simd256 rng{rd};
+  //   PerfEventBlock e(n, params, true);
+  //   celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng,
+  //   n));
+  // }
+  // cout << "pi = " << pi << "\n";
+  // {
+  //   params.setParam("name", "pxart::xs128p_simd256 x 2");
+  //   pxart::xs128p_simd256 rng1{rd};
+  //   pxart::xs128p_simd256 rng2{rd};
+  //   PerfEventBlock e(n, params, true);
+  //   celero::DoNotOptimizeAway(
+  //       pi = pxart::monte_carlo::simd::vprng::pi(rng1, rng2, n));
+  // }
+  // cout << "pi = " << pi << "\n";
   {
     params.setParam("name", "pxart::simd256::mt19937");
     pxart::simd256::mt19937 rng{rd};
     PerfEventBlock e(n, params, true);
-    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng, n));
+    // celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng,
+    // n));
+    pi = pxart::monte_carlo::simd::vprng::pi(rng, n);
   }
   cout << "pi = " << pi << "\n";
   {

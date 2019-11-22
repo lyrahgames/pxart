@@ -1,8 +1,9 @@
 #include <fmt/format.h>
 
-#include <pxart/middle_square_weyl_engine.hpp>
 #include <pxart/test/histogram.hpp>
 #include <pxart/test/monty_hall_dilemma.hpp>
+
+#include "middle_square_weyl_engine.hpp"
 
 using namespace std;
 using namespace std::string_literals;

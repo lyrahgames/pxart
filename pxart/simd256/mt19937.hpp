@@ -43,7 +43,7 @@ struct mt19937 {
   constexpr result_type min() noexcept { return uint_type{}; }
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
-  uint_type state[state_size + simd_size];
+  uint_type state[state_size + simd_size] __attribute__((aligned(32)));
   int state_index = state_size;
 };
 
@@ -63,9 +63,15 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
       const auto simd_one = _mm256_set1_epi32(1);
       const auto simd_xor_mask = _mm256_set1_epi32(xor_mask);
 
-      const auto s0 = reinterpret_cast<const simd_type&>(state[k]);
-      const auto s1 = reinterpret_cast<const simd_type&>(state[k + 1]);
-      const auto ss = reinterpret_cast<const simd_type&>(state[k_shift]);
+      // const auto s0 = reinterpret_cast<const simd_type&>(state[k]);
+      // const auto s1 = reinterpret_cast<const simd_type&>(state[k + 1]);
+      // const auto ss = reinterpret_cast<const simd_type&>(state[k_shift]);
+      const auto s0 =
+          _mm256_load_si256(reinterpret_cast<const simd_type*>(&state[k]));
+      const auto s1 =
+          _mm256_loadu_si256(reinterpret_cast<const simd_type*>(&state[k + 1]));
+      const auto ss = _mm256_loadu_si256(
+          reinterpret_cast<const simd_type*>(&state[k_shift]));
 
       const auto y = _mm256_or_si256(_mm256_and_si256(s0, simd_upper_mask),
                                      _mm256_and_si256(s1, simd_lower_mask));
@@ -113,17 +119,21 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
     // };
 
     const auto first = transition(0, shift_size);
-    reinterpret_cast<simd_type&>(state[0]) = first;
-    reinterpret_cast<simd_type&>(state[state_size]) = first;
+    // reinterpret_cast<simd_type&>(state[0]) = first;
+    // reinterpret_cast<simd_type&>(state[state_size]) = first;
+    _mm256_store_si256(reinterpret_cast<simd_type*>(&state[0]), first);
+    _mm256_store_si256(reinterpret_cast<simd_type*>(&state[state_size]), first);
 
     int k = simd_size;
     for (; k < state_size - shift_size; k += simd_size) {
       const auto result = transition(k, k + shift_size);
-      reinterpret_cast<simd_type&>(state[k]) = result;
+      // reinterpret_cast<simd_type&>(state[k]) = result;
+      _mm256_store_si256(reinterpret_cast<simd_type*>(&state[k]), result);
     }
     for (; k < state_size; k += simd_size) {
       const auto result = transition(k, k + shift_size - state_size);
-      reinterpret_cast<simd_type&>(state[k]) = result;
+      // reinterpret_cast<simd_type&>(state[k]) = result;
+      _mm256_store_si256(reinterpret_cast<simd_type*>(&state[k]), result);
     }
     // for (; k < state_size - shift_size; k += 2 * simd_size) {
     //   const auto result = transition2(k, k + shift_size);
@@ -142,7 +152,9 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
     state_index = 0;
   }
 
-  auto x = reinterpret_cast<simd_type&>(state[state_index]);
+  // auto x = reinterpret_cast<simd_type&>(state[state_index]);
+  auto x = _mm256_load_si256(
+      reinterpret_cast<const simd_type*>(&state[state_index]));
   state_index += simd_size;
   x = _mm256_xor_si256(x, _mm256_srli_epi32(x, tempering_u_shift));
   x = _mm256_xor_si256(x,

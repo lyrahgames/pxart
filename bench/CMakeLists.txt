@@ -22,4 +22,4 @@ target_link_libraries(gen PRIVATE Celero::Celero perfevent::perfevent Boost::boo
 
 add_executable(monte_carlo_pi monte_carlo_pi.cpp)
 target_link_libraries(monte_carlo_pi PRIVATE Celero::Celero perfevent::perfevent Boost::boost pxart::pxart)
-target_compile_options(monte_carlo_pi PRIVATE -O3 -march=native)
+target_compile_options(monte_carlo_pi PRIVATE -O3)

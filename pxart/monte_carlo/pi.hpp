@@ -87,8 +87,6 @@ namespace vprng {
 
 template <typename Integer, typename RNG>
 inline float pi(RNG& rng, Integer samples) noexcept {
-  std::uniform_real_distribution<float> dist{0, 1};
-
   const auto uniform = [](__m256i x) {
     const auto tmp = _mm256_srli_epi32(x, 9);
     const auto tmp2 = _mm256_or_si256(tmp, _mm256_set1_epi32(0x3f800000));
