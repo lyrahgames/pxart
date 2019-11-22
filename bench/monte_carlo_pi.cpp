@@ -9,8 +9,10 @@
 #include <pxart/mt19937.hpp>
 #include <pxart/rdrand_engine.hpp>
 #include <pxart/simd128/mt19937.hpp>
+#include <pxart/simd128/xoroshiro128plus.hpp>
 #include <pxart/simd256/msws.hpp>
 #include <pxart/simd256/mt19937.hpp>
+#include <pxart/simd256/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus_simd256.hpp>
 #include <random>
@@ -146,6 +148,20 @@ int main(int argc, char** argv) {
   {
     params.setParam("name", "pxart::simd128::mt19937");
     pxart::simd128::mt19937 rng{rd};
+    PerfEventBlock e(n, params, true);
+    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd128::pi(rng, n));
+  }
+  cout << "pi = " << pi << "\n";
+  {
+    params.setParam("name", "pxart::simd256::xrsr128p");
+    pxart::simd256::xrsr128p rng{rd};
+    PerfEventBlock e(n, params, true);
+    celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd::vprng::pi(rng, n));
+  }
+  cout << "pi = " << pi << "\n";
+  {
+    params.setParam("name", "pxart::simd128::xrsr128p");
+    pxart::simd128::xrsr128p rng{rd};
     PerfEventBlock e(n, params, true);
     celero::DoNotOptimizeAway(pi = pxart::monte_carlo::simd128::pi(rng, n));
   }
