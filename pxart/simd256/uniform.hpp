@@ -5,7 +5,8 @@ namespace pxart::simd256 {
 
 namespace detail {
 
-template <typename Real>
+template <typename Real,
+          std::enable_if_t<std::is_floating_point_v<Real>, int> = 0>
 inline auto uniform(__m256i) noexcept = delete;
 
 template <>
@@ -23,7 +24,8 @@ inline auto uniform<double>(__m256i x) noexcept {
   return _mm256_sub_pd(_mm256_castsi256_pd(tmp2), _mm256_set1_pd(1.0));
 }
 
-template <typename Real>
+template <typename Real,
+          std::enable_if_t<std::is_floating_point_v<Real>, int> = 0>
 inline auto uniform(__m256i x, Real a, Real b) noexcept = delete;
 
 template <>
@@ -40,6 +42,36 @@ inline auto uniform<double>(__m256i x, double a, double b) noexcept {
   const auto offset = _mm256_set1_pd(a);
   const auto rnd = pxart::simd256::detail::uniform<double>(x);
   return _mm256_add_pd(_mm256_mul_pd(scale, rnd), offset);
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) <= sizeof(uint32_t)),
+                           int> = 0>
+inline auto uniform(__m256i x, Integer a, Integer b) noexcept {
+  const auto sv = _mm256_set1_epi32(b - a);
+  const auto x1 = _mm256_srli_epi32(x, 16);
+  const auto x0 = _mm256_and_si256(x, _mm256_set1_epi32(0x0000ffff));
+  const auto s1 = _mm256_srli_epi32(sv, 16);
+  const auto s0 = _mm256_and_si256(sv, _mm256_set1_epi32(0x0000ffff));
+
+  const auto x1s1 = _mm256_mullo_epi32(x1, s1);
+  const auto x1s0 = _mm256_mullo_epi32(x1, s0);
+  const auto x0s1 = _mm256_mullo_epi32(x0, s1);
+  const auto x0s0 = _mm256_mullo_epi32(x0, s0);
+  const auto x1s0_0 = _mm256_and_si256(x1s0, _mm256_set1_epi32(0x0000ffff));
+  const auto x1s0_1 = _mm256_srli_epi32(x1s0, 16);
+  const auto x0s1_0 = _mm256_and_si256(x0s1, _mm256_set1_epi32(0x0000ffff));
+  const auto x0s1_1 = _mm256_srli_epi32(x0s1, 16);
+  return _mm256_add_epi32(
+      _mm256_set1_epi32(a),
+      _mm256_add_epi32(
+          x1s1, _mm256_add_epi32(
+                    _mm256_add_epi32(x1s0_1, x0s1_1),
+                    _mm256_srli_epi32(
+                        _mm256_add_epi32(_mm256_add_epi32(x1s0_0, x0s1_0),
+                                         _mm256_srli_epi32(x0s0, 16)),
+                        16))));
 }
 
 }  // namespace detail
