@@ -9,6 +9,12 @@
 
   \subsection{Mersenne Twister} % (fold)
   \label{sub:mersenne_twister}
+    \inputCodeBlock[title = Scalar MT19937 Structure]{code/mt19937/sisd/struct.hpp}
+    \inputCodeBlock[title = Scalar MT19937 Seeding]{code/mt19937/sisd/seeding.hpp}
+    \inputCodeBlock[title = Scalar MT19937 Advancing]{code/mt19937/sisd/advance.hpp}
+
+    \inputCodeBlock[title = AVX MT19937 Structure]{code/mt19937/simd256/struct.hpp}
+    \inputCodeBlock[title = AVX MT19937 Advancing]{code/mt19937/simd256/advance.hpp}
 
   % subsection mersenne_twister (end)
 
@@ -19,11 +25,20 @@
 
   \subsection{Xoroshiro} % (fold)
   \label{sub:xoroshiro}
+    \inputCodeBlock[title = Scalar Xoroshiro128+ Structure]{code/xoroshiro128plus/sisd/struct.hpp}
+    \inputCodeBlock[title = Scalar Xoroshiro128+ Structure]{code/xoroshiro128plus/sisd/advance.hpp}
+
+    \inputCodeBlock[title = AVX Xoroshiro128+ Structure]{code/xoroshiro128plus/simd256/struct.hpp}
+    \inputCodeBlock[title = AVX Xoroshiro128+ Structure]{code/xoroshiro128plus/simd256/advance.hpp}
 
   % subsection xoroshiro (end)
 
   \subsection{Middle Square Weyl Generator} % (fold)
   \label{sub:middle_square_weyl_generator}
+    \inputCodeBlock[title = Scalar MSWS]{code/msws/sisd/struct.hpp}
+
+    \inputCodeBlock[title = AVX MSWS Structure]{code/msws/simd256/struct.hpp}
+    \inputCodeBlock[title = AVX MSWS Advancing]{code/msws/simd256/advance.hpp}
 
   % subsection middle_square_weyl_generator (end)
 

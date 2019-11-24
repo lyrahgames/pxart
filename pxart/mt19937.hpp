@@ -27,6 +27,13 @@ struct mt19937 {
   static constexpr uint_type upper_mask = ((~uint_type{}) << mask_bits) & mask;
   static constexpr uint_type lower_mask = (~upper_mask) & mask;
 
+  // static constexpr uint64_t upper_mask_2 =
+  //     (static_cast<uint64_t>(upper_mask) << 32) |
+  //     static_cast<uint64_t>(upper_mask);
+  // static constexpr uint64_t lower_mask_2 =
+  //     (static_cast<uint64_t>(lower_mask) << 32) |
+  //     static_cast<uint64_t>(lower_mask);
+
   struct default_seeder;
 
   template <typename RNG>
@@ -42,6 +49,7 @@ struct mt19937 {
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
   uint_type state[state_size];
+  // uint_type state[state_size + 2] __attribute__((aligned(8)));
   int state_index = state_size;
 };
 
@@ -80,6 +88,29 @@ constexpr mt19937::result_type mt19937::operator()() noexcept {
     for (int k = state_size - shift_size; k < state_size - 1; ++k)
       transition(k, k + 1, k + shift_size - state_size);
     transition(state_size - 1, 0, shift_size - 1);
+
+    // const auto transition = [this](int k, int k1, int k2) constexpr {
+    //   const auto x =
+    //       (*reinterpret_cast<const uint64_t*>(&state[k]) & upper_mask_2) |
+    //       (*reinterpret_cast<const uint64_t*>(&state[k1]) & lower_mask_2);
+    //   return *reinterpret_cast<uint64_t*>(&state[k]) =
+    //              *reinterpret_cast<const uint64_t*>(&state[k2]) ^
+    //              ((x & 0xfffffffefffffffful) >> 1) ^
+    //              ((x & 0x0000000000000001ul) ?
+    //              static_cast<uint64_t>(xor_mask)
+    //                                          : 0ul) ^
+    //              ((x & 0x0000000100000000ul)
+    //                   ? (static_cast<uint64_t>(xor_mask) << 32)
+    //                   : (0ul));
+    // };
+
+    // const auto first = transition(0, 1, shift_size);
+    // *reinterpret_cast<uint64_t*>(&state[state_size]) = first;
+    // int k = 2;
+    // for (; k < state_size - shift_size; k += 2)
+    //   transition(k, k + 1, k + shift_size);
+    // for (; k < state_size; k += 2)
+    //   transition(k, k + 1, k + shift_size - state_size);
 
     state_index = 0;
   }
