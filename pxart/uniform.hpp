@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <random>
+#include <type_traits>
 #include <utility>
 
 namespace pxart {
@@ -23,9 +24,20 @@ constexpr inline double uniform<double>(uint32_t x) noexcept {
   return (*reinterpret_cast<const double*>(&tmp)) - 1.0;
 }
 
-template <typename Real>
+template <typename Real,
+          std::enable_if_t<std::numeric_limits<Real>::is_iec559, int> = 0>
 constexpr inline Real uniform(uint32_t x, Real a, Real b) noexcept {
   return (b - a) * uniform<Real>(x) + a;
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) <= sizeof(uint32_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint32_t x, Integer a, Integer b) noexcept {
+  return a +
+         static_cast<Integer>(
+             (static_cast<uint64_t>(x) * static_cast<uint64_t>(b - a)) >> 32);
 }
 
 template <typename Real>
@@ -50,9 +62,35 @@ constexpr inline std::pair<float, float> uniform<std::pair<float, float>>(
           uniform<float>(static_cast<uint32_t>(x >> 32))};
 }
 
-template <typename Real>
+template <typename Real,
+          std::enable_if_t<std::numeric_limits<Real>::is_iec559, int> = 0>
 constexpr inline Real uniform(uint64_t x, Real a, Real b) noexcept {
   return (b - a) * uniform<Real>(x) + a;
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) <= sizeof(uint64_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint64_t x, Integer a, Integer b) noexcept {
+  const auto m = static_cast<uint64_t>(b - a);
+  const auto n = static_cast<uint64_t>(x);
+  constexpr auto lower_mask = 0x00000000fffffffful;
+  const auto m0 = m & lower_mask;
+  const auto m1 = m >> 32;
+  const auto n0 = n & lower_mask;
+  const auto n1 = n >> 32;
+  const auto m0n0 = m0 * n0;
+  const auto m0n1 = m0 * n1;
+  const auto m1n0 = m1 * n0;
+  const auto m1n1 = m1 * n1;
+  const auto m0n1_0 = m0n1 & lower_mask;
+  const auto m0n1_1 = m0n1 >> 32;
+  const auto m1n0_0 = m1n0 & lower_mask;
+  const auto m1n0_1 = m1n0 >> 32;
+  const auto mul =
+      (((m0n0 >> 32) + m1n0_0 + m0n1_0) >> 32) + (m0n1_1 + m1n0_1) + m1n1;
+  return a + static_cast<Integer>(mul);
 }
 
 }  // namespace detail

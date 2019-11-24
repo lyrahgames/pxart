@@ -4,7 +4,8 @@
 namespace pxart {
 
 inline auto uniform_int(uint32_t x, uint32_t s) noexcept {
-  return static_cast<uint32_t>((static_cast<uint64_t>(x) * s) >> 32);
+  return static_cast<uint32_t>(
+      (static_cast<uint64_t>(x) * static_cast<uint64_t>(s)) >> 32);
 }
 
 inline auto uniform_int(__m256i x, uint32_t s) noexcept {
