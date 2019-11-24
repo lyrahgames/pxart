@@ -1,6 +1,7 @@
 #pragma once
 #include <immintrin.h>
 
+#include <pxart/simd128/uniform.hpp>
 #include <pxart/simd256/uniform.hpp>
 #include <pxart/uniform.hpp>
 #include <random>
@@ -112,8 +113,8 @@ inline float monte_carlo_pi(RNG& rng, Integer samples) noexcept {
   for (auto i = samples; i > 0; i -= 8) {
     // const auto x = uniform(rng());
     // const auto y = uniform(rng());
-    const auto x = pxart::simd256::detail::uniform<float>(rng());
-    const auto y = pxart::simd256::detail::uniform<float>(rng());
+    const auto x = pxart::simd256::uniform<float>(rng);
+    const auto y = pxart::simd256::uniform<float>(rng);
     const auto radius = _mm256_add_ps(_mm256_mul_ps(x, x), _mm256_mul_ps(y, y));
     const auto mask = _mm256_castps_si256(
         _mm256_cmp_ps(radius, _mm256_set1_ps(1.0f), _CMP_LE_OQ));
@@ -130,8 +131,6 @@ inline float monte_carlo_pi(RNG& rng, Integer samples) noexcept {
 
 template <typename Integer, typename RNG1, typename RNG2>
 inline float monte_carlo_pi(RNG1& rng1, RNG2& rng2, Integer samples) noexcept {
-  std::uniform_real_distribution<float> dist{0, 1};
-
   const auto uniform = [](__m256i x) {
     const auto tmp = _mm256_srli_epi32(x, 9);
     const auto tmp2 = _mm256_or_si256(tmp, _mm256_set1_epi32(0x3f800000));
@@ -163,17 +162,19 @@ namespace simd128::vprng {
 
 template <typename Integer, typename RNG>
 inline float monte_carlo_pi(RNG& rng, Integer samples) noexcept {
-  const auto uniform = [](__m128i x) {
-    const auto tmp = _mm_srli_epi32(x, 9);
-    const auto tmp2 = _mm_or_si128(tmp, _mm_set1_epi32(0x3f800000));
-    return _mm_sub_ps(_mm_castsi128_ps(tmp2), _mm_set1_ps(1.0f));
-  };
+  // const auto uniform = [](__m128i x) {
+  //   const auto tmp = _mm_srli_epi32(x, 9);
+  //   const auto tmp2 = _mm_or_si128(tmp, _mm_set1_epi32(0x3f800000));
+  //   return _mm_sub_ps(_mm_castsi128_ps(tmp2), _mm_set1_ps(1.0f));
+  // };
 
   auto samples_in_circle = _mm_setzero_si128();
 
   for (auto i = samples; i > 0; i -= 4) {
-    const auto x = uniform(rng());
-    const auto y = uniform(rng());
+    // const auto x = uniform(rng());
+    // const auto y = uniform(rng());
+    const auto x = pxart::simd128::uniform<float>(rng);
+    const auto y = pxart::simd128::uniform<float>(rng);
     const auto radius = _mm_add_ps(_mm_mul_ps(x, x), _mm_mul_ps(y, y));
     const auto mask =
         _mm_castps_si128(_mm_cmp_ps(radius, _mm_set1_ps(1.0f), _CMP_LE_OQ));

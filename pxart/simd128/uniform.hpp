@@ -43,4 +43,14 @@ inline auto uniform<double>(__m128i x, double a, double b) noexcept {
 
 }  // namespace detail
 
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng) noexcept {
+  return pxart::simd128::detail::uniform<Real>(std::forward<RNG>(rng)());
+}
+
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept {
+  return pxart::simd128::detail::uniform(std::forward<RNG>(rng)(), a, b);
+}
+
 }  // namespace pxart::simd128
