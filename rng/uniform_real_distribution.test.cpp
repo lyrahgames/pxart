@@ -1,8 +1,7 @@
 #include <doctest/doctest.h>
 
-#include <random>
-
 #include <pxart/uniform_real_distribution.hpp>
+#include <random>
 
 TEST_CASE("uniform_real_distribution") {
   const auto seed = std::random_device{}();
