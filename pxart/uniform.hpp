@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <pxart/utilities/is_valid.hpp>
 #include <random>
 #include <type_traits>
 #include <utility>
@@ -95,14 +96,33 @@ constexpr inline Integer uniform(uint64_t x, Integer a, Integer b) noexcept {
 
 }  // namespace detail
 
+constexpr auto has_uniform_01 =
+    is_valid([](auto&& x) -> decltype(x.uniform()) {});
+constexpr auto has_uniform =
+    is_valid([](auto&& x, auto&& y, auto&& z) -> decltype(x.uniform(y, z)) {});
+
 template <typename Real, typename RNG>
-constexpr inline Real uniform(RNG&& rng) noexcept {
+constexpr inline auto uniform(RNG&& rng) noexcept
+    -> std::enable_if_t<!decltype(has_uniform_01(rng))::value, Real> {
   return detail::uniform<Real>(std::forward<RNG>(rng)());
 }
 
 template <typename Real, typename RNG>
-constexpr inline Real uniform(RNG&& rng, Real a, Real b) noexcept {
+constexpr inline auto uniform(RNG&& rng) noexcept
+    -> std::enable_if_t<decltype(has_uniform_01(rng))::value, Real> {
+  return std::forward<RNG>(rng).uniform();
+}
+
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept
+    -> std::enable_if_t<!decltype(has_uniform(rng, a, b))::value, Real> {
   return detail::uniform(std::forward<RNG>(rng)(), a, b);
+}
+
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept
+    -> std::enable_if_t<decltype(has_uniform(rng, a, b))::value, Real> {
+  return std::forward<RNG>(rng).uniform(a, b);
 }
 
 template <typename Real>
