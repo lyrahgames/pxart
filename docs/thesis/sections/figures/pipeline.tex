@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows.meta}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance =0.1\textwidth and 0.1\textwidth,
+    on grid, semithick,
+    byte/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      align=center,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 2cm,
+      minimum height = 0.6cm
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\begin{document}
+\begin{graph}
+  \node[byte] (A1) {$A_1$};
+  \node[byte] (A2) [right =2cm of A1] {$A_2$};
+  \node[byte] (A3) [right =2cm of A2] {$A_3$};
+  \node[byte] (A4) [right =2cm of A3] {$A_4$};
+
+  \node[byte] (B1) [below =0.6cm of A2]{$B_1$};
+  \node[byte] (B2) [right =2cm of B1] {$B_2$};
+  \node[byte] (B3) [right =2cm of B2] {$B_3$};
+  \node[byte] (B4) [right =2cm of B3] {$B_4$};
+
+  \node[byte] (C1) [below =0.6cm of B2]{$C_1$};
+  \node[byte] (C2) [right =2cm of C1] {$C_2$};
+  \node[byte] (C3) [right =2cm of C2] {$C_3$};
+  \node[byte] (C4) [right =2cm of C3] {$C_4$};
+
+  \node[byte] (D1) [below =0.6cm of C2]{$D_1$};
+  \node[byte] (D2) [right =2cm of D1] {$D_2$};
+  \node[byte] (D3) [right =2cm of D2] {$D_3$};
+  \node[byte] (D4) [right =2cm of D3] {$D_4$};
+\end{graph}
+\end{document}

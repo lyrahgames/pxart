@@ -1,0 +1,91 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows.meta}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance =0.1\textwidth and 0.1\textwidth,
+    on grid, semithick,
+    state/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.7 cm,
+    },
+    visible/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5cm,
+    },
+    test/.style = {
+      rectangle,
+      rounded corners,
+      top color = white,
+      bottom color = processblue!10,
+      align=center,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 2.5cm,
+      minimum height = 0cm
+    },
+    hidden/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!70,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.8cm,
+    },
+    layer/.style = {
+      rectangle,
+      rounded corners,
+      draw=processblue!80,
+      align=center,
+      % thick,
+      fill = white,
+      fill opacity =0.1,
+      text=black,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\begin{document}
+\begin{graph}
+  \node (C1) {Processor Core};
+  \node[test] (R1) [below=0.8cm of C1] {Registers};
+  \node[test] (ALU1) [below=0.8cm of R1] {ALU};
+
+  \node (C2) [right=3.5cm of C1] {Processor Core};
+  \node[test] (R2) [below=0.8cm of C2] {Registers};
+  \node[test] (ALU2) [below=0.8cm of R2] {ALU};
+
+  \begin{scope}[on background layer]
+    \node[test,fit=(C1) (ALU1),inner sep = 5pt, fill opacity = 0.4, text = black, text opacity = 1,text height=0.0cm] (X1) {};
+    \node[test,fit=(C2) (ALU2),inner sep = 5pt, fill opacity = 0.4, text = black, text opacity = 1,text height=0.0cm] (X2) {};
+  \end{scope}
+
+  \node[opacity=0, fit=(C1) (C2)] (V) {};
+
+  \node[test,minimum width = 6.4cm] (CU) [above =1.0cm of V]{Control Unit};
+  \node (CPU) [above =0.6cm of CU] {CPU};
+  \node[test,fit=(CPU) (X1) (X2), fill opacity=0] (Y) {};
+\end{graph}
+\end{document}
