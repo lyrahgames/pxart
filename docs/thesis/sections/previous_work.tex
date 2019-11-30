@@ -23,7 +23,7 @@
 
   \textcite{saito2008} presented an alternative algorithm, called SFMT, to the widely used Mersenne Twister optimized for the SSE instruction set which is working with $128\appendUnit{bit}$ data types.
   The authors have been one of the first people to officially vectorize PRNGs.
-  They provide a library for academic usage and could successfully show that their generation scheme is much more efficient when using SSE based instructions.
+  They provide a library for academic usage and could successfully show that their generation scheme is much more efficient when using SSE based instructions \autocite{sfmt}.
   On the other hand, processor architectures are evolving.
   Using the SFMT on modern hardware with AVX or even AVX512 support will not make full use of the complete vector registers because the algorithm is specialized for the older SSE registers.
 
@@ -35,7 +35,7 @@
   Furthermore, the interface to use the routines of the library tend to be complicated and due to their backwards compatibility it is unlikely that this will change.
 
   \textcite{barash2017} describes how to implement a lot of PRNGs by using the AVX instruction set.
-  They as well provide a library for academic use with an implementation of the MT19937 even surpassing Intel's implementation.
+  They as well provide a library for academic use with an implementation of the MT19937 even surpassing Intel's implementation \autocite{rngavxlib,guskova2016}.
   But the interface of the library is again C-compatible and introduces an overhead in development time while using C++.
   \citeauthor{barash2017} manually vectorize their code through inline assembly statements which make their code unreadable, difficult to understand and not generalizable to other SIMD architectures.
 
