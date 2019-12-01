@@ -214,6 +214,7 @@
     In figure \ref{fig:pi-computation-plots}, we can see this behavior for some actual simulations.
     By taking a larger amount of samples, the volume of the quarter of the unit circle becomes more occupied as can be seen in figure \ref{fig:pi-computation-points}.
     As a consequence, the estimation of π will be more precise.
+    Furthermore, figure \ref{fig:pi-computation-plots} shows that the error of the estimation can also be estimated and will be more precise for a larger sample count.
     \begin{figure}
       \center
       \begin{subfigure}[b]{0.49\linewidth}
@@ -232,13 +233,32 @@
       \label{fig:pi-computation-plots}
     \end{figure}
 
-    To use the described Monte Carlo integration for estimating π, an actual implementation in C++ is needed.
-    The following code block provides a basic approach.
-    It uses templates to generalize the usage of different RNGs and different real number types.
-    \inputCodeBlock[title=monte\_carlo\_pi.hpp]{code/monte_carlo_pi.hpp}
-    The application of the given library function is shown in the following source file.
-    \inputCodeBlock[title=monte\_carlo\_pi.cpp]{code/monte_carlo_pi.cpp}
+    Later, we will use the computation of π as benchmark routine to measure the performance of PRNGs with respect to different aspects of their implementation.
+    In these cases, the error of π should be in some given range
+    Assume we want to use $10^8$ samples to estimate the value of π.
+    According to the formula above for the standard deviation, we get an error of approximately $0,00016$ which means we should at least get a precision of four digits, such that π should approach the value $3.1415$ with a varying last digit.
 
+    To use the described Monte Carlo integration for estimating π, an actual implementation in C++ is needed.
+    The following code snippet provides the basic algorithm relying on the random utilities given by the standard template library (STL) of the C++ programming language.
+    Because C++ is a strongly typed language which is working with templates for type abstraction, the given code uses templates to generalize the usage of different RNG types, as well as different real and integer number types.
+    Typically, we will use the \code{float} type as the real number type and the \code{int} type as the integer type.
+
+    \inputCodeBlock[title=monte\_carlo\_pi.hpp]{code/monte_carlo_pi.hpp}
+    The implementation of the algorithm does not introduce any irregularities and can directly be deduced from the mathematical formulation.
+    First, we define the standard uniform distribution for the RNG and an integer number \code{samples\_in\_circle} as zero which will be used to count the number of samples that lie inside the unit circle.
+    In the following \code{for} loop every run will construct two uniformly distributed random numbers which together will define the position of random two-dimensional point in the unit square.
+    We then evaluate the circle condition adding it to \code{samples\_in\_circle} resulting in an incrementation by one if it is true and zero otherwise.
+    At the end, the code computes the correct result by calculating the division and scaling the output.
+
+    % The application of the given library function is shown in the following source file.
+    % \inputCodeBlock[title=monte\_carlo\_pi.cpp]{code/monte_carlo_pi.cpp}
+
+    The computation of π is only an academic example that should not be used in reality because there are much more efficient ways to estimate it.
+    But as we will see, it is perfectly suited as a benchmark to test different kinds of RNGs because the main part of the algorithm consists of generating a lot of random numbers while using their values to actually compute a result.
+    Evaluating the circle condition for generated random numbers is fast and will not introduce a lot of bias in the actual measurement.
+    Besides, it is the most simplest example of a non-trivial Monte Carlo integration.
+    A lot of physical problems rely on Monte Carlo integration.
+    In the end, all these problems can be broken down into similar form as the computation of π.
   % subsection monte_carlo_integration_and_the_computation_of_ (end)
 % section simulation_in_physics_and_mathematics (end)
 \end{document}

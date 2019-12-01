@@ -20,13 +20,13 @@
 
     In \textcite{kneusel2018}, a special seeding routine was used, such that the actual initialization process only needs one truly random number.
     In the STL of the C++ programming language the MT19937 is already implemented.
-    The corresponding class is called \texttt{std::mt19937} and offers a constructor with only one integral number of $32\appendUnit{bit}$ length as seeding value.
+    The corresponding class is called \code{std::mt19937} and offers a constructor with only one integral number of $32\appendUnit{bit}$ length as seeding value.
     This constructor uses the initialization routine described by \textcite{kneusel2018}.
     We want to make sure, that our implementation gives exactly the same output as the standard variant while keeping the advantages of our own API.
     As a consequence, we have to introduce a structure which can be interpreted as a PRNG and should serve as a default seeder for the MT19937.
 
     Additionally, the types and parameters of the MT19937 will be defined as compile-time constants inside the functor to make sure the code stays maintainable by not inserting magic numbers in the implementation.
-    To guarantee that there is no runtime overhead, we defined those variables as \texttt{static constexpr}.
+    To guarantee that there is no runtime overhead, we defined those variables as \code{static constexpr}.
 
     \inputCodeBlock[title = Scalar MT19937 Structure]{code/mt19937/sisd/struct.hpp}
     Implementing the default seeder is done the same way as the MT19937 itself.
@@ -104,7 +104,7 @@
     The scalar implementation of the Xoroshiro128+ follows the same rules as the scalar implementation of the MT19937.
     \citeauthor{vigna-xoroshiro} provides the C code for the generator on his website \autocite{vigna-xoroshiro}.
     We again use a functor which saves the state and advances it by calling the function operator.
-    Compile-time constants will again be declared as \texttt{static constexpr} to reduce the runtime overhead.
+    Compile-time constants will again be declared as \code{static constexpr} to reduce the runtime overhead.
     In comparison to the MT19937, the state of the Xoroshiro128+ can be easily described by two $64\appendUnit{bit}$ unsigned integer values.
     For the advancing routine, the generator needs a utility which is rotating the bits of a $64\appendUnit{bit}$ unsigned integer.
 
