@@ -5,7 +5,7 @@
   The design of an API for a library making the use of vectorized PRNGs possible consists of multiple parts.
   To exploit the statistical properties of all the implemented generators proper seeding routines have to be provided.
   Seeding of PRNGs should be easy but not magically hiding important information, like the RNG that is used for the initialization.
-  The implementation of the MT19937 given by \code{std::mt19937} in the STL of the C++ programming language for example, internally uses an easier PRNG to initialize its whole state vector by only one truly random number.
+  The implementation of the MT19937 given by \code{std::mt19937} in the STL of the C++ programming language for example, internally uses an easier PRNG to initialize its whole state vector by only one truly random number \autocite{gcc-libstdcpp}.
   The interface of \code{std::mt19937} does not show this information to the programmer or the reader and even forces the user of the library to employ this process.
   Furthermore, a generator \code{RNG} only used for seeding will typically constructed directly as an rvalue in the constructor of the \code{std::mt19937}.
   \[
@@ -37,33 +37,73 @@
   This idea makes it even possible to specialize these functions outside of the RNG structure for a non-intrusive adjustment.
   Furthermore, by providing those functions we keep compatibility to the standard distributions.
 
+  \subsection{Utilities} % (fold)
+  \label{sub:utilities}
+    The ideas for the API given above require us to rely on the template meta programming facilities C++ provides.
+    In general, we would like to use helper functions, as well as member functions for specific tasks, like generating a vector of random numbers.
+    If a generator provides a member function the helper function should use the given specialization whereas otherwise a default algorithm should be used.
+    Hence, at compile-time we need to evaluate if calling a specific member is a valid expression.
+    In \textcite{vandevoorde2018}, there is given a technique that allows us to evaluate the validity of expressions.
 
-  \inputCodeBlock[title = Is-Valid Utility]{code/is_valid.hpp}
-  \inputCodeBlock[title = Uniform Template]{code/uniform.hpp}
+    \inputCodeBlock[title = Is-Valid Utility]{code/is_valid.hpp}
+    This code makes highly use of template meta programming artifacts, like SFINAE and type traits.
+    First in the details, it uses an overloaded variadic helper function template \code{detail::is\_valid} to decide if the call of a specific function type \code{F} with the varying amount of argument types \code{Args} would be a valid call.
+    The call is put into an unevaluated context by using the \code{std::declval} template utility from C++ which is able to return an object of a class without specific constructors in such an unevaluated context.
+    To decide the validity of this statement it relies on a default template parameter and the \code{decltype} utility of the C++ language.
+    If the call to the given function object would be possible, \code{decltype} will indeed deduce the return type of the function call and correctly set the default template argument.
+    In this case, the first overload would be chosen so that the return type of \code{detail::is\_valid} would be \code{std::true\_type}.
+    In all other cases, the second overload with the return type \code{std::false\_type} would be activated because due to SFINAE the first overload would not be taken into account.
+    We have to make sure to decide on the validity with the generalized boolean types \code{std::true\_type} and \code{std::false\_type} from the STL of C++ because we will use the given templates in unevaluated contexts where no evaluation of an actual \code{bool} variable would be possible.
 
-  \subsection{C++ Concepts} % (fold)
-  \label{sub:c_concepts}
+    The routine \code{is\_valid} is actually a lambda expression that returns another lambda expression which is then evaluating the validity of its arguments by the helper template \code{detail::is\_valid}.
+    The function object \code{f} will be a lambda expression that lists conditions for abstract types which have to be valid to fulfill the concept we want to define.
+    The arguments \code{args} will then be the actual variables to be inserted in the pattern test of \code{f}.
+    The two interleaved lambda expressions separate the function object \code{f} from its varying amount of arguments \code{args} for convenience.
+    Additionally, they allow us to use variables in unevaluated contexts.
 
-  % subsection c_concepts (end)
+    To better understand the utility, we will directly apply it to construct a helper function template \code{generate} which is calling \code{std::generate} from the STL of C++ for a given RNG as a default.
+    But as a specialization we would like to call the member function with the same name of the generator if it exists.
+    We do this again through the use of SFINAE.
 
-  \subsection{Uniform Random Bit Generator} % (fold)
-  \label{sub:uniform_random_bit_generator}
+    \inputCodeBlock[title = Generate Utility]{code/generate.hpp}
+    First, we are defining a general pattern \code{has\_generate} based on \code{is\_valid} to be able to decide the validity of the expression \code{x.generate(y,z)} for arbitrary types by using a lambda expression.
+    Again, we have to make sure the lambda expression is deducing its return in an unevaluated context.
+    Hence, \code{decltype} is used as a trailing return type with the pattern to evaluate.
+    Next, we declare an overloaded helper function template \code{generate}.
+    SFINAE is applied for overload resolution by using \code{std::enable\_if\_t} in the return type of the functions.
+    In the template argument, we use the general pattern \code{has\_generate(rng,first,last)} and deduce its type by \code{decltype}.
+    The type will either be \code{std::true\_type} or \code{std::false\_type}.
+    In the first case, \code{std::enable\_if\_t} will be evaluated to be the type \code{void}.
+    In the other case, \code{std::enable\_if\_t} will be no valid type and the function will be not be taken into account in the overload resolution.
+    The overloads of \code{generate} use complementary conditions in the template argument of \code{std::enable\_if\_t}, so that at all times only one of them will be available in the overload resolution.
+    As a result, \code{generate(rng,first,last)} will call \code{rng.generate(first,last)} if the type of \code{rng} provides the named member function and \code{std::generate(first,last,std::ref(rng))} otherwise.
+  % subsection utilities (end)
 
-  % subsection uniform_random_bit_generator (end)
+  \subsection{Seeding} % (fold)
+  \label{sub:seeding}
+    Seeding of RNGs through the use of other RNGs will be accomplished by the use of perfect forwarding.
+    In contrast to the ideas in \textcite{cpp-std-seeding}, we allow for rvalue initialization making the API simpler.
+    Consider the following code snippet that introduces an arbitrary RNG type \code{rng\_type}.
 
-  \subsection{Random Number Engine} % (fold)
-  \label{sub:random_number_engine}
+    \inputCodeBlock[title = Seeding Strategy]{code/seeding.hpp}
+    \code{rng\_type} is a structure with an explicit forwarding constructor available for seeding which is able match any other RNG type.
+    Please note the typical usage of a universal reference to deduce forwarding types.
+    The implementation of the constructor should call either the \code{generate} method or the function operator of the given RNG type to initialize its own state.
+    For a few exceptional cases, the given code can lead to certain artifacts in the template deduction process.
+    This behavior is discussed in \textcite[\ppno~188-197]{meyers2014}.
+    For RNGs, there is typically no need to provide an extra degree of type security.
+    But we can easily add it through the use of \code{std::enable\_if\_t} to turn on the SFINAE process.
 
-  % subsection random_number_engine (end)
-
-  \subsection{Seeding and Seed Sequences} % (fold)
-  \label{sub:seeding_and_seed_sequences}
-
-  % subsection seeding_and_seed_sequences (end)
+    \inputCodeBlock[title = Advanced Seeding Strategy]{code/seeding_advanced.hpp}
+    This implementation removes the explicit forwarding constructor for seeding when we want to copy or move the state of the structure itself.
+    For the implementations of PRNGs, we have tested both variants and could not spot any differences.
+    Hence, further we will use the simpler variant.
+    According to \textcite{vandevoorde2018}, in the future of C++ concepts will be available which will make such an initialization artifact even simpler and more efficient.
+  % subsection seeding (end)
 
   \subsection{Distributions} % (fold)
   \label{sub:distributions}
-
+    \inputCodeBlock[title = Uniform Template]{code/uniform.hpp}
   % subsection distributions (end)
 
   \subsection{Algorithms} % (fold)
@@ -71,29 +111,8 @@
 
   % subsection algorithms (end)
 
-  What do we want from the interface of our RNG?
-  It should make testing with given frameworks like TestU01, dieharder, ent and PractRand easy.
-  Benchmarking should be possible as well.
-  Therefore we need a good API and a good application interface.
-  Most of the time we want to generate uniform distributed real or integer numbers.
-  We need two helper functions.
-  So we see that the concept of a distribution makes things complicated.
-  We cannot specialize distributions for certain RNGs.
-  We cannot use lambda expressions as distributions.
-  Therefore we want to use only helper functions as distributions and not member functions.
-  So we do not have to specify a specialization and instead use the given standard but we are able to do it.
-  Therefore functors and old-distributions are distributions as well and hence we are compatible to the standard.
+  \subsection{PRNG Concept} % (fold)
+  \label{sub:prng_concept}
 
-  Additionally, we have to be more specific about the concept of a random number engine.
-  The output of a random number engine of the current concept is magical unsigned integer which should be uniformly distributed in the interval [min,max].
-  But these magic numbers can result in certain problems if used the wrong way, see Melissa O'Neill Seeding Surprises.
-  Therefore the general idea is to always use the helper functions as new distributions which define min and max explicitly and make sure you really get those values.
-  This is also a good idea for the standard.
-  And it is compatible with the current standard.
-
-  Now think of vector registers and multiprocessors.
-  The random number engine should provide ways to fill a range with random numbers such that it can perform generation more efficiently.
-  Think about the execution policies in C++17.
-  They should be provided as well.
-% section design_of_the_api (end)
+  % subsection prng_concept (end)
 \end{document}
