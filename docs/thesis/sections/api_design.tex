@@ -103,7 +103,26 @@
 
   \subsection{Distributions} % (fold)
   \label{sub:distributions}
+    The design of a uniform distribution \code{uniform} via helper functions and member specializations will be handled the same way as for the function template \code{generate}.
+    This time, we only have to take care of additional overloads.
+    By calling \code{uniform} without function arguments, we have to provide the return type as a template argument.
+    For floating-point types, the result should be a number in the interval $[0,1)$.
+    Specifying integer number types the output will use the complete range of the template argument.
+    If we call \code{uniform} with additional arguments specifying the range of the output, we are able to use template argument deduction for the return type based on the range arguments.
+    We separate those two cases to further optimize the frequently used first function call without arguments.
+    The following code shows the implementation.
+
     \inputCodeBlock[title = Uniform Template]{code/uniform.hpp}
+    We use two \code{is\_valid} patterns to describe the existence of \code{uniform} member functions with and without additional arguments.
+    The actual \code{uniform} functions then use the same overload resolution via SFINAE as the \code{generate} function.
+
+    The result type of the Mersenne Twister \code{std::mt19937} from the STL is given by \code{uint\_fast32\_t} which, on modern machines, will evaluate to \code{uint64\_t} with $64\appendUnit{bit}$ size instead of the used $32\appendUnit{bit}$.
+    Because the uniform distribution utilities that we will provide in the implementation use their argument types to overload themselves, the Mersenne Twister would call the wrong function.
+    We can prohibit this behavior without changing the inner structure of the \code{std::mt19937} type by creating another helper function overload especially for the Mersenne Twister.
+    In this implementation, we are making sure its return type will be casted to the \code{uint32\_t} type.
+
+    The defined API gives us the ability of a powerful default distribution together with the possibility of specializing it for some generators through member functions.
+    If we cannot access the inner structure of an RNG then we may even insert slightly more complicated helper specializations to adjust the output of RNGs not created by the programmer itself.
   % subsection distributions (end)
 
   \subsection{Algorithms} % (fold)
