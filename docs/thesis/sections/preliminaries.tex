@@ -1,7 +1,7 @@
 \documentclass{stdlocal}
 \begin{document}
-\section{Mathematical Preliminaries} % (fold)
-\label{sub:mathematical_preliminaries}
+\section{Preliminaries} % (fold)
+\label{sub:preliminaries}
   To systematically approach the implementation of PRNGs, basic knowledge in the topics of stochastics and finite fields is administrable.
   Together, these topics will give a deeper understanding of randomness in deterministic computer systems, a formal description of pseudorandom sequences and generators, and the mathematical foundation of Monte Carlo algorithms.
   Based on them, we are capable of scientifically analyzing PRNGs concerning their randomness properties.
@@ -159,9 +159,75 @@
     \end{theorem}
   % subsection stochastics (end)
 
-  \subsection{Number Theory and Finite Fields} % (fold)
-  \label{ssub:finite_fields}
+  % \subsection{Number Theory and Finite Fields} % (fold)
+  % \label{ssub:finite_fields}
 
-  % subsection finite_fields (end)
-% section mathematical_preliminaries (end)
+  % % subsection finite_fields (end)
+
+  \subsection{The C++ Programming Language} % (fold)
+  \label{sub:the_c_programming_language}
+    As already told in the introductory section \ref{sec:introduction}, the C++ programming language is the perfect candidate for developing high-performance low-level structures while keeping the high degree of abstraction that makes the use of libraries easier and more consistent.
+    C++ features multiple programming styles, like procedural programming, data abstraction, object-oriented programming, as well as generic programming, also known as template metaprogramming \autocite{stroustrup2014,vandevoorde2018}.
+    The type mechanism makes C++ a strongly typed language.
+    To exploit this, we will always try to map problems to an abstract data structure.
+    Furthermore, the built-in facilities of C++, such as templates, function overloading, type deduction, and lambda expressions, simplify the type handling and the generalization of algorithms.
+    Additionally, C++ provides a standard library, called the standard template library (STL), consisting of header files providing default templates to use for a wide variety of problems.
+    In this thesis, we will rely on the random utilities the STL exhibits in its header \code{random}.
+    We will also assume basic knowledge in C++ and refer to \textcite{stroustrup2014} and \textcite{meyers2014} for a detailed introduction to the general usage of the language.
+    A complete online reference of the language is given by \textcite{cppreference}.
+
+    The C++ programming language evolves over time by defining different language standards every three years which are published by the ISO C++ standardization committee.
+    Newer standards typically introduce modern language features, fix old behavior and add new algorithms and templates to the STL.
+    Hence, modern C++ separates into the standards C++11, C++14, and C++17 each published in the year 2011, 2014, and 2017, respectively.
+    Currently, we are waiting for the C++20 standard specification to be able to use even more advanced features concerning template metaprogramming and concurrency.
+    At the time of writing this thesis, C++17 is most modern specification and as a consequence it will be used throughout the code.
+    \autocite{stroustrup2014,meyers2014,vandevoorde2018}
+
+    To design the API of a library supplying vectorized RNGs and some advanced utilities, we will heavily rely on different template metaprogramming techniques.
+    For getting deeper into the topic, we refer to \textcite{vandevoorde2018} and again to \textcite{meyers2014}.
+    Here, we will only be able to list the most important terms, techniques and rules that will be used throughout the code.
+
+    \begin{description}
+      \item[Template Argument Deduction]
+        \textquote[\cite{cppreference}]{%
+          In order to instantiate a function template, every template argument must be known, but not every template argument has to be specified.
+          When possible, the compiler will deduce the missing template arguments from the function arguments.
+        }
+      \item[Overloading Function Templates]
+        \textquote[\cite{vandevoorde2018}]{%
+          Like ordinary functions, function templates can be overloaded.
+          That is, you can have different function definitions with the same function name so that when that name is used in a function call, a C++ compiler must decide which one of the various candidates to call.
+        }
+      \item[Variadic Templates]
+        \textquote[\cite{vandevoorde2018}]{%
+          Since C++11, templates can have parameters that accept a variable number of template arguments.
+          This feature allows the use of templates in places where you have to pass an arbitrary number of arguments of arbitrary types.
+        }
+      \item[Perfect Forwarding]
+        C++11 introduced so-called move semantics to optimize specific copy operations by moving internal resources instead of creating a deep copy of them.
+        Perfect forwarding is a template-based pattern that forwards the basic properties of a type concerning its reference and modification type.
+        % \autocite{vandevoorde2018}
+      \item[SFINAE]
+        Substituting template arguments to resolve function template overloading could lead to errors by creating code that makes no sense.
+        The principle \enquote{substitution failure is not an error} (SFINAE) states that in these circumstances the overload candidates with such substitution problems will simply ignored.
+        % \autocite{vandevoorde2018}
+      \item[\code{decltype}]
+        This is a specifier introducing an unevaluated context from which it is deducing the type of the given expression without actually evaluating the expression.
+        % \autocite{stroustrup2014}
+      \item[\code{std::enable\_if\_t}]
+        This is a helper template from the STL to ignore function templates by using SFINAE under certain compile conditions.
+        If the template argument evaluates to true then \code{std::enable\_if\_t} will evaluate to an actual type.
+        Otherwise, it will have no meaning triggering the SFINAE principle for overloads.
+        % \autocite{vandevoorde2018}
+      \item[\code{std::declval}]
+        The given STL function template is only declared, not defined and therefore cannot be called in evaluated contexts.
+        It can be used as a placeholder for an object reference of a specific type.
+        Typically, this routine will be inserted instead of a default constructor in the unevaluated context argument of \code{decltype}.
+        % \autocite{vandevoorde2018}
+      \item[Type Traits]
+        Type traits are general functions defined over types to modify or evaluate them.
+        In the STL a typical examples is given by \code{std::is\_same\_v} which is evaluating if two types are the same.
+    \end{description}
+  % subsection the_c_programming_language (end)
+% section preliminaries (end)
 \end{document}
