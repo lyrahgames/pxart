@@ -132,6 +132,18 @@
 
   \subsection{PRNG Concept} % (fold)
   \label{sub:prng_concept}
+    We do not want to introduce a lot of overhead to the design concept of PRNGs and vectorized PRNGs.
+    The compiler should automatically find out which algorithm to use.
+    This can be done by specialization according to the result type of the function operator.
+    If this should be not enough, tag dispatching can be used.
 
+    The output could have arbitrary size but it is always interpreted as a finite length bit stream.
+    For AVX this means a $256\appendUnit{bit}$ stream.
+    This explains how to interleave SIMD streams and how to test them.
+
+    Interfaces for SIMD intrinsics will always be specialized templates even for wrapper classes because SIMD is behaving differently to SISD architectures.
+    If we are working with SIMD vector the least surprising interface is to use the SIMD vector as result type directly.
+    Through inheritance we or someone from the outside could add another interface by using wrapper classes without changing the implementation.
+    Therefore seeding will be a specialized routine.
   % subsection prng_concept (end)
 \end{document}

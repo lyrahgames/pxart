@@ -81,7 +81,8 @@ constexpr mt19937::result_type mt19937::operator()() noexcept {
   if (state_index >= state_size) {
     const auto transition = [this](int k, int k1, int k2) constexpr {
       const auto x = (state[k] & upper_mask) | (state[k1] & lower_mask);
-      state[k] = state[k2] ^ (x >> 1) ^ ((x & 0x01) ? xor_mask : 0);
+      // state[k] = state[k2] ^ (x >> 1) ^ ((x & 0x01) * xor_mask);
+      state[k] = state[k2] ^ (x >> 1) ^ ((state[k1] & 0x01) * xor_mask);
     };
 
     for (int k = 0; k < state_size - shift_size; ++k)
@@ -89,6 +90,22 @@ constexpr mt19937::result_type mt19937::operator()() noexcept {
     for (int k = state_size - shift_size; k < state_size - 1; ++k)
       transition(k, k + 1, k + shift_size - state_size);
     transition(state_size - 1, 0, shift_size - 1);
+
+    // for (int k = 0; k < state_size - shift_size; ++k) {
+    //   const auto x = (state[k] & upper_mask) | (state[k + 1] & lower_mask);
+    //   state[k] =
+    //       state[k + shift_size] ^ (x >> 1) ^ ((state[k + 1] & 0x01) *
+    //       xor_mask);
+    // }
+    // for (int k = state_size - shift_size; k < state_size - 1; ++k) {
+    //   const auto x = (state[k] & upper_mask) | (state[k + 1] & lower_mask);
+    //   state[k] = state[k + shift_size - state_size] ^ (x >> 1) ^
+    //              ((state[k + 1] & 0x01) * xor_mask);
+    // }
+    // const auto x =
+    //     (state[state_size - 1] & upper_mask) | (state[0] & lower_mask);
+    // state[state_size - 1] =
+    //     state[shift_size - 1] ^ (x >> 1) ^ ((state[0] & 0x01) * xor_mask);
 
     // const auto transition = [this](int k, int k1, int k2) constexpr {
     //   const auto x =

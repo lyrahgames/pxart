@@ -1,14 +1,15 @@
 \documentclass{stdlocal}
-
 \begin{document}
-  \section{Evaluation and Results} % (fold)
-  \label{sec:evaluation}
-    \autocite{compiler-explorer,intel-intrinsics-guide,perfevent,vandevoorde2018,meyers2014}
+\section{Evaluation and Results} % (fold)
+\label{sec:evaluation}
+  \autocite{compiler-explorer,intel-intrinsics-guide,perfevent,vandevoorde2018,meyers2014}
 
-    godbolt
-    google benchmark
-    intel vtune amplifier
-    testu01
-    dieharder
-  % section evaluation (end)
+  \subsection{Statistical Performance} % (fold)
+  \label{sub:statistical_performance}
+    From a theoretical point of view, interleaving multiple streams of random numbers based on multiple instances of the same generator should not reduce the randomness of the output, such that test suites will be able to measure it.
+    Using multiple instances the state of the vectorized PRNG becomes four times as big as the scalar variant.
+    According to \textcite{oneill-blog-toobig}, creating a larger state will even make a weak generator stronger concerning its statistical performance.
+    We will run the tests to confirm this.
+  % subsection statistical_performance (end)
+% section evaluation (end)
 \end{document}

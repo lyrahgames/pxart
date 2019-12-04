@@ -50,15 +50,33 @@
     This especially true for the MT19937.
     Hence, we only test the output of the vectorized Xoroshiro128+ and the MSWS to guarantee the vectorization process is not reducing the statistical performance of the generators.
     The process of testing was geared to \textcite[\ppno~141-155]{kneusel2018} and \textcite{oneill-blog-testu01}.
+
+    \inputCodeBlock[title = AVX Xoroshiro128+ Bit Stream]{code/xoroshiro128plus/simd256/bitstream.cpp}
+
+    \[
+      \text{\code{bench/xrsr128p_simd256_bitstream | dieharder -a -g 200}}
+    \]
+
+    \inputCodeBlock[title = AVX Xoroshiro128+ TestU01]{code/xoroshiro128plus/simd256/testu01.cpp}
   % subsection statistical_testing (end)
 
   \subsection{Generation Benchmark} % (fold)
   \label{sub:generation_benchmark}
-
+    \inputCodeBlock[title = Generation Benchmark with Cache]{code/generation_benchmark.cpp}
   % subsection generation_benchmark (end)
 
   \subsection{Monte Carlo π Benchmark} % (fold)
   \label{sub:monte_carlo_π_benchmark}
+    The samples should always be a multiple of packet size.
+    The packet size is small in comparison to the sample size.
+    Hence, this is no real restriction for benchmarking.
+    We will always make sure to choose sample sizes that are a multiple of eight.
+
+    Concerning the precision of the output, the sample count is important and has to be expressed as \code{uint32_t} or \code{uint64_t}.
+    To reach the full precision of a single precision floating point value, we have to fill 23 bits of the fraction.
+    Doing this would need approximately $2^{44}$ samples and therefore a \code{uint64_t} as a type of the sample variable.
+    With \code{uint32_t}, we can reach a precision of $2^{-15} \approx 3.05\cdot 10^{-5}$.
+
     \inputCodeBlock[title = Scalar Monte Carlo π]{code/monte_carlo_pi/sisd/single.hpp}
     \inputCodeBlock[title = AVX Monte Carlo π]{code/monte_carlo_pi/simd256/vprng.hpp}
   % subsection monte_carlo_π_benchmark (end)

@@ -1,6 +1,8 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <pxart/simd128/uniform.hpp>
+#include <pxart/simd256/uniform.hpp>
 #include <pxart/utilities/is_valid.hpp>
 #include <random>
 #include <type_traits>
@@ -103,8 +105,26 @@ constexpr auto has_uniform =
 
 template <typename Real, typename RNG>
 constexpr inline auto uniform(RNG&& rng) noexcept
-    -> std::enable_if_t<!decltype(has_uniform_01(rng))::value, Real> {
+    -> std::enable_if_t<!decltype(has_uniform_01(rng))::value &&
+                            std::is_integral_v<decltype(rng())>,
+                        Real> {
   return detail::uniform<Real>(std::forward<RNG>(rng)());
+}
+
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng) noexcept -> std::enable_if_t<
+    !decltype(has_uniform_01(rng))::value &&
+        std::is_same_v<decltype(rng()), __m256i>,
+    std::conditional_t<std::is_same_v<Real, float>, __m256, __m256d>> {
+  return pxart::simd256::uniform<Real>(std::forward<RNG>(rng));
+}
+
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng) noexcept -> std::enable_if_t<
+    !decltype(has_uniform_01(rng))::value &&
+        std::is_same_v<decltype(rng()), __m128i>,
+    std::conditional_t<std::is_same_v<Real, float>, __m128, __m128d>> {
+  return pxart::simd128::uniform<Real>(std::forward<RNG>(rng));
 }
 
 template <typename Real, typename RNG>
