@@ -27,12 +27,12 @@ struct mt19937 {
   static constexpr uint_type upper_mask = ((~uint_type{}) << mask_bits) & mask;
   static constexpr uint_type lower_mask = (~upper_mask) & mask;
 
-  // static constexpr uint64_t upper_mask_2 =
-  //     (static_cast<uint64_t>(upper_mask) << 32) |
-  //     static_cast<uint64_t>(upper_mask);
-  // static constexpr uint64_t lower_mask_2 =
-  //     (static_cast<uint64_t>(lower_mask) << 32) |
-  //     static_cast<uint64_t>(lower_mask);
+  static constexpr uint64_t upper_mask_2 =
+      (static_cast<uint64_t>(upper_mask) << 32) |
+      static_cast<uint64_t>(upper_mask);
+  static constexpr uint64_t lower_mask_2 =
+      (static_cast<uint64_t>(lower_mask) << 32) |
+      static_cast<uint64_t>(lower_mask);
 
   struct default_seeder;
 
@@ -49,7 +49,8 @@ struct mt19937 {
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
   uint_type state[state_size];
-  // uint_type state[state_size + 2] __attribute__((aligned(8)));
+  // uint_type state[state_size] __attribute__((aligned(64)));
+  // uint_type state[state_size + 2] __attribute__((aligned(64)));
   int state_index = state_size;
 };
 

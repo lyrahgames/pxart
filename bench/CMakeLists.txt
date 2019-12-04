@@ -33,3 +33,12 @@ target_link_libraries(generate
     pxart::pxart
 )
 target_compile_options(generate PRIVATE -O3)
+
+add_executable(generate_cache generate_cache.cpp)
+target_link_libraries(generate_cache
+  PRIVATE
+    perfevent::perfevent
+    Boost::boost
+    pxart::pxart
+)
+target_compile_options(generate_cache PRIVATE -O3)

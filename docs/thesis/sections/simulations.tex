@@ -268,7 +268,45 @@
 
   \subsection{Photon Propagation and Physically Based Rendering} % (fold)
   \label{sub:photon_propagation_and_physically_based_rendering}
+    In computer graphics, the rendering of realistic images based on physical principles requires the simulation of global illumination effects.
+    Global illumination is formally described by the so-called rendering equation, also known as light transport equation (LTE).
+    There exist several different formulations of the LTE, such as the surface form and the path integral formulation, which are all equivalent and are used to derive advanced methods to actually estimate the light distribution in space consisting of differing objects.
+    The LTE can be derived by applying principles of geometric optics to the law of the conservation of energy for electromagnetic radiation.
+    A detailed explanation is given in \textcite{pharr2016} and a mathematically rigorous discussion can be read in \textcite{pawellek2017}.
 
+    Typically, the LTE cannot be evaluated analytically for complex geometries.
+    As a consequence, there are multiple famous simulation strategies, like path tracing, bidirectional path tracing, metropolis light transport, and photon mapping, to approximate its solutions.
+    All of these strategies have in common that they are somehow estimating the light distribution in space through Monte Carlo methods.
+    Because of the integral appearing inside the equation, all algorithms make great use of Monte Carlo integration in different ways.
+    Path tracing, for example, is using the path integral formulation of the LTE by importance sampling different paths of light through the scene starting from the observer and ending at a light source.
+    At every vertex of the path, Russian roulette decides if the ray has to be reflected, transmitted or absorbed.
+    In general, the algorithm has to compute several hundreds of sample paths for every pixel on the screen to reduce the noise and get an acceptable estimation  of the actual light distribution.
+    As a consequence, the tracing of rays and the propagation of photons through a scene needs to use a really large amount of random numbers.
+
+    The tracing of light rays is strongly connected to photon propagation in space.
+    From an abstract point of view, we can think of light rays as single photons or packets of photons.
+    Light rays are used to gather the radiance arriving at the observer whereas photons propagate flux from a light source.
+    Both of them adhere to the same laws even if they are interpreted differently.
+    Hence, photon tracing works exactly the same way as ray tracing.
+    A usual application of this phenomenon is the photon mapping algorithm.
+    The movement and transmission of differing photons or rays does not depend on each other.
+    Due to the high amount of random numbers needed and the large degree of independence the simulation of global illumination by using Monte Carlo methods is a perfect candidate to measure the performance improvement by applying vectorized PRNGs.
+    This claim is even supported by an already existing strong usage of SIMD instructions for the current most efficient ray and path tracing engines \autocite{embree}.
+
+    In this thesis, it is not possible to provide a complete ray tracing framework to test the application of vectorized PRNGs.
+    But we are able to construct a simplified version which is using the developed PRNGs to simulate the propagation of photons.
+    This smaller simulation focuses on the most important physical effects and ignores subtleties that would introduce bias in the performance measurements.
+    We will provide the physical background concerning photon propagation.
+
+    \subsubsection*{Surface Interaction} % (fold)
+    \label{ssub:surface_interaction}
+
+    % subsubsection surface_interaction (end)
+
+    \subsubsection*{Volume Scattering} % (fold)
+    \label{ssub:volume_scattering}
+
+    % subsubsection volume_scattering (end)
   % subsection photon_propagation_and_physically_based_rendering (end)
 % section simulation_in_physics_and_mathematics (end)
 \end{document}

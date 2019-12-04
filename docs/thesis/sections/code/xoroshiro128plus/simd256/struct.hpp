@@ -1,7 +1,7 @@
 struct xoroshiro128plus {
   using uint_type = uint64_t;
   using simd_type = __m256i;
-  using result_type = simd_type;
+  using result_type = uint_type;
   static constexpr size_t simd_size = 4;
   static constexpr size_t word_size = 64;
   static constexpr size_t rotation_a = 24;

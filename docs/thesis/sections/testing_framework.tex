@@ -3,8 +3,69 @@
 \section{Testing Framework} % (fold)
 \label{sec:testing_framework}
 
-  \inputCodeBlock[title = Scalar Monte Carlo π]{code/monte_carlo_pi/sisd/single.hpp}
-  \inputCodeBlock[title = AVX Monte Carlo π]{code/monte_carlo_pi/simd256/vprng.hpp}
+  \subsection{Unit Tests} % (fold)
+  \label{sub:unit_tests}
+    While working on modules of a library, we always have to make sure to test their functionality.
+    Typically, this is done via unit and integration tests.
+    We do not want to go into details of testing but instead want to show a few unit tests that were created and used during the development process.
+    Besides consistency and correctness, this will additionally show how to apply the library in other code.
+    To append and create new tests easily, a unit testing framework called \enquote{doctest} was used \autocite{doctest}.
+    Because all PRNGs are in general tested the same way, we will only describe the testing facilities by means of the MT19937 and AVX intrinsics if not otherwise stated.
 
+    \inputCodeBlock[title = Scalar MT19937 Advance Test]{code/mt19937/sisd/test.cpp}
+    In our scalar implementation of the MT19937, we wanted to guarantee that its output does not differ in comparison to the output of the \code{std::mt19937} of the STL of C++.
+    Using only the seeding process and the advancing methods of the generators, we came up with the most simplest solution.
+    We use a truly random seed given from \code{std::random\_device} to initialize the standard MT from the STL and our own implementation the same way.
+    Afterwards, we are requiring the equality of their output for several million calls to the function operator.
+    It does not necessarily fulfill all good design principles for unit tests but asks for enough information, such that multiple successful runs of this test imply the correctness of the implementation.
+    Therefore, we avoided an infeasible brute-force method of testing all possible outputs.
+    As we have designed another API, our own MT has to be seeded with its default seeder, such that it is able to use only one $32\appendUnit{bit}$ random number in the construction process.
+    Please note that \code{std::random\_device} does not have to be truly random \autocite{oneill-blog-rd,oneill-blog-seeding-surprises} but in this case can be replaced by other seeding alternatives \autocite{oneill-blog-seed-entropy}.
+
+    Testing the vectorized implementation of an advancing method can be done the same way by comparing each element of an SIMD vector with the output of the scalar version.
+    The use of appropriate \code{using} declarations or even a wrapper class would makes the code more readable.
+    \inputCodeBlock[title = AVX MT19937 Advance Test]{code/mt19937/simd256/test.cpp}
+    As a special case, the vectorization of the jump function of the Xoroshiro128+ can be tested by checking the equality of the internal state variables.
+    Here, we have to take care when initializing the four scalar instances to test against.
+    We first set their state directly to be able to run the comparison the same way after doing the jump.
+    \inputCodeBlock[title = AVX Xoroshiro128+ Jump Test]{code/xoroshiro128plus/simd256/test.cpp}
+  % subsection unit_tests (end)
+
+  \subsection{Statistical Testing} % (fold)
+  \label{sub:statistical_testing}
+    The topic of this thesis is not to develop new PRNGs.
+    As a consequence, we will not test the statistical performance of the already known scalar PRNGs.
+    Instead, we have to examine the randomness of the created multiple streams embodied by the SIMD vectors.
+    As stated in \textcite[\ppno~160-162]{kneusel2018}, we will combine all streams of random numbers into a single one by interleaving the samples as shown in figure \ref{fig:combined-stream}.
+    The combined stream will then be used as an input to the common test suites \citetitle{testu01} and \citetitle{dieharder} \autocite{testu01,dieharder}.
+    \begin{figure}
+      \center
+      \caption[Combined Stream by Interleaving Samples of Multiple Streams]{%
+        The figure shows how the samples of multiple streams can be interleaved to produce a combined stream which can be used as input for common statistical test suites.
+      }
+      \label{fig:combined-stream}
+    \end{figure}
+
+    By using the described method, testing vectorized PRNGs without multiple instances will not give us further insights to their randomness properties because interleaving the samples would produce the same output as the scalar version.
+    This especially true for the MT19937.
+    Hence, we only test the output of the vectorized Xoroshiro128+ and the MSWS to guarantee the vectorization process is not reducing the statistical performance of the generators.
+    The process of testing was geared to \textcite[\ppno~141-155]{kneusel2018} and \textcite{oneill-blog-testu01}.
+  % subsection statistical_testing (end)
+
+  \subsection{Generation Benchmark} % (fold)
+  \label{sub:generation_benchmark}
+
+  % subsection generation_benchmark (end)
+
+  \subsection{Monte Carlo π Benchmark} % (fold)
+  \label{sub:monte_carlo_π_benchmark}
+    \inputCodeBlock[title = Scalar Monte Carlo π]{code/monte_carlo_pi/sisd/single.hpp}
+    \inputCodeBlock[title = AVX Monte Carlo π]{code/monte_carlo_pi/simd256/vprng.hpp}
+  % subsection monte_carlo_π_benchmark (end)
+
+  \subsection{Photon Benchmark} % (fold)
+  \label{sub:photon_benchmark}
+
+  % subsection photon_benchmark (end)
 % section testing_framework (end)
 \end{document}

@@ -214,19 +214,19 @@
       \item[\code{decltype}]
         This is a specifier introducing an unevaluated context from which it is deducing the type of the given expression without actually evaluating the expression.
         % \autocite{stroustrup2014}
-      \item[\code{std::enable\_if\_t}]
+      \item[\code{std::enable_if_t}]
         This is a helper template from the STL to ignore function templates by using SFINAE under certain compile conditions.
         If the template argument evaluates to true then \code{std::enable\_if\_t} will evaluate to an actual type.
         Otherwise, it will have no meaning triggering the SFINAE principle for overloads.
         % \autocite{vandevoorde2018}
-      \item[\code{std::declval}]
+      \item[\text{\code{std::declval}}]
         The given STL function template is only declared, not defined and therefore cannot be called in evaluated contexts.
         It can be used as a placeholder for an object reference of a specific type.
         Typically, this routine will be inserted instead of a default constructor in the unevaluated context argument of \code{decltype}.
         % \autocite{vandevoorde2018}
       \item[Type Traits]
         Type traits are general functions defined over types to modify or evaluate them.
-        In the STL a typical examples is given by \code{std::is\_same\_v} which is evaluating if two types are the same.
+        In the STL a typical examples is given by \code{std::is_same_v} which is evaluating if two types are the same.
     \end{description}
   % subsection the_c_programming_language (end)
 % section preliminaries (end)
