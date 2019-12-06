@@ -300,7 +300,14 @@
 
     \subsubsection*{Surface Interaction} % (fold)
     \label{ssub:surface_interaction}
+      The interaction of photons with surfaces of objects is strongly associated with the properties of the materials the objects consist of.
+      Typically, the behavior can be modeled by bidirectional scattering distribution functions (BSDFs) which give the portion of light scattered in the outgoing direction with respect to the incoming direction.
+      Concerning photons, for a fixed incoming direction BSDFs can be thought of as probability densities over the outgoing direction of the photon after the surface scattering has taken place.
+      We refer again to \textcite{pharr2016} and \textcite{pawellek2017}.
 
+      To simulate complex optical properties of object materials BSDFs have to sampled with the usage of appropriate random variables.
+
+      We will only assume ideal reflection and refraction.
     % subsubsection surface_interaction (end)
 
     \subsubsection*{Volume Scattering} % (fold)
