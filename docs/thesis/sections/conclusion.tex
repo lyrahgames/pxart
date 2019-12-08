@@ -1,9 +1,21 @@
-\documentclass[crop=false]{standalone}
-\usepackage{standard}
-
+\documentclass[crop=false]{stdlocal}
 \begin{document}
-  \section{Conclusions} % (fold)
-  \label{sec:conclusions}
+\section{Conclusions and Future Work} % (fold)
+\label{sec:conclusions}
+  We were able to show that the vectorization of PRNGs based on SIMD intrinsics can improve the performance of physical simulations which need to access a large amount of random numbers.
+  For further development, we recommend to compare our implementations against state-of-the-art RNGs.
+  Due to the unique restrictions concerning the statistical performance an application is imposing on an RNG, future work should involve the development of even more vectorized RNGs.
+  This also means that we have to exhaustively test the statistical performance of vectorized PRNGs in different scenarios.
+  These scenarios should be simplified versions of a real-world problem to justify the results and examine the robustness of our current design.
+  By tweaking the testing and benchmarking framework, we are then able to extend the vectorized implementations to other SIMD architectures providing vector registers, like the AVX512 instruction set from Intel.
+  With the release of the C++20 standard specification, we should take advantage on the newly introduced features, like concepts, of C++ to reduce the complexity of the API and increase its performance and handling.
 
-  % section conclusions (end)
+  more generators
+  comparison to other implementations
+  c++20 improve api
+  real-world applications
+  avx512
+  more architectures
+  statistical tests
+% section conclusions (end)
 \end{document}

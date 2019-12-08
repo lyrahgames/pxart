@@ -12,7 +12,7 @@ using namespace std;
 
 struct benchmark {
   explicit benchmark(size_t samples) : n{samples} {
-    cout << "iteration = " << n << "\n"
+    cout << "# iterations = " << n << "\n"
          << "\n";
   }
 
@@ -21,11 +21,11 @@ struct benchmark {
                           Function function) noexcept {
     float pi{};
     {
-      params.setParam("                                  name", name);
+      params.setParam("#                                  name", name);
       PerfEventBlock e(n, params, header);
       pi = function(forward<RNG>(rng), n);
     }
-    cout << "pi = " << pi << "\n";
+    cout << "# pi = " << pi << "\n";
 
     header = false;
     return *this;
@@ -35,11 +35,11 @@ struct benchmark {
                           Function function) noexcept {
     float pi{};
     {
-      params.setParam("                                  name", name);
+      params.setParam("#                                  name", name);
       PerfEventBlock e(n, params, header);
       pi = function(forward<RNG>(rng1), forward<RNG>(rng2), n);
     }
-    cout << "pi = " << pi << "\n";
+    cout << "# pi = " << pi << "\n";
 
     header = false;
     return *this;
@@ -127,6 +127,11 @@ struct benchmark {
     return *this;
   }
 
+  benchmark& heading(const char* text) {
+    cout << text << "\n";
+    return *this;
+  }
+
   size_t n{};
   BenchmarkParameters params{};
   bool header = true;
@@ -145,57 +150,56 @@ int main(int argc, char** argv) {
   random_device rd{};
 
   benchmark{n}  //
-      .run_std("base std::mt19937", std::mt19937{rd()})
-      .run_uniform("uniform std::mt19937", std::mt19937{rd()})
+      .heading("# STL MT19937")
+      .run_std("naive", std::mt19937{rd()})
+      .run_uniform("uniform", std::mt19937{rd()})
       .separate()
-      .run_std("base boost::mt19937", boost::random::mt19937{rd()})
-      .run_uniform("uniform boost::mt19937", boost::random::mt19937{rd()})
+      .heading("# Boost MT19937")
+      .run_std("naive", boost::random::mt19937{rd()})
+      .run_uniform("uniform", boost::random::mt19937{rd()})
       .separate()
-      .run_std("base pxart::mt19937", pxart::mt19937{rd})
-      .run_uniform("uniform pxart::mt19937", pxart::mt19937{rd})
-      .run_cache("cache pxart::simd256::mt19937", pxart::simd256::mt19937{rd})
-      .run_simd256("simd256 pxart::simd256::mt19937",
-                   pxart::simd256::mt19937{rd})
-      .run_cache("cache pxart::simd128::mt19937", pxart::simd128::mt19937{rd})
-      .run_simd128("simd128 pxart::simd128::mt19937",
-                   pxart::simd128::mt19937{rd})
+      .heading("# pxart MT19937")
+      .run_std("naive", pxart::mt19937{rd})
+      .run_uniform("uniform", pxart::mt19937{rd})
+      .run_cache("AVX cache", pxart::simd256::mt19937{rd})
+      .run_simd256("AVX", pxart::simd256::mt19937{rd})
+      .run_cache("SSE cache", pxart::simd128::mt19937{rd})
+      .run_simd128("SSE", pxart::simd128::mt19937{rd})
       .separate()
-      .run_std("base pxart::xrsr128p", pxart::xrsr128p{rd})
-      .run_std("2 x base pxart::xrsr128p", pxart::xrsr128p{rd},
-               pxart::xrsr128p{rd})
-      .run_uniform("uniform pxart::xrsr128p", pxart::xrsr128p{rd})
-      .run_uniform("2 x uniform pxart::xrsr128p", pxart::xrsr128p{rd},
-                   pxart::xrsr128p{rd})
-      .run_cache("cache pxart::simd256::xrsr128p", pxart::simd256::xrsr128p{rd})
-      .run_cache("2 x cache pxart::simd256::xrsr128p",
-                 pxart::simd256::xrsr128p{rd}, pxart::simd256::xrsr128p{rd})
-      .run_simd256("simd256 pxart::simd256::xrsr128p",
+      .heading("# pxart Xoroshiro128+")
+      .run_std("naive", pxart::xrsr128p{rd})
+      .run_std("2 x naive", pxart::xrsr128p{rd}, pxart::xrsr128p{rd})
+      .run_uniform("uniform", pxart::xrsr128p{rd})
+      .run_uniform("2 x uniform", pxart::xrsr128p{rd}, pxart::xrsr128p{rd})
+      .run_cache("AVX cache", pxart::simd256::xrsr128p{rd})
+      .run_cache("2 x AVX cache", pxart::simd256::xrsr128p{rd},
+                 pxart::simd256::xrsr128p{rd})
+      .run_simd256("AVX", pxart::simd256::xrsr128p{rd})
+      .run_simd256("2 x AVX", pxart::simd256::xrsr128p{rd},
                    pxart::simd256::xrsr128p{rd})
-      .run_simd256("2 x simd256 pxart::simd256::xrsr128p",
-                   pxart::simd256::xrsr128p{rd}, pxart::simd256::xrsr128p{rd})
-      .run_cache("cache pxart::simd128::xrsr128p", pxart::simd128::xrsr128p{rd})
-      .run_cache("2 x cache pxart::simd128::xrsr128p",
-                 pxart::simd128::xrsr128p{rd}, pxart::simd128::xrsr128p{rd})
-      .run_simd128("simd128 pxart::simd128::xrsr128p",
+      .run_cache("SSE cache", pxart::simd128::xrsr128p{rd})
+      .run_cache("2 x SSE cache", pxart::simd128::xrsr128p{rd},
+                 pxart::simd128::xrsr128p{rd})
+      .run_simd128("SSE", pxart::simd128::xrsr128p{rd})
+      .run_simd128("2 x SSE", pxart::simd128::xrsr128p{rd},
                    pxart::simd128::xrsr128p{rd})
-      .run_simd128("2 x simd128 pxart::simd128::xrsr128p",
-                   pxart::simd128::xrsr128p{rd}, pxart::simd128::xrsr128p{rd})
       .separate()
-      .run_std("base pxart::msws", pxart::msws{rd})
-      .run_std("2 x base pxart::msws", pxart::msws{rd}, pxart::msws{rd})
-      .run_uniform("uniform pxart::msws", pxart::msws{rd})
-      .run_uniform("2 x uniform pxart::msws", pxart::msws{rd}, pxart::msws{rd})
-      .run_cache("cache pxart::simd256::msws", pxart::simd256::msws{rd})
-      .run_cache("2 x cache pxart::simd256::msws", pxart::simd256::msws{rd},
+      .heading("# pxart MSWS")
+      .run_std("naive", pxart::msws{rd})
+      .run_std("2 x naive", pxart::msws{rd}, pxart::msws{rd})
+      .run_uniform("uniform", pxart::msws{rd})
+      .run_uniform("2 x uniform", pxart::msws{rd}, pxart::msws{rd})
+      .run_cache("AVX cache", pxart::simd256::msws{rd})
+      .run_cache("2 x AVX cache", pxart::simd256::msws{rd},
                  pxart::simd256::msws{rd})
-      .run_simd256("simd256 pxart::simd256::msws", pxart::simd256::msws{rd})
-      .run_simd256("2 x simd256 pxart::simd256::msws", pxart::simd256::msws{rd},
+      .run_simd256("AVX", pxart::simd256::msws{rd})
+      .run_simd256("2 x AVX", pxart::simd256::msws{rd},
                    pxart::simd256::msws{rd})
-      .run_cache("cache pxart::simd128::msws", pxart::simd128::msws{rd})
-      .run_cache("2 x cache pxart::simd128::msws", pxart::simd128::msws{rd},
+      .run_cache("SSE cache", pxart::simd128::msws{rd})
+      .run_cache("2 x SSE cache", pxart::simd128::msws{rd},
                  pxart::simd128::msws{rd})
-      .run_simd128("simd128 pxart::simd128::msws", pxart::simd128::msws{rd})
-      .run_simd128("2 x simd128 pxart::simd128::msws", pxart::simd128::msws{rd},
+      .run_simd128("SSE", pxart::simd128::msws{rd})
+      .run_simd128("2 x SSE", pxart::simd128::msws{rd},
                    pxart::simd128::msws{rd})
       //
       ;

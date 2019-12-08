@@ -11,5 +11,32 @@
     According to \textcite{oneill-blog-toobig}, creating a larger state will even make a weak generator stronger concerning its statistical performance.
     We will run the tests to confirm this.
   % subsection statistical_performance (end)
+
+  \begin{figure}
+    \center
+    \begin{subfigure}[b]{\textwidth}
+      \includegraphics[width=\textwidth]{plots/monte_carlo_pi_laptop_mt19937.pdf}
+      \caption{MT19937}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{\textwidth}
+      \includegraphics[width=\textwidth]{plots/monte_carlo_pi_laptop_xrsr128p.pdf}
+      \caption{Xoroshiro128+}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{\textwidth}
+      \includegraphics[width=\textwidth]{plots/monte_carlo_pi_laptop_msws.pdf}
+      \caption{MSWS}
+    \end{subfigure}
+    \caption{}
+  \end{figure}
+
+  \begin{table}
+    \center
+    \caption{}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.2}
+    \subimport{tables/}{monte_carlo_pi_laptop.tex}
+  \end{table}
 % section evaluation (end)
 \end{document}
