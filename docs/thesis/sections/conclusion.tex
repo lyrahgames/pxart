@@ -2,20 +2,21 @@
 \begin{document}
 \section{Conclusions and Future Work} % (fold)
 \label{sec:conclusions}
-  We were able to show that the vectorization of PRNGs based on SIMD intrinsics can improve the performance of physical simulations which need to access a large amount of random numbers.
-  For further development, we recommend to compare our implementations against state-of-the-art RNGs.
+  We were able to show that the vectorization of PRNGs and distributions based on SIMD intrinsics can improve the performance of physical simulations which need to access a large amount of random numbers.
+  By applying current statistical and empirical test suites, it was demonstrated that the vectorization of multiple instances does not reduce the statistical performance of the given generators.
+  The time and effort taken to implement the vectorized data structures and advancing routines do not outweigh the enhancement in speed-up but have to be considered when deciding to vectorize an actual application to further increase performance.
+
+  Also, we have developed an API which makes the initialization process and the usage of distributions much simpler while providing possibilities for easily implementing new generators specializing algorithms though the creation of certain member functions.
+  The interface of the library was directly applied to the testing framework and the physical simulations showing its simplicity and robustness.
+  Accelerating the execution of randomized algorithms was achieved through different implementation schemes by using scalar code or exploiting SSE/AVX features.
+  Especially, the estimation of π, the Ising model and the simulation of photon propagation typically build the basis for more advanced physical simulations in optics and quantum physics depending on Monte Carlo integration, Metropolis-Hastings algorithms, importance sampling and Russian roulette.
+  Thus, even in scalar applications not using any SIMD intrinsics, we can recommend the usage of vectorized PRNGs and distributions to speed up the generation of random numbers.
+
+  For further development, we recommend to compare our implementations against vectorized state-of-the-art RNGs given by \citetitle{intel-mkl} and \citetitle{rngavxlib}.
   Due to the unique restrictions concerning the statistical performance an application is imposing on an RNG, future work should involve the development of even more vectorized RNGs.
   This also means that we have to exhaustively test the statistical performance of vectorized PRNGs in different scenarios.
   These scenarios should be simplified versions of a real-world problem to justify the results and examine the robustness of our current design.
   By tweaking the testing and benchmarking framework, we are then able to extend the vectorized implementations to other SIMD architectures providing vector registers, like the AVX512 instruction set from Intel.
-  With the release of the C++20 standard specification, we should take advantage on the newly introduced features, like concepts, of C++ to reduce the complexity of the API and increase its performance and handling.
-
-  more generators
-  comparison to other implementations
-  c++20 improve api
-  real-world applications
-  avx512
-  more architectures
-  statistical tests
+  With the release of the C++20 standard specification, we should take advantage on the newly introduced features of C++, like concepts, to reduce the complexity of the API and increase its performance and handling.
 % section conclusions (end)
 \end{document}
