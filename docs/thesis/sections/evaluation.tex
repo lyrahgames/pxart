@@ -21,8 +21,8 @@
   It operates at a base frequency of $1.6\appendUnit{GHz}$ and a Turbo Boost frequency of up to $3.4\appendUnit{GHz}$.
   We refer to \textcite{intel-kaby-lake-i5} and \textcite{intel-kaby-lake-i7} for more information.
 
-  \subsection{Statistical Performance} % (fold)
-  \label{sub:statistical_performance}
+  \subsection{Statistical Quality} % (fold)
+  \label{sub:statistical_quality}
     From a theoretical point of view, interleaving multiple streams of random numbers based on multiple instances of the same generator should not reduce the randomness of the output, such that test suites will be able to measure it.
     Using multiple instances through SSE/AVX vector registers the state of the vectorized PRNG becomes at least two times as big as the scalar variant.
     According to \textcite{oneill-blog-toobig}, creating a larger state will even make a weak generator stronger concerning its statistical performance.
@@ -38,33 +38,82 @@
     Even a truly random sequence will fail tests from time to time \autocite[\pno~142]{kneusel2018} and so after running the test suites multiple times, we wer able to confirm this for our implementations, too.
     Every generator rarely produced test failures that did not follow any pattern.
     We conclude that the usage of multiple instances to vectorize the generators did not reduce their statistical quality.
-  % subsection statistical_performance (end)
+  % subsection statistical_quality (end)
 
-  \begin{figure}
-    \center
-    \begin{subfigure}[b]{\textwidth}
-      \includegraphics[width=\textwidth]{plots/monte_carlo_pi_laptop_mt19937.pdf}
-      \caption{MT19937}
-    \end{subfigure}
+  \subsection{Performance Improvement} % (fold)
+  \label{sub:performance_improvement}
 
-    \begin{subfigure}[b]{\textwidth}
-      \includegraphics[width=\textwidth]{plots/monte_carlo_pi_laptop_xrsr128p.pdf}
-      \caption{Xoroshiro128+}
-    \end{subfigure}
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{plots/generation_desktop.pdf}
+      \caption{\citetitle{intel-kaby-lake-i7}}
+    \end{figure}
 
-    \begin{subfigure}[b]{\textwidth}
-      \includegraphics[width=\textwidth]{plots/monte_carlo_pi_laptop_msws.pdf}
-      \caption{MSWS}
-    \end{subfigure}
-    \caption{}
-  \end{figure}
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{plots/generation_desktop_speedup.pdf}
+      \caption{\citetitle{intel-kaby-lake-i7}}
+    \end{figure}
 
-  \begin{table}
-    \center
-    \caption{}
-    \footnotesize
-    \renewcommand{\arraystretch}{1.2}
-    \subimport{tables/}{monte_carlo_pi_laptop.tex}
-  \end{table}
+    \begin{table}
+      \caption{\citetitle{intel-kaby-lake-i7}}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.2}
+      \subimport{tables/}{generation_desktop}
+    \end{table}
+
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_mt19937.pdf}
+        \caption{MT19937}
+      \end{subfigure}
+
+      \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_xrsr128p.pdf}
+        \caption{Xoroshiro128+}
+      \end{subfigure}
+
+      \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_msws.pdf}
+        \caption{MSWS}
+      \end{subfigure}
+      \caption{\citetitle{intel-kaby-lake-i7}}
+    \end{figure}
+
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_laptop_mt19937.pdf}
+        \caption{MT19937}
+      \end{subfigure}
+
+      \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_laptop_xrsr128p.pdf}
+        \caption{Xoroshiro128+}
+      \end{subfigure}
+
+      \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_laptop_msws.pdf}
+        \caption{MSWS}
+      \end{subfigure}
+      \caption{\citetitle{intel-kaby-lake-i5}}
+    \end{figure}
+
+    \begin{table}
+      \center
+      \caption{\citetitle{intel-kaby-lake-i7}}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.2}
+      \subimport{tables/}{monte_carlo_pi_desktop.tex}
+    \end{table}
+    \begin{table}
+      \center
+      \caption{\citetitle{intel-kaby-lake-i5}}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.2}
+      \subimport{tables/}{monte_carlo_pi_laptop.tex}
+    \end{table}
+  % subsection performance_improvement (end)
 % section evaluation (end)
 \end{document}

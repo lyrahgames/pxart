@@ -18,9 +18,9 @@ using namespace std;
 
 struct benchmark {
   explicit benchmark(size_t samples) : n{samples} {
-    cout << "iteration = " << n << "\n"
-         << "cache size = " << cache_size << " B\n"
-         << "samples = " << n * cache_size / sizeof(uint32_t) << "\n"
+    cout << "# iteration = " << n << "\n"
+         << "# cache size = " << cache_size << " B\n"
+         << "# samples = " << n * cache_size / sizeof(uint32_t) << "\n"
          << "\n";
   }
 
@@ -35,7 +35,7 @@ struct benchmark {
     {
       params.setParam("npc",  // numbers per call
                       to_string(sizeof(result_type) / sizeof(uint32_t)));
-      params.setParam("name", name);
+      params.setParam("#     name", name);
       PerfEventBlock e(n * cache_count, params, header);
       for (int i = 0; i < n; ++i)
         for (auto& x : cache) x = rng();
@@ -68,7 +68,7 @@ struct benchmark {
     {
       params.setParam("npc",  // numbers per call
                       to_string(sizeof(result_type) / sizeof(uint32_t)));
-      params.setParam("name", name);
+      params.setParam("#     name", name);
       PerfEventBlock e(n * cache_count, params, header);
       for (int i = 0; i < n; ++i) {
         for (int j = 0; j < cache_count; j += 2) {
@@ -96,6 +96,11 @@ struct benchmark {
     return *this;
   }
 
+  benchmark& heading(const char* text) noexcept {
+    cout << text << "\n";
+    return *this;
+  }
+
   static constexpr int cache_size = 1 << 14;
   size_t n{};
   BenchmarkParameters params{};
@@ -115,27 +120,32 @@ int main(int argc, char** argv) {
   random_device rd{};
 
   benchmark{n}  //
-      .run<uint32_t>("std   mt", std::mt19937{rd()})
-      .run("boost mt", boost::random::mt19937{rd()})
-      .run("pxart mt", pxart::mt19937{pxart::mt19937::default_seeder{rd()}})
-      .run("px mt256",
-           pxart::simd256::mt19937{pxart::mt19937::default_seeder{rd()}})
-      .run("px mt128",
-           pxart::simd128::mt19937{pxart::mt19937::default_seeder{rd()}})
+      .heading("# STL MT19937")
+      .run<uint32_t>("scalar", std::mt19937{rd()})
       .separate()
-      .run("pxt xrsr", pxart::xrsr128p{rd})
-      .run("xrsr  x2", pxart::xrsr128p{rd}, pxart::xrsr128p{rd})
-      .run("px xs256", pxart::simd256::xrsr128p{rd})
-      .run("xs256 x2", pxart::simd256::xrsr128p{rd},
+      .heading("# Boost MT19937")
+      .run("scalar", boost::random::mt19937{rd()})
+      .separate()
+      .heading("# MT19937")
+      .run("scalar", pxart::mt19937{pxart::mt19937::default_seeder{rd()}})
+      .run("AVX", pxart::simd256::mt19937{pxart::mt19937::default_seeder{rd()}})
+      .run("SSE", pxart::simd128::mt19937{pxart::mt19937::default_seeder{rd()}})
+      .separate()
+      .heading("# Xoroshiro128+")
+      .run("scalar", pxart::xrsr128p{rd})
+      .run("2 x scalar", pxart::xrsr128p{rd}, pxart::xrsr128p{rd})
+      .run("AVX", pxart::simd256::xrsr128p{rd})
+      .run("2 x AVX", pxart::simd256::xrsr128p{rd},
            pxart::simd256::xrsr128p{rd})
-      .run("px xs128", pxart::simd128::xrsr128p{rd})
-      .run("xs128 x2", pxart::simd128::xrsr128p{rd},
+      .run("SSE", pxart::simd128::xrsr128p{rd})
+      .run("2 x SSE", pxart::simd128::xrsr128p{rd},
            pxart::simd128::xrsr128p{rd})
       .separate()
-      .run("pxt msws", pxart::msws{rd})
-      .run("msws  x2", pxart::msws{rd}, pxart::msws{rd})
-      .run("px mw256", pxart::simd256::msws{rd})
-      .run("mw256 x2", pxart::simd256::msws{rd}, pxart::simd256::msws{rd})
-      .run("px mw128", pxart::simd128::msws{rd})
-      .run("mw128 x2", pxart::simd128::msws{rd}, pxart::simd128::msws{rd});
+      .heading("# MSWS")
+      .run("scalar", pxart::msws{rd})
+      .run("2 x scalar", pxart::msws{rd}, pxart::msws{rd})
+      .run("AVX", pxart::simd256::msws{rd})
+      .run("2 x AVX", pxart::simd256::msws{rd}, pxart::simd256::msws{rd})
+      .run("SSE", pxart::simd128::msws{rd})
+      .run("2 x SSE", pxart::simd128::msws{rd}, pxart::simd128::msws{rd});
 }
