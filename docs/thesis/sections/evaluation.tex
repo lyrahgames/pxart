@@ -2,8 +2,6 @@
 \begin{document}
 \section{Evaluation and Results} % (fold)
 \label{sec:evaluation}
-  \autocite{compiler-explorer,intel-intrinsics-guide,perfevent,vandevoorde2018,meyers2014}
-
   In section \ref{sec:implementation}, we have implemented scalar and vectorized versions of known PRNGs, namely the MT19937, the Xoroshiro128+, and the MSWS.
   Additionally, unbiased uniform distribution functions for floating-point numbers based on \textcite[\ppno~55-56]{kneusel2018} and \textcite{vigna-xoroshiro} were introduced to completely exploit the vector registers as long as possible.
   The last section \ref{sec:testing_framework} described the implementation of tests and benchmarks to measure the performance of PRNGs concerning statistics and execution time.
@@ -42,29 +40,15 @@
 
   \subsection{Performance Improvement} % (fold)
   \label{sub:performance_improvement}
+    Applying the designed benchmarks to the implementations of scalar and vectorized PRNGs enables us to evaluate the performance improvement introduced by using vectorization techniques.
+    In tables \ref{tab:generation-data-i7} and \ref{tab:monte-carlo-pi-data-i7}, the results for running the generation benchmark and the Monte Carlo π benchmark respectively on the \citetitle{intel-kaby-lake-i7} are given for all the implemented PRNG versions and benchmark scenarios.
+    For the MT19937, we have even inserted the data for the STL and Boost implementations to see if the code is indeed outperforming its state-of-art scalar counterparts \autocite{boost,gcc-libstdcpp}.
+    All measurements and plots for the \citetitle{intel-kaby-lake-i5} will not be shown in this section to not distract and can be found in the appendix \ref{sec:further_results}.
+    Figures \ref{fig:generation-performance-i7} and \ref{fig:generation-speedup-i7} show the respective performance and speedup resulted from running the generation benchmark on the \citetitle{intel-kaby-lake-i7}.
+    For the many variants of the Monte Carlo π benchmark, we only show the speed-up in figure \ref{fig:monte-carlo-pi-speedup-i7}.
+    The prefix \enquote{2 x} appearing in all figures states that two independent instances of the given generator were used.
 
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{plots/generation_desktop.pdf}
-      \caption[Generation Benchmark Performance for \citetitle{intel-kaby-lake-i7}]{%
-        The plot shows the performance resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} measured in $\mathrm{GiB}$ of random numbers per second for the different variants of the implemented PRNGs.
-        % The prefix \enquote{2 x} states that two independent instances of the given generator were used.
-        For convenience, the performances of the STL and Boost implementation of the MT19937 are shown as well.
-        The data can be found in table \ref{tab:generation-data-i7}.
-      }
-    \end{figure}
-
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{plots/generation_desktop_speedup.pdf}
-      \caption[Generation Benchmark Speed-Up for \citetitle{intel-kaby-lake-i7}]{%
-        The plot shows the speed-up in execution time with respect to the single-instance scalar version resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs.
-        For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
-        The data can be found in table \ref{tab:generation-data-i7}.
-      }
-    \end{figure}
-
-    \begin{table}
+    \begin{table}[H]
       \center
       \caption[Generation Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
         The table shows the results achieved by running the generation benchmark on the \citetitle{intel-kaby-lake-i7} at a frequency of $4.51\appendUnit{GHz}$ with all implemented variants of given PRNGs.
@@ -76,6 +60,85 @@
       \footnotesize
       \renewcommand{\arraystretch}{1.2}
       \subimport{tables/}{generation_desktop}
+    \end{table}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{plots/generation_desktop.pdf}
+      \caption[Generation Benchmark Performance for \citetitle{intel-kaby-lake-i7}]{%
+        The plot shows the performance resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} measured in $\mathrm{GiB}$ of random numbers per second for the different variants of the implemented PRNGs.
+        For convenience, the performances of the STL and Boost implementation of the MT19937 are shown as well.
+        The data can be found in table \ref{tab:generation-data-i7}.
+      }
+      \label{fig:generation-performance-i7}
+    \end{figure}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{plots/generation_desktop_speedup.pdf}
+      \caption[Generation Benchmark Speed-Up for \citetitle{intel-kaby-lake-i7}]{%
+        The plot shows the speed-up in execution time with respect to the single-instance scalar version resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs.
+        For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
+        The data can be found in table \ref{tab:generation-data-i7}.
+      }
+      \label{fig:generation-speedup-i7}
+    \end{figure}
+
+    Both target machines consist of similar architectures.
+    Comparing the tables \ref{tab:generation-data-i7} and \ref{tab:monte-carlo-pi-data-i7} and the figures \ref{fig:generation-performance-i7}, \ref{fig:generation-speedup-i7}, and \ref{fig:monte-carlo-pi-speedup-i7} to the tables \ref{tab:generation-data-i5} and \ref{tab:monte-carlo-pi-data-i5} and the figures \ref{fig:generation-performance-i5}, \ref{fig:generation-speedup-i5}, and \ref{fig:monte-carlo-pi-speedup-i5} in appendix \ref{sec:further_results} respectively, we see that both architectures exhibit nearly the same speed-up, averaged cycles and averaged instructions.
+    Due to differing raw computing power, the execution time and the averaged IPC deviate from each other.
+    Therefore we recommend that quantizing the efficiency of a PRNG implementation should use the averaged cycles and instructions to draw conclusions for a given microarchitecture.
+
+    We are mostly interested in the speed-up concerning the execution time of a given benchmark to have a direct comparison between scalar and vectorized generators.
+    According to figure \ref{fig:generation-speedup-i7}, in the generation benchmark we were able to achieve a speed-up greater than one for all vectorized versions of PRNGs.
+
+    Our scalar implementation of the MT19937 has already beaten the standard version of the STL but was not able to surpass the Boost implementation.
+    However, looking at the speed-up introduced by the usage of SSE and AVX intrinsics, vectorized versions of the MT19937 are more than three times faster by using SSE and more than six times faster by using AVX than their scalar counterparts.
+    Vectorizing the MT19937, the best possible theoretical speed-up should be four when used with SSE registers and eight when used with AVX registers.
+    The compiler already tries to vectorize the scalar versions so that it is not possible to reach this theoretical bound.
+    But this also means that for this scenario the compiler is not able to fully vectorize the scalar implementations automatically, such that manually vectorizing the code is necessary for speeding up the execution.
+    In general, the MT19937 speed-ups introduced by SSE and AVX are close to the theoretical maximum.
+    Thus, taking the extra effort of vectorizing this generator paid off.
+
+    The Xoroshiro128+ indeed executes faster by using SSE/AVX intrinsics.
+    The SSE variant realizes a speed-up of approximately $1.1$ and the AVX variant a speed-up of $2.2$.
+    However, we are much further away from the theoretical bounds than in the case of the MT19937.
+    Using SSE, we should reach a speed-up of two, whereas a speed-up of four would be the bound for the AVX version.
+    We expect that this time the compiler was much more capable of automatically vectorizing large parts of the code in the generation benchmark.
+    If the automatically vectorized code is already exploiting vector intrinsics we cannot hope to reach the theoretical speed-up.
+    But instead the manual vectorization was able to further reduce code and data dependencies in the generation benchmark.
+    Furthermore, by analyzing latency issues through the use of two independent instances of the generator, we see that in some cases SSE/AVX versions can be further optimized by using the doubled state size to keep the CPU pipeline filled.
+    This seems not to be true for the scalar version.
+    The implementation of a vectorized Xoroshiro128+ is not a complex procedure.
+    As a consequence, even for these smaller speed-ups using vectorization techniques turns out to be profitable.
+
+    The results for the MSWS in the generation benchmark are similar to the results of the Xoroshiro128+.
+    The compiler is capable of automatically vectorizing large parts of the code.
+    This reduces the possible speed-up reachable by SSE/AVX implementations.
+    But this time, we see a strong improvement in performance when using two instances of the MSWS versions.
+    In the implementation of the MSWS, we have to carry out a $64\appendUnit{bit}$ multiplication by squaring a number.
+    Especially for vector registers, operations needed to compute this result typically feature an acceptable throughput but also a high latency.
+    Hence, using the doubled amount of independent states would take advantage of these parameters by keeping the multiplication pipeline filled.
+    This also would explain the results.
+    Vectorizing the MSWS has been a little bit more complicated than the procedure for the Xoroshiro128+.
+    On the other hand, we are getting a slightly better speed-up with the potential for further improvements.
+    Figure \ref{fig:generation-performance-i7} shows that the performance of the vectorized MSWS versions is smaller in comparison to the other generators.
+    The MSWS seems not to be competitive concerning its execution time, yet.
+    Nevertheless, its non-linearity makes it a perfect candidate for more advanced applications with special statistical requirements on used random numbers.
+
+    \begin{table}
+      \center
+      \caption[Monte Carlo π Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
+        The table shows the results achieved by running the Monte Carlo π Benchmark on the \citetitle{intel-kaby-lake-i7} with all implemented variants of given PRNGs and benchmark scenarios.
+        While running the benchmark, $10^{8}$ samples in the unit square were used to estimate the value of π.
+        It was ensured that the estimation error was small enough according to the calculation at the end of section \ref{sub:monte_carlo_integration}.
+        During the execution, there were no cache or branch misses.
+        The values for cycles, instructions, and IPCs were averaged over the number of samples in the unit square.
+      }
+      \label{tab:monte-carlo-pi-data-i7}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.2}
+      \subimport{tables/}{monte_carlo_pi_desktop.tex}
     \end{table}
 
     \begin{figure}
@@ -102,23 +165,26 @@
         For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
         The data can be found in table \ref{tab:monte-carlo-pi-data-i7}.
       }
+      \label{fig:monte-carlo-pi-speedup-i7}
     \end{figure}
 
-    \begin{table}
-      \center
-      \caption[Monte Carlo π Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
-        The table shows the results achieved by running the Monte Carlo π Benchmark on the \citetitle{intel-kaby-lake-i7} with all implemented variants of given PRNGs and benchmark scenarios.
-        While running the benchmark, $10^{8}$ samples in the unit square were used to estimate the value of π.
-        It was ensured that the estimation error was small enough according to the calculation at the end of section \ref{sub:monte_carlo_integration}.
-        During the execution, there were no cache or branch misses.
-        The values for cycles, instructions, and IPCs were averaged over the number of samples in the unit square.
-      }
-      \label{tab:monte-carlo-pi-data-i7}
-      \footnotesize
-      \renewcommand{\arraystretch}{1.2}
-      \subimport{tables/}{monte_carlo_pi_desktop.tex}
-    \end{table}
+    Looking at the data and plots of the Monte Carlo π benchmark in table \ref{tab:monte-carlo-pi-data-i7} and figure \ref{fig:monte-carlo-pi-speedup-i7}, we first expected to see similar results.
+    As before, all the vectorized implementations were able to increase the performance of the program.
+    Especially the fast uniform distribution function even outperforms the naive scenario for scalar generators in all cases.
+    But this time the compiler was rarely capable of automatically vectorizing the code.
+    As a consequence, we could detect much higher speed-ups for the Xoroshiro128+ and MSWS by using vector intrinsics.
+    The speed-ups of the MT19937 are reduced.
+    Using two instances of independent generators only slightly improves the performance of the MSWS and is not really changing the performance of the Xoroshiro128+.
+    We think that this follows from a higher code complexity in the Monte Carlo π benchmark.
+    The compiler optimization of the program flow is not as effective as for the generation benchmark.
+    However, at the end of each benchmark the estimation of π will printed on the screen which forces the compiler to not remove code that is needed for the computation of π.
+    Therefore the Monte Carlo π benchmark did not introduce as much noise to the measurements as the generation benchmark did.
+    We conclude that an actual application, like the computation of π, should always be used to measure performance and speed-up of PRNGs.
 
+    Another important point is that we always could reduce the execution time by a factor ranging from $1.2$ to $2.6$ when using a cache without introducing vector intrinsics to the actual benchmark.
+    By Amdahl's law, the given speed-ups have to be a lot smaller than the theoretical bounds because a great percentage of the code was not vectorized.
+    This means that even in scalar code the usage of vectorized PRNGs improves the overall performance.
+    But to completely exploit the speed-up brought by vectorization of PRNGs, developers should consider the usage of SIMD intrinsics in performance-critical parts of their code which are using random numbers.
   % subsection performance_improvement (end)
 % section evaluation (end)
 \end{document}
