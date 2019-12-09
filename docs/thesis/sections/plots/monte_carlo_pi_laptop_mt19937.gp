@@ -7,7 +7,7 @@ set yrange [0:0.001 < * < 1000]
 # set ytics 0.25
 set xr [-0.75:12]
 set xtics rotate by 35 right
-set yl "speed-up"
+set yl "Speed-Up"
 set format y "%.1f"
 bs = 0.75
 plot \

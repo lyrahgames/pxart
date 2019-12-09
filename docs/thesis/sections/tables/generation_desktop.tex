@@ -3,33 +3,33 @@
 \begin{document}
 \begin{tabular}{llrrrrr}
   \hline
-  PRNG & Variant & 4 Bytes per Call & time & cycles & instructions & IPC \\
+  \textbf{PRNG} & \textbf{Variant} & \textbf{Result Size} $[\mathrm{B}]$ & \textbf{Time} $[\mathrm{s}]$ & \textbf{Cycles} & \textbf{Instructions} & \textbf{IPC} \\
   \hline
   \hline
-  STL MT19937 & scalar & 1 & 9.29 & 9.75 & 28.34 & 2.91 \\
+  STL MT19937 & scalar & 4 & 9.29 & 9.75 & 28.34 & 2.91 \\
   \hline
-  Boost MT19937 & scalar & 1 & 5.79 & 6.09 & 24.86 & 4.09 \\
+  Boost MT19937 & scalar & 4 & 5.79 & 6.09 & 24.86 & 4.09 \\
   \hline
   \multirow{3}{*}{MT19937}
-  & scalar & 1 & 7.61 & 7.99 & 26.71 & 3.34 \\
-  & AVX & 8 & 1.15 & 9.68 & 34.07 & 3.52 \\
-  & SSE & 4 & 2.11 & 8.86 & 34.04 & 3.84 \\
+  & scalar & 4 & 7.61 & 7.99 & 26.71 & 3.34 \\
+  & AVX & 32 & 1.15 & 9.68 & 34.07 & 3.52 \\
+  & SSE & 16 & 2.11 & 8.86 & 34.04 & 3.84 \\
   \hline
   \multirow{6}{*}{Xoroshiro128+}
   & scalar & 2 & 1.66 & 3.49 & 12.00 & 3.44 \\
   & 2 x scalar & 2 & 1.80 & 3.79 & 12.00 & 3.17 \\
-  & AVX & 8 & 0.74 & 6.26 & 17.02 & 2.72 \\
-  & 2 x AVX & 8 & 0.69 & 5.77 & 14.01 & 2.43 \\
-  & SSE & 4 & 1.47 & 6.19 & 17.01 & 2.75 \\
-  & 2 x SSE & 4 & 1.31 & 5.49 & 14.01 & 2.55 \\
+  & AVX & 32 & 0.74 & 6.26 & 17.02 & 2.72 \\
+  & 2 x AVX & 32 & 0.69 & 5.77 & 14.01 & 2.43 \\
+  & SSE & 16 & 1.47 & 6.19 & 17.01 & 2.75 \\
+  & 2 x SSE & 16 & 1.31 & 5.49 & 14.01 & 2.55 \\
   \hline
   \multirow{6}{*}{MSWS}
-  & scalar & 1 & 4.77 & 5.01 & 8.00 & 1.60 \\
-  & 2 x scalar & 1 & 4.24 & 4.45 & 8.50 & 1.91 \\
-  & AVX & 8 & 1.84 & 15.45 & 31.02 & 2.01 \\
-  & 2 x AVX & 8 & 1.32 & 11.13 & 24.51 & 2.20 \\
-  & SSE & 4 & 3.71 & 15.58 & 29.01 & 1.86 \\
-  & 2 x SSE & 4 & 2.60 & 10.93 & 24.51 & 2.24 \\
+  & scalar & 4 & 4.77 & 5.01 & 8.00 & 1.60 \\
+  & 2 x scalar & 4 & 4.24 & 4.45 & 8.50 & 1.91 \\
+  & AVX & 32 & 1.84 & 15.45 & 31.02 & 2.01 \\
+  & 2 x AVX & 32 & 1.32 & 11.13 & 24.51 & 2.20 \\
+  & SSE & 16 & 3.71 & 15.58 & 29.01 & 1.86 \\
+  & 2 x SSE & 16 & 2.60 & 10.93 & 24.51 & 2.24 \\
   \hline
 \end{tabular}
 \end{document}

@@ -46,17 +46,33 @@
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{plots/generation_desktop.pdf}
-      \caption{\citetitle{intel-kaby-lake-i7}}
+      \caption[Generation Benchmark Performance for \citetitle{intel-kaby-lake-i7}]{%
+        The plot shows the performance resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} measured in $\mathrm{GiB}$ of random numbers per second for the different variants of the implemented PRNGs.
+        % The prefix \enquote{2 x} states that two independent instances of the given generator were used.
+        For convenience, the performances of the STL and Boost implementation of the MT19937 are shown as well.
+        The data can be found in table \ref{tab:generation-data-i7}.
+      }
     \end{figure}
 
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{plots/generation_desktop_speedup.pdf}
-      \caption{\citetitle{intel-kaby-lake-i7}}
+      \caption[Generation Benchmark Speed-Up for \citetitle{intel-kaby-lake-i7}]{%
+        The plot shows the speed-up in execution time with respect to the single-instance scalar version resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs.
+        For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
+        The data can be found in table \ref{tab:generation-data-i7}.
+      }
     \end{figure}
 
     \begin{table}
-      \caption{\citetitle{intel-kaby-lake-i7}}
+      \center
+      \caption[Generation Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
+        The table shows the results achieved by running the generation benchmark on the \citetitle{intel-kaby-lake-i7} at a frequency of $4.51\appendUnit{GHz}$ with all implemented variants of given PRNGs.
+        While running the benchmark, $16\appendUnit{GiB}$ of random numbers were generated and temporarily stored in a cache of size $16384\appendUnit{B}$ by iterating $2^{20}$ times over its content.
+        During the execution, there were no cache or branch misses.
+        The values for cycles, instructions, and IPCs were averaged over the calls to the advancing routine of the respective generator.
+      }
+      \label{tab:generation-data-i7}
       \footnotesize
       \renewcommand{\arraystretch}{1.2}
       \subimport{tables/}{generation_desktop}
@@ -64,75 +80,45 @@
 
     \begin{figure}
       \center
-      \includegraphics[width=0.95\textwidth]{plots/generation_laptop.pdf}
-      \caption{\citetitle{intel-kaby-lake-i5}}
-    \end{figure}
-
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{plots/generation_laptop_speedup.pdf}
-      \caption{\citetitle{intel-kaby-lake-i5}}
-    \end{figure}
-
-    \begin{table}
-      \caption{\citetitle{intel-kaby-lake-i5}}
-      \footnotesize
-      \renewcommand{\arraystretch}{1.2}
-      \subimport{tables/}{generation_laptop}
-    \end{table}
-
-    \begin{figure}
-      \center
       \begin{subfigure}[b]{\textwidth}
+        \center
         \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_mt19937.pdf}
         \caption{MT19937}
       \end{subfigure}
 
       \begin{subfigure}[b]{\textwidth}
+        \center
         \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_xrsr128p.pdf}
         \caption{Xoroshiro128+}
       \end{subfigure}
 
       \begin{subfigure}[b]{\textwidth}
+        \center
         \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_msws.pdf}
         \caption{MSWS}
       \end{subfigure}
-      \caption{\citetitle{intel-kaby-lake-i7}}
-    \end{figure}
-
-    \begin{figure}
-      \center
-      \begin{subfigure}[b]{\textwidth}
-        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_laptop_mt19937.pdf}
-        \caption{MT19937}
-      \end{subfigure}
-
-      \begin{subfigure}[b]{\textwidth}
-        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_laptop_xrsr128p.pdf}
-        \caption{Xoroshiro128+}
-      \end{subfigure}
-
-      \begin{subfigure}[b]{\textwidth}
-        \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_laptop_msws.pdf}
-        \caption{MSWS}
-      \end{subfigure}
-      \caption{\citetitle{intel-kaby-lake-i5}}
+      \caption[Monte Carlo π Benchmark Speed-Up for \citetitle{intel-kaby-lake-i7}]{%
+        The plot shows the speed-up in execution time with respect to the single-instance uniform version resulting from the Monte Carlo π benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs and benchmark scenarios.
+        For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
+        The data can be found in table \ref{tab:monte-carlo-pi-data-i7}.
+      }
     \end{figure}
 
     \begin{table}
       \center
-      \caption{\citetitle{intel-kaby-lake-i7}}
+      \caption[Monte Carlo π Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
+        The table shows the results achieved by running the Monte Carlo π Benchmark on the \citetitle{intel-kaby-lake-i7} with all implemented variants of given PRNGs and benchmark scenarios.
+        While running the benchmark, $10^{8}$ samples in the unit square were used to estimate the value of π.
+        It was ensured that the estimation error was small enough according to the calculation at the end of section \ref{sub:monte_carlo_integration}.
+        During the execution, there were no cache or branch misses.
+        The values for cycles, instructions, and IPCs were averaged over the number of samples in the unit square.
+      }
+      \label{tab:monte-carlo-pi-data-i7}
       \footnotesize
       \renewcommand{\arraystretch}{1.2}
       \subimport{tables/}{monte_carlo_pi_desktop.tex}
     \end{table}
-    \begin{table}
-      \center
-      \caption{\citetitle{intel-kaby-lake-i5}}
-      \footnotesize
-      \renewcommand{\arraystretch}{1.2}
-      \subimport{tables/}{monte_carlo_pi_laptop.tex}
-    \end{table}
+
   % subsection performance_improvement (end)
 % section evaluation (end)
 \end{document}
