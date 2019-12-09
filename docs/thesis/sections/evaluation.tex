@@ -64,6 +64,25 @@
 
     \begin{figure}
       \center
+      \includegraphics[width=0.95\textwidth]{plots/generation_laptop.pdf}
+      \caption{\citetitle{intel-kaby-lake-i5}}
+    \end{figure}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{plots/generation_laptop_speedup.pdf}
+      \caption{\citetitle{intel-kaby-lake-i5}}
+    \end{figure}
+
+    \begin{table}
+      \caption{\citetitle{intel-kaby-lake-i5}}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.2}
+      \subimport{tables/}{generation_laptop}
+    \end{table}
+
+    \begin{figure}
+      \center
       \begin{subfigure}[b]{\textwidth}
         \includegraphics[width=0.95\textwidth]{plots/monte_carlo_pi_desktop_mt19937.pdf}
         \caption{MT19937}
