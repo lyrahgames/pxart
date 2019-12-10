@@ -171,7 +171,7 @@
   \subsection{Limitations and Mathematical Properties}
   As was already discussed, PRNGs have certain advantages in comparison with TRNGs.
   But they are also yielding essential and intrinsic limitations.
-  From the previous subsubsection, it becomes clear that all the samples of a randomized pseudorandom sequence are not stochastically independent.
+  From the previous subsection, it becomes clear that all the samples of a randomized pseudorandom sequence are not stochastically independent.
   In general, this means the output of a PRNG can consist of certain regular patterns or artifacts \autocite{lecuyer1994,oneill2014}.
   In \textcite{lecuyer1994} these artifacts are also called the lattice structure.
   % Such patterns can be visualized by so-called randograms.
@@ -179,7 +179,7 @@
   For applications that are using a large amount of random numbers, such patterns will introduce bias in the evaluated outputs.
   Hence, we will discuss a few mathematical properties a PRNG should fulfill to reduce the lattice structure as much as possible.
 
-  \subsubsection{Periodicity}
+  \subsubsection*{Periodicity}
   Since the set of states in a PRNG is finite, every respective pseudorandom sequence has to be periodic or ultimately periodic \autocite{lecuyer1994,bauke2007}.
   First, a rigorous definition of this concept should be given.
 
@@ -395,7 +395,7 @@
   It was well known to suffer from the \enquote{zero mechanism} --- once some digits become zero, all following return values would be zero as well \autocites[\ppno~12-15]{kneusel2018}{widynski2019}.
   So besides a large state space and a bijective transition function, the largest possible permutation cycle should be reached when advancing the state of a PRNG.
 
-  \subsubsection{Equidistribution}
+  \subsubsection*{Equidistribution}
   Pseudorandom sequences should mimic the behavior of truly random sequences.
   And for that reason, we want them to be uniformly distributed on the set of output values in some sense.
   This property will make it possible to generate every important distribution of random numbers by applying special transformations based on stochastics.
@@ -477,7 +477,7 @@
   % \end{definition}
   % A PRNG is called equidistributed if every possible pseudorandom sequence is equidistributed.
 
-  \subsubsection{Multidimensional Equidistribution}
+  \subsubsection*{Multidimensional Equidistribution}
   In physical problems, we typically have to deal with partial differential equations in many dimensions.
   Finding deterministic, numerical solutions through iterated integrals becomes infeasible due to the resulting degrees of freedom.
   This is called the \enquote{curse of dimensionality}.
@@ -669,7 +669,7 @@
   %   $\mathscr{G}$ is said to be $k$-dimensional equidistributed with respect to $S_0$ if for all $τ\in\setNatural_0$ and seeds $s_0\in S_0$ the respective $k$-dimensional, pseudorandom vector sequence $(v_n)$ is equidistributed on $U^k$.
   % \end{definition}
 
-  \subsubsection{Linearity}
+  \subsubsection*{Linearity}
   According to \textcite{lecuyer2015}, the transition function of most PRNGs can be viewed as linear recurrence modulo some prime number.
   Thus, such PRNGs are called linear and exhibit certain advantages and disadvantages in comparison to non-linear PRNGs.
   The linearity property makes a theoretical and statistical analysis of respective pseudorandom sequences much easier \autocite{lecuyer2015,blackman2019,bauke2007}.
@@ -763,9 +763,9 @@
   \]
   In one period, $(u_n)$ reaches the elements $(01)$, $(10)$ and $(11)$ exactly two times whereas $(00)$ only appears one time.
 
-  % \subsubsection{Discrepancy}
+  % \subsubsection*{Discrepancy}
 
-  \subsubsection{Predictability and Security}
+  \subsubsection*{Predictability and Security}
   There are a lot applications where PRNGs are used to encrypt crucial data.
   As a matter of fact, such usability infers certain restrictions on a PRNG.
   In general, PRNGs implemented for this way of use have to be secure and unpredictable in some sense.
@@ -775,13 +775,13 @@
   Therefore no further discussion or rigorous concept of security will be given.
 
   \subsection{Implementation-Specific Properties and Features}
-  \subsubsection{Seekability}
-  \subsubsection{Seeding and Consistency}
-  \subsubsection{Ease of Implementation}
-  \subsubsection{Portability}
-  \subsubsection{Speed}
-  \subsubsection{Alignment, Caching, Code Size, Memory Size and Complexity}
-  \subsubsection{Scalability, Parallelism, Vectorization and Multiple Streams}
+  \subsubsection*{Seekability}
+  \subsubsection*{Seeding and Consistency}
+  \subsubsection*{Ease of Implementation}
+  \subsubsection*{Portability}
+  \subsubsection*{Speed}
+  \subsubsection*{Alignment, Caching, Code Size, Memory Size and Complexity}
+  \subsubsection*{Scalability, Parallelism, Vectorization and Multiple Streams}
 
   \subsection{Analyzation}
   visualization, proof, experiments, benchmarks (runtime), test suites, code analyzation

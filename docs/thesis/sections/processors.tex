@@ -1,6 +1,6 @@
 \documentclass{stdlocal}
 \begin{document}
-\section{SIMD-Capable Processors} % (fold)
+\subsection{SIMD-Capable Processors} % (fold)
 \label{sub:simd-capable_processors}
 
   According to \textcite[\ppno~10-11]{hennessy2019}, in the year 1966, Flynn classified parallel architectures of computers with respect to their data-level and task-level parallelism.
@@ -19,7 +19,7 @@
   In reality, there are several different SIMD-capable CPU architectures.
   Here, we will restrict our discussions to the SSE and AVX instruction set architectures from modern Intel processors, like the \citetitle{intel-kaby-lake-i7} and the \citetitle{intel-kaby-lake-i5} used to test implementations of described PRNGs \autocite{intel-kaby-lake-i5,intel-kaby-lake-i7}.
 
-  \subsection{Fundamentals of Computer Architecture}
+  \subsubsection*{Fundamentals of Computer Architecture}
     The Von Neumann architecture still describes the basic organization of a modern computer.
     Besides external mass storage, like hard disk drives (HDDs), and input/output (IO) mechanisms, the model consists of two main parts --- the central processing unit (CPU), also called the processor, to execute instructions from a computer program, and the memory to store the respective data and instructions \autocite{hennessy2019}.
     Today, both, data and instructions, are encoded as binary numbers with fixed length which has proven to make the building and functioning of a computer much more efficient \autocite{patterson2014}.
@@ -149,7 +149,7 @@
     The AVX architecture of Intel CPUs is working with $256\appendUnit{bit}$ or $32\appendUnit{Byte}$ long vector registers which do not have to be aligned but should provide a slightly improved performance otherwise.
     \autocite{fog2019a}
 
-  \subsection{Usage in C++} % (fold)
+  \subsubsection*{Usage in C++} % (fold)
   \label{sub:usage_in_c_}
     To force the usage of the SSE or AVX instructions which exploit the SIMD capabilities on modern Intel processors, assembler code resulting from compiling a given program has to explicitly call the according instructions of the microarchitecture.
     To achieve this behavior in C++, there are several variants.
@@ -180,5 +180,58 @@
     For example, the name of the AVX intrinsic to add every element of two other vectors each containing eight single precision floating-point values is given by \texttt{\_mm256\_add\_ps}.
     \autocite{intel-optimization-reference}
   % subsection usage_in_c_ (end)
-% section simd-capable_processors (end)
+
+  \subsubsection*{Floating-Point Representation} % (fold)
+  \label{sub:floating_point_representation}
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/floating-point_encoding_single.pdf}
+      \end{subfigure}
+
+      \begin{subfigure}[b]{\textwidth}
+        \center
+        \includegraphics[width=\textwidth]{figures/floating-point_encoding_double.pdf}
+      \end{subfigure}
+      \caption[Single- and Double-Precision Floating-Point Layout]{%
+        The figure shows a schematic view of the single- (top) and double-precision (bottom) floating-point layout according to the IEEE 754 standard.
+        The boxes represent the bits of the underlying registers and the numbers above them mark the bit index.
+        Both encodings consist of a sign, a fractional part and an exponent.
+        The figure was modeled after \textcite[\ppno~197-198]{patterson2014}.
+      }
+      \label{fig:floating-point-encoding}
+    \end{figure}
+    Generating a sequence of random numbers uniformly distributed in the unit interval requires the result to be a floating-point value.
+    Thus, we have to be able to transform a sequence of random bits representing an unsigned integer to real numbers.
+    Today, types representing real numbers in a computer are typically encoded in the floating-point format that does not fix the binary point \autocite{patterson2014}.
+    Hence, real values can be approximated with an adaptive precision.
+    For our purposes, the format can be seen to be superior to other fixed-point formats.
+    The IEEE standard for floating-point arithmetic, also called IEEE 754, is a technical standard describing the single- and double-precision floating-point encodings used in modern processors.
+    We will give a brief definition of the representation of normalized numbers and refer to \textcite[\ppno~196-220]{patterson2014} for more information.
+    Figure \ref{fig:floating-point-encoding} shows the bit layouts for both encodings schematically.
+
+    \begin{definition}[Floating-Point Format for Normalized Numbers]
+      Let $p,q\in\setNatural$ be the numbers of bits used for the exponent and the fraction respectively.
+      Furthermore, let $b\define (b_i)_{i=0}^{p+q}$ be a finite sequence of bits in $\mathds{F}_2$.
+      We define the sign $s$, the exponent $e$ the offset $o$, and the significand $m$ as follows.
+      \[
+        s \define b_{p+q}
+        \separate
+        o \define 2^{p-1} - 1
+        \separate
+        e \define \sum_{k=0}^{p-1} b_{k+q} 2^{k}
+        \separate
+        m \define 1 + \sum_{i=1}^{q} b_{q-i} 2^{-i}
+      \]
+      Assume $b$ represents a normalized number, that is $0 < e < 2^p - 1$.
+      Then we call the value $b$ the $(p,q)$-precision floating-point encoding of $x$.
+      \[
+        x = (-1)^s \cdot m \cdot 2^{e-o}
+      \]
+      For $p=8$ and $q = 23$, we call $b$ a single-precision floating-point encoding.
+      For $p=11$ and $q = 52$, $b$ will be called a double-precision floating-point encoding.
+    \end{definition}
+  % subsection floating_point_representation (end)
+% subsection simd-capable_processors (end)
 \end{document}

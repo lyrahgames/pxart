@@ -1,0 +1,24 @@
+\documentclass[crop=false]{standalone}
+\usepackage{standard}
+\begin{document}
+  \newgeometry{top=0mm,bottom=0mm,right=43mm,left=43mm}
+  {
+    \selectlanguage{ngerman}
+    \thispagestyle{empty}
+    \null
+    \vfill
+    \hrule
+    \medskip
+    \begin{abstract}
+      \itshape
+      Das Thema dieser Arbeit ist die Entwicklung einer Softwarebibliothek, genannt \enquote{pxart}, in der Programmiersprache C++, die es ermöglicht, die Leistung auf Zufallszahlen basierender physikalischer Simulationen zu verbessern.
+      Die Bibliothek besteht aus Pseudozufallszahlengeneratoren, die die SSE- und AVX-Befehlssätze moderner Intel Prozessoren nutzen.
+      Wir haben eine neue Schnittstelle geschaffen, um deren Initialisierung und Nutzung zu vereinfachen.
+      Durch die Implementierung geeigneter Benchmarks und physikalisch basierter Applikationen konnten wir zeigen, dass unsere Generatoren die Ausführung randomisierter Algorithmen tatsächlich beschleunigen.
+    \end{abstract}
+    \medskip
+    \hrule
+    \vfill
+  }
+  \restoregeometry
+\end{document}
