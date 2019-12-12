@@ -45,8 +45,8 @@ Lemire and RNGAVXLIB provide open-source, vectorized implementations with bad do
 Intel MKL as well provides vectorized PRNGs but is not available open-source and uses difficult interfaces.
 There is not any easily-accessible, portable, open-source library which gives a coherent, easy-to-use and consistent interface for vectorized PRNGs.
 
-In this thesis, we develop a new library, called pxart, in the C++ programming language.
-pxart vectorizes a handful of already known PRNGs which partly do not exist as vectorized versions and provides a new API for their usage to accommodate the disadvantages of the standard random library of the STL.
+In this thesis, we develop a new library, called \citetitle{pxart}, in the C++ programming language \footfullcite{pxart}.
+\citetitle{pxart} vectorizes a handful of already known PRNGs which partly do not exist as vectorized versions and provides a new API for their usage to accommodate the disadvantages of the standard random library of the STL.
 The library itself is header-only, open-source, and can be found on GitHub.
 It is easily installable on every operating system.
 Additionally, we compare the performance of our vectorized PRNGs to other already accessible implementations in Boost, Intel MKL, Lemire, RNGAVXLIB and others.

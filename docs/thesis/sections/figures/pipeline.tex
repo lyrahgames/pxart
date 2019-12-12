@@ -29,26 +29,43 @@
   \end{tikzpicture}
 }
 
+\usepackage{times}
+
 \begin{document}
 \begin{graph}
   \node[byte] (A1) {$A_1$};
-  \node[byte] (A2) [right =2cm of A1] {$A_2$};
-  \node[byte] (A3) [right =2cm of A2] {$A_3$};
-  \node[byte] (A4) [right =2cm of A3] {$A_4$};
+  \node[byte] (A2) [right =2cm of A1] {$B_1$};
+  \node[byte] (A3) [right =2cm of A2] {$C_1$};
+  \node[byte] (A4) [right =2cm of A3] {$D_1$};
+  \node[byte,bottom color = processblue!60] (A5) [right =2cm of A4] {$E_1$};
+  \node[byte,bottom color = processblue!60] (A6) [right =2cm of A5] {$F_1$};
+  \node[byte,bottom color = processblue!60] (A7) [right =2cm of A6] {$G_1$};
 
-  \node[byte] (B1) [below =0.6cm of A2]{$B_1$};
+  \node[byte] (B1) [below =0.8cm of A2]{$A_2$};
   \node[byte] (B2) [right =2cm of B1] {$B_2$};
-  \node[byte] (B3) [right =2cm of B2] {$B_3$};
-  \node[byte] (B4) [right =2cm of B3] {$B_4$};
+  \node[byte] (B3) [right =2cm of B2] {$C_2$};
+  \node[byte] (B4) [right =2cm of B3] {$D_2$};
+  \node[byte,bottom color = processblue!60] (B5) [right =2cm of B4] {$E_2$};
+  \node[byte,bottom color = processblue!60] (B6) [right =2cm of B5] {$F_2$};
 
-  \node[byte] (C1) [below =0.6cm of B2]{$C_1$};
-  \node[byte] (C2) [right =2cm of C1] {$C_2$};
+  \node[byte] (C1) [below =0.8cm of B2]{$A_3$};
+  \node[byte] (C2) [right =2cm of C1] {$B_3$};
   \node[byte] (C3) [right =2cm of C2] {$C_3$};
-  \node[byte] (C4) [right =2cm of C3] {$C_4$};
+  \node[byte] (C4) [right =2cm of C3] {$D_3$};
+  \node[byte,bottom color = processblue!60] (C5) [right =2cm of C4] {$E_3$};
 
-  \node[byte] (D1) [below =0.6cm of C2]{$D_1$};
-  \node[byte] (D2) [right =2cm of D1] {$D_2$};
-  \node[byte] (D3) [right =2cm of D2] {$D_3$};
+  \node[byte] (D1) [below =0.8cm of C2]{$A_4$};
+  \node[byte] (D2) [right =2cm of D1] {$B_4$};
+  \node[byte] (D3) [right =2cm of D2] {$C_4$};
   \node[byte] (D4) [right =2cm of D3] {$D_4$};
+
+  \node (S1) [left = 2cm of A1] {};
+  \node (S4) [left = 8cm of D1] {};
+
+  \node (Y) [below = 0.6cm of D4] {};
+  \node (X) [left = 12.0cm of Y] {};
+
+  \path[->] (S1) edge[left] node[left=0.4cm,above=0.1cm,rotate=90] {stages} (S4);
+  \path[->] (X) edge[below] node {cycles} (Y);
 \end{graph}
 \end{document}

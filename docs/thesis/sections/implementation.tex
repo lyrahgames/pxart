@@ -1,6 +1,6 @@
 \documentclass{stdlocal}
 \begin{document}
-\section{Implementation of Vectorized PRNGs} % (fold)
+\section{Implementation} % (fold)
 \label{sec:implementation}
   In the section \ref{sec:pseudorandom_number_generators}, we have already discussed the mathematical foundations of PRNGs, as well as some examples, like the MT19937.
   In this section, we will first implement a scalar variant of the chosen generators to better understand their structure and design.
@@ -9,7 +9,7 @@
   For this, it is helpful to first discuss which technique to use for the vectorization.
   Afterwards a theoretical analysis of the used vector intrinsics concerning their latency and throughput will follow to pinpoint bottlenecks of the implementation possibly resulting in future work.
 
-  \subsection{Mersenne Twister} % (fold)
+  \subsection{MT19937} % (fold)
   \label{sub:mersenne_twister}
     The MT19937 is de facto standard of applications using random numbers to compute their results.
     In the original paper, \citeauthor{matsumoto1998} have given a standard implementation in the C programming language.
@@ -99,7 +99,7 @@
 
   % subsection mersenne_twister (end)
 
-  \subsection{Xoroshiro} % (fold)
+  \subsection{Xoroshiro128+} % (fold)
   \label{sub:xoroshiro}
     The scalar implementation of the Xoroshiro128+ follows the same rules as the scalar implementation of the MT19937.
     \citeauthor{vigna-xoroshiro} provides the C code for the generator on his website \autocite{vigna-xoroshiro}.
@@ -139,7 +139,7 @@
 
   % subsection xoroshiro (end)
 
-  \subsection{Middle Square Weyl Generator} % (fold)
+  \subsection{MSWS} % (fold)
   \label{sub:middle_square_weyl_generator}
     The MSWS is a simple, modern, and non-linear PRNG that uses a state based on $64\appendUnit{bit}$ unsigned integer values but is returning only a $32\appendUnit{bit}$ unsigned integer.
     The scalar implementation will again use the same approach as the MT19937 and the Xoroshiro128+ as it is given as a C implementation in \textcite{widynski2019}.
@@ -175,15 +175,15 @@
 
   % subsection middle_square_weyl_generator (end)
 
-  \subsection{Uniform Real Distribution} % (fold)
+  \subsection{Uniform Distribution Functions for Reals} % (fold)
   \label{sub:uniform_real_distribution}
     \inputCodeBlock[title = Scalar Uniform 32bit]{code/uniform/sisd/uint32.hpp}
     \inputCodeBlock[title = AVX Uniform]{code/uniform/simd256/__m256i.hpp}
   % subsection uniform_real_distribution (end)
 
-  \subsection{Summary} % (fold)
-  \label{sub:summary}
+  \subsection{Uniform Distribution Functions for Integers} % (fold)
+  \label{sub:uniform_distribution_functions_for_integers}
 
-  % subsection summary (end)
+  % subsection uniform_distribution_functions_for_integers (end)
 % section implementation (end)
 \end{document}

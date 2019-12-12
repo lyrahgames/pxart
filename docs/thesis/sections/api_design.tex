@@ -1,6 +1,6 @@
 \documentclass{stdlocal}
 \begin{document}
-\section{Design of the API} % (fold)
+\section{Design of the Library Interface} % (fold)
 \label{sec:design_of_the_api}
   The design of an API for a library making the use of vectorized PRNGs possible consists of multiple parts.
   To exploit the statistical properties of all the implemented generators proper seeding routines have to be provided.
@@ -37,7 +37,31 @@
   This idea makes it even possible to specialize these functions outside of the RNG structure for a non-intrusive adjustment.
   Furthermore, by providing those functions we keep compatibility to the standard distributions.
 
-  \subsection{Utilities} % (fold)
+  \begin{figure}
+    \center
+    \includegraphics[width=0.95\textwidth]{figures/api_parts.pdf}
+    \caption[Parts of the API Design]{}
+    \label{fig:api-parts}
+  \end{figure}
+
+  \subsection{Concepts} % (fold)
+  \label{sub:prng_concept}
+    We do not want to introduce a lot of overhead to the design concept of PRNGs and vectorized PRNGs.
+    The compiler should automatically find out which algorithm to use.
+    This can be done by specialization according to the result type of the function operator.
+    If this should be not enough, tag dispatching can be used.
+
+    The output could have arbitrary size but it is always interpreted as a finite length bit stream.
+    For AVX this means a $256\appendUnit{bit}$ stream.
+    This explains how to interleave SIMD streams and how to test them.
+
+    Interfaces for SIMD intrinsics will always be specialized templates even for wrapper classes because SIMD is behaving differently to SISD architectures.
+    If we are working with SIMD vector the least surprising interface is to use the SIMD vector as result type directly.
+    Through inheritance we or someone from the outside could add another interface by using wrapper classes without changing the implementation.
+    Therefore seeding will be a specialized routine.
+  % subsection prng_concept (end)
+
+  \subsection{Template Utilities} % (fold)
   \label{sub:utilities}
     The ideas for the API given above require us to rely on the template meta programming facilities C++ provides.
     In general, we would like to use helper functions, as well as member functions for specific tasks, like generating a vector of random numbers.
@@ -79,7 +103,7 @@
     As a result, \code{generate(rng,first,last)} will call \code{rng.generate(first,last)} if the type of \code{rng} provides the named member function and \code{std::generate(first,last,std::ref(rng))} otherwise.
   % subsection utilities (end)
 
-  \subsection{Seeding} % (fold)
+  \subsection{Seeding Mechanism} % (fold)
   \label{sub:seeding}
     Seeding of RNGs through the use of other RNGs will be accomplished by the use of perfect forwarding.
     In contrast to the ideas in \textcite{cpp-std-seeding}, we allow for rvalue initialization making the API simpler.
@@ -101,7 +125,7 @@
     According to \textcite{vandevoorde2018}, in the future of C++ concepts will be available which will make such an initialization artifact even simpler and more efficient.
   % subsection seeding (end)
 
-  \subsection{Distributions} % (fold)
+  \subsection{Uniform Distribution Functions} % (fold)
   \label{sub:distributions}
     The design of a uniform distribution \code{uniform} via helper functions and member specializations will be handled the same way as for the function template \code{generate}.
     This time, we only have to take care of additional overloads.
@@ -125,25 +149,8 @@
     If we cannot access the inner structure of an RNG then we may even insert slightly more complicated helper specializations to adjust the output of RNGs not created by the programmer itself.
   % subsection distributions (end)
 
-  \subsection{Algorithms} % (fold)
-  \label{sub:algorithms}
+  % \subsection{Algorithms} % (fold)
+  % \label{sub:algorithms}
 
   % subsection algorithms (end)
-
-  \subsection{PRNG Concept} % (fold)
-  \label{sub:prng_concept}
-    We do not want to introduce a lot of overhead to the design concept of PRNGs and vectorized PRNGs.
-    The compiler should automatically find out which algorithm to use.
-    This can be done by specialization according to the result type of the function operator.
-    If this should be not enough, tag dispatching can be used.
-
-    The output could have arbitrary size but it is always interpreted as a finite length bit stream.
-    For AVX this means a $256\appendUnit{bit}$ stream.
-    This explains how to interleave SIMD streams and how to test them.
-
-    Interfaces for SIMD intrinsics will always be specialized templates even for wrapper classes because SIMD is behaving differently to SISD architectures.
-    If we are working with SIMD vector the least surprising interface is to use the SIMD vector as result type directly.
-    Through inheritance we or someone from the outside could add another interface by using wrapper classes without changing the implementation.
-    Therefore seeding will be a specialized routine.
-  % subsection prng_concept (end)
 \end{document}

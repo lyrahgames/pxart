@@ -1,9 +1,9 @@
 \documentclass{stdlocal}
 \begin{document}
-\section{Testing Framework} % (fold)
+\section{Tests and Benchmarks} % (fold)
 \label{sec:testing_framework}
 
-  \subsection{Unit Tests} % (fold)
+  \subsection{Functionality and Correctness} % (fold)
   \label{sub:unit_tests}
     While working on modules of a library, we always have to make sure to test their functionality.
     Typically, this is done via unit and integration tests.
@@ -31,7 +31,7 @@
     \inputCodeBlock[title = AVX Xoroshiro128+ Jump Test]{code/xoroshiro128plus/simd256/test.cpp}
   % subsection unit_tests (end)
 
-  \subsection{Statistical Testing} % (fold)
+  \subsection{Randomness of Multiple Streams} % (fold)
   \label{sub:statistical_testing}
     The topic of this thesis is not to develop new PRNGs.
     As a consequence, we will not test the statistical performance of the already known scalar PRNGs.
@@ -40,8 +40,10 @@
     The combined stream will then be used as an input to the common test suites \citetitle{testu01} and \citetitle{dieharder} \autocite{testu01,dieharder}.
     \begin{figure}
       \center
+      \includegraphics[width=0.95\textwidth]{figures/interleaving_multiple_streams.pdf}
       \caption[Combined Stream by Interleaving Samples of Multiple Streams]{%
         The figure shows how the samples of multiple streams can be interleaved to produce a combined stream which can be used as input for common statistical test suites.
+        Modeled after \textcite[\pno~161]{kneusel2018}.
       }
       \label{fig:combined-stream}
     \end{figure}

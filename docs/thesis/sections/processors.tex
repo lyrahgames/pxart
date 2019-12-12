@@ -1,8 +1,8 @@
 \documentclass{stdlocal}
 \begin{document}
-\subsection{SIMD-Capable Processors} % (fold)
+% \subsection{SIMD-Capable Processors} % (fold)
+\subsection{Fundamentals of Computer Architecture}
 \label{sub:simd-capable_processors}
-
   According to \textcite[\ppno~10-11]{hennessy2019}, in the year 1966, Flynn classified parallel architectures of computers with respect to their data-level and task-level parallelism.
   Based on this classification, a conventional uniprocessor has a single instruction stream and single data stream, also known as single instruction single data (SISD) architecture \autocite[\ppno~509-510]{patterson2014}.
   The single instruction multiple data (SIMD) architecture exploits data-level parallelism by applying the same operations to multiple items of independent data at the same time \autocite{hennessy2019} which, from the programmer's perspective, is close to the SISD mode of operation \autocite{patterson2014}.
@@ -19,7 +19,7 @@
   In reality, there are several different SIMD-capable CPU architectures.
   Here, we will restrict our discussions to the SSE and AVX instruction set architectures from modern Intel processors, like the \citetitle{intel-kaby-lake-i7} and the \citetitle{intel-kaby-lake-i5} used to test implementations of described PRNGs \autocite{intel-kaby-lake-i5,intel-kaby-lake-i7}.
 
-  \subsubsection*{Fundamentals of Computer Architecture}
+  % \subsubsection*{Fundamentals of Computer Architecture}
     The Von Neumann architecture still describes the basic organization of a modern computer.
     Besides external mass storage, like hard disk drives (HDDs), and input/output (IO) mechanisms, the model consists of two main parts --- the central processing unit (CPU), also called the processor, to execute instructions from a computer program, and the memory to store the respective data and instructions \autocite{hennessy2019}.
     Today, both, data and instructions, are encoded as binary numbers with fixed length which has proven to make the building and functioning of a computer much more efficient \autocite{patterson2014}.
@@ -101,6 +101,13 @@
     The choice which pattern to use is based on the trade-off between precision and throughput.
     If an application demands a high precision from the underlying floating-point operations, it will be more efficient to use four $64\appendUnit{bit}$ double precision values reducing the throughput instead of eight single precision values.
 
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/simd_vector_operations.pdf}
+      \caption[SIMD Vector and Operations]{}
+      \label{fig:simd-vector-operation}
+    \end{figure}
+
     \subsubsection*{The Memory}
     Memory can be described as a finite sequence of bits, whereby each bit anytime represents either the value $0$ or $1$.
     Eight bits are grouped into a byte and enumerated with a natural number starting from zero.
@@ -149,7 +156,7 @@
     The AVX architecture of Intel CPUs is working with $256\appendUnit{bit}$ or $32\appendUnit{Byte}$ long vector registers which do not have to be aligned but should provide a slightly improved performance otherwise.
     \autocite{fog2019a}
 
-  \subsubsection*{Usage in C++} % (fold)
+  \subsubsection*{SIMD Instruction Set Features in C++} % (fold)
   \label{sub:usage_in_c_}
     To force the usage of the SSE or AVX instructions which exploit the SIMD capabilities on modern Intel processors, assembler code resulting from compiling a given program has to explicitly call the according instructions of the microarchitecture.
     To achieve this behavior in C++, there are several variants.

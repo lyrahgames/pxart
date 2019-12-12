@@ -88,40 +88,40 @@
         \stddev\boxBrackets{\mathrm{MCI}_n(f)} \leq \sqrt{\frac{λ(U)}{n} \integral{U}{}{f^2}{λ}}
       \]
     \end{lemma}
-    \begin{proof}
-      Let $p$ be the probability density of $X_n$.
-      Because the random variables are uniformly distributed on $U$, we can express it as follows.
-      \[
-        \function{p}{U}{[0,\infty)}
-        \separate
-        p(x) \define \frac{1}{λ(U)}
-      \]
-      By using substitution and chaining from propositions \ref{proposition:substitution} and \ref{proposition:chaining}, the expectation value can be directly computed.
-      \[
-        \begin{aligned}[t]
-          \expect \mathrm{MCI}_n(f)
-          &= \expect \boxBrackets{ \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k }
-          = \frac{λ(U)}{n} \sum_{k=1}^n \expect(f\circ X_k) \\
-          &= λ(U) \integral{U}{}{f(x) p(x)}{λ(x)}
-          = \integral{U}{}{f}{λ}
-        \end{aligned}
-      \]
-      For the standard deviation, first the variance will be observed.
-      Since the sequence of random variables is stochastically independent, the sum can be taken out of the argument.
-      Afterwards, we again apply substitution and chaining.
-      \[
-        \begin{aligned}
-          \var \mathrm{MCI}_n(f) &= \var\boxBrackets{ \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k } = \frac{λ(U)^2}{n^2} \sum_{k=1}^n \var\roundBrackets{f\circ X_k} \\
-          &= \frac{λ(U)^2}{n^2} \sum_{k=1}^n \expect\roundBrackets{f\circ X_k}^2 - \boxBrackets{\expect\roundBrackets{f\circ X_k}}^2 \\
-          &\leq \frac{λ(U)^2}{n^2} \sum_{k=1}^n \expect\roundBrackets{f\circ X_k}^2 = \frac{λ(U)^2}{n} \integral{U}{}{f^2(x) p(x)}{λ(x)} \\
-          &= \frac{λ(U)}{n} \integral{U}{}{f^2}{λ}
-        \end{aligned}
-      \]
-      The inequality is now inferred by the definition of the standard deviation which proofs the lemma.
-      \[
-        \stddev\boxBrackets{\mathrm{MCI}_n(f)} = \sqrt{\var \mathrm{MCI}_n(f)} \leq \sqrt{\frac{λ(U)}{n} \integral{U}{}{f^2}{λ}}
-      \]
-    \end{proof}
+    % \begin{proof}[Lemma \ref{lemma:monte-carlo-integration} on page \pageref{lemma:monte-carlo-integration}]
+    %   Let $p$ be the probability density of $X_n$.
+    %   Because the random variables are uniformly distributed on $U$, we can express it as follows.
+    %   \[
+    %     \function{p}{U}{[0,\infty)}
+    %     \separate
+    %     p(x) \define \frac{1}{λ(U)}
+    %   \]
+    %   By using substitution and chaining from propositions \ref{proposition:substitution} and \ref{proposition:chaining}, the expectation value can be directly computed.
+    %   \[
+    %     \begin{aligned}[t]
+    %       \expect \mathrm{MCI}_n(f)
+    %       &= \expect \boxBrackets{ \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k }
+    %       = \frac{λ(U)}{n} \sum_{k=1}^n \expect(f\circ X_k) \\
+    %       &= λ(U) \integral{U}{}{f(x) p(x)}{λ(x)}
+    %       = \integral{U}{}{f}{λ}
+    %     \end{aligned}
+    %   \]
+    %   For the standard deviation, first the variance will be observed.
+    %   Since the sequence of random variables is stochastically independent, the sum can be taken out of the argument.
+    %   Afterwards, we again apply substitution and chaining.
+    %   \[
+    %     \begin{aligned}
+    %       \var \mathrm{MCI}_n(f) &= \var\boxBrackets{ \frac{λ(U)}{n} \sum_{k=1}^n f\circ X_k } = \frac{λ(U)^2}{n^2} \sum_{k=1}^n \var\roundBrackets{f\circ X_k} \\
+    %       &= \frac{λ(U)^2}{n^2} \sum_{k=1}^n \expect\roundBrackets{f\circ X_k}^2 - \boxBrackets{\expect\roundBrackets{f\circ X_k}}^2 \\
+    %       &\leq \frac{λ(U)^2}{n^2} \sum_{k=1}^n \expect\roundBrackets{f\circ X_k}^2 = \frac{λ(U)^2}{n} \integral{U}{}{f^2(x) p(x)}{λ(x)} \\
+    %       &= \frac{λ(U)}{n} \integral{U}{}{f^2}{λ}
+    %     \end{aligned}
+    %   \]
+    %   The inequality is now inferred by the definition of the standard deviation which proofs the lemma.
+    %   \[
+    %     \stddev\boxBrackets{\mathrm{MCI}_n(f)} = \sqrt{\var \mathrm{MCI}_n(f)} \leq \sqrt{\frac{λ(U)}{n} \integral{U}{}{f^2}{λ}}
+    %   \]
+    % \end{proof}
     In the proof, we basically applied the lemma about the direct simulation.
     So we get the same convergence rate for the expectation value with respect to the standard deviation.
     To get a deeper understanding of this method, consider the estimation of $π$ by Monte Carlo integration.
@@ -243,7 +243,7 @@
     Because C++ is a strongly typed language which is working with templates for type abstraction, the given code uses templates to generalize the usage of different RNG types, as well as different real and integer number types.
     Typically, we will use the \code{float} type as the real number type and the \code{int} type as the integer type.
 
-    \inputCodeBlock[title=monte\_carlo\_pi.hpp]{code/monte_carlo_pi.hpp}
+    \inputCodeBlock[title=Monte Carlo π Computation]{code/monte_carlo_pi.hpp}
     The implementation of the algorithm does not introduce any irregularities and can directly be deduced from the mathematical formulation.
     First, we define the standard uniform distribution for the RNG and an integer number \code{samples\_in\_circle} as zero which will be used to count the number of samples that lie inside the unit circle.
     In the following \code{for} loop every run will construct two uniformly distributed random numbers which together will define the position of random two-dimensional point in the unit square.
@@ -274,6 +274,13 @@
     The LTE can be derived by applying principles of geometric optics to the law of the conservation of energy for electromagnetic radiation.
     A detailed explanation is given in \textcite{pharr2016} and a mathematically rigorous discussion can be read in \textcite{pawellek2017}.
 
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{images/audi_r8_path_tracing.png}
+      \caption[Path Tracing Example]{\autocite{pawellek2017}}
+      \label{fig:path-tracing-r8}
+    \end{figure}
+
     Typically, the LTE cannot be evaluated analytically for complex geometries.
     As a consequence, there are multiple famous simulation strategies, like path tracing, bidirectional path tracing, metropolis light transport, and photon mapping, to approximate its solutions.
     All of these strategies have in common that they are somehow estimating the light distribution in space through Monte Carlo methods.
@@ -298,6 +305,14 @@
     This smaller simulation focuses on the most important physical effects and ignores subtleties that would introduce bias in the performance measurements.
     We will provide the physical background concerning photon propagation.
 
+    \begin{definition}[Light Transport Equation]
+
+    \end{definition}
+
+    \begin{definition}[Photon]
+
+    \end{definition}
+
     \subsubsection*{Surface Interaction} % (fold)
     \label{ssub:surface_interaction}
       The interaction of photons with surfaces of objects is strongly associated with the properties of the materials the objects consist of.
@@ -308,11 +323,21 @@
       To simulate complex optical properties of object materials BSDFs have to sampled with the usage of appropriate random variables.
 
       We will only assume ideal reflection and refraction.
+
+      \begin{definition}[Russian Roulette]
+
+      \end{definition}
     % subsubsection surface_interaction (end)
 
     \subsubsection*{Volume Scattering} % (fold)
     \label{ssub:volume_scattering}
+      \begin{definition}[Henyey-Greenstein Function]
 
+      \end{definition}
+
+      \begin{lemma}[Sampling Henyey-Greenstein Function]
+
+      \end{lemma}
     % subsubsection volume_scattering (end)
   % subsection photon_propagation_and_physically_based_rendering (end)
 % section simulation_in_physics_and_mathematics (end)

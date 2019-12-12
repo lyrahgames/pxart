@@ -206,8 +206,10 @@
   \]
   Choosing the minimal values allows us to talk about a unique transient and a unique period.
   In the following lemma we show the application of the definition to pseudorandom sequences.
+  The proof can be found in appendix \ref{sec:proofs}.
 
   \begin{lemma}[Pseudorandom Sequences are Ultimately Periodic]
+  \label{lemma:pseudorandom-sequences-periodicity}
     Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG and $s_0\in S$ its initial state.
     Then the respective pseudorandom sequence $(u_n)_{n\in\setNatural}$ is ultimately periodic.
     In this case, for the period ρ and the transient τ the following holds.
@@ -216,36 +218,36 @@
     \]
     In particular, if $T$ is bijective $(u_n)$ will be periodic.
   \end{lemma}
-  \begin{proof}
-    Let $(s_n)_{n\in\setNatural}$ be the respective sequence of states and $N\define \# S$ the number of different states.
-    $T$ maps all elements of $S$ to at most $N$ other elements of $S$.
-    Therefore at least the element $s_N$ has to be mapped to an element $s_k$ for $k\in\setNatural$ with $k\leq N$ which was already reached.
-    % Hence, there exist $n,k\in\setNatural$ with $k\leq n\leq N$ such that $T(s_n) = s_k$.
-    Hence, we conclude the following.
-    \[
-      \exists n,k\in\setNatural, k\leq n\leq N: \quad T(s_n) = s_k
-    \]
-    % Assume $T$ maps $s_n$ to a state $s_k$ with $k\in\setNatural$ and $k < n$.
-    We choose $n$ and $k$ appropriately and define the following values.
-    \[
-      ρ \define n - k + 1
-      \separate
-      τ \define k
-    \]
-    Now let $i\in\setNatural_0$ be arbitrary and apply the definition.
-    We get the following chain of equations which show that $(u_n)$ is ultimately periodic.
-    \[
-      \begin{aligned}
-        u_{τ+i+ρ} &= u_{n+1+i} = G \circ T^{n+1+i}(s_0) = G \circ T^i\circ T^{n+1}(s_0) \\
-        &= G \circ T^i(s_k) = G \circ T^i \circ T^k(s_0) = G \circ T^{i+k}(s_0) = u_{k+i} = u_{τ+i}
-      \end{aligned}
-    \]
-    The inequality can be shown by directly inserting the values into the definition.
-    \[
-      1 \leq ρ + τ - 1 = n \leq N = \# S
-    \]
-    This proofs the given lemma.
-  \end{proof}
+  % \begin{proof}[Lemma~\ref{lemma:pseudorandom-sequences-periodicity}]
+  %   Let $(s_n)_{n\in\setNatural}$ be the respective sequence of states and $N\define \# S$ the number of different states.
+  %   $T$ maps all elements of $S$ to at most $N$ other elements of $S$.
+  %   Therefore at least the element $s_N$ has to be mapped to an element $s_k$ for $k\in\setNatural$ with $k\leq N$ which was already reached.
+  %   % Hence, there exist $n,k\in\setNatural$ with $k\leq n\leq N$ such that $T(s_n) = s_k$.
+  %   Hence, we conclude the following.
+  %   \[
+  %     \exists n,k\in\setNatural, k\leq n\leq N: \quad T(s_n) = s_k
+  %   \]
+  %   % Assume $T$ maps $s_n$ to a state $s_k$ with $k\in\setNatural$ and $k < n$.
+  %   We choose $n$ and $k$ appropriately and define the following values.
+  %   \[
+  %     ρ \define n - k + 1
+  %     \separate
+  %     τ \define k
+  %   \]
+  %   Now let $i\in\setNatural_0$ be arbitrary and apply the definition.
+  %   We get the following chain of equations which show that $(u_n)$ is ultimately periodic.
+  %   \[
+  %     \begin{aligned}
+  %       u_{τ+i+ρ} &= u_{n+1+i} = G \circ T^{n+1+i}(s_0) = G \circ T^i\circ T^{n+1}(s_0) \\
+  %       &= G \circ T^i(s_k) = G \circ T^i \circ T^k(s_0) = G \circ T^{i+k}(s_0) = u_{k+i} = u_{τ+i}
+  %     \end{aligned}
+  %   \]
+  %   The inequality can be shown by directly inserting the values into the definition.
+  %   \[
+  %     1 \leq ρ + τ - 1 = n \leq N = \# S
+  %   \]
+  %   This proofs the given lemma.
+  % \end{proof}
   Thus, every pseudorandom sequence will repeat itself after it reached a certain point.
   The period and the transient are greatly affected by the number of states and the transition function of the PRNG.
   To get a better insight, we will examine the following idealized examples with different transition functions.
@@ -427,6 +429,7 @@
   To make sure the generalization is working properly, we proof the following lemma which states that, while observing pseudorandom sequences, the relative frequency in one period of an arbitrary element must be given by its probability.
 
   \begin{lemma}[Equidistributed Pseudorandom Sequences]
+  \label{lemma:equidistribution}
     Let $\mathscr{G}\define (S,T,U,G)$ be a PRNG with $s_0\in S$ as its seed value and $(u_n)_{n\in\setNatural}$ the respective pseudorandom sequence with transient τ and period ρ.
     Furthermore, let μ be a probability measure on $(U,\mathscr{P}(U))$.
     Then the following statements are equivalent.
@@ -438,28 +441,28 @@
         \]
     \end{enumerate}
   \end{lemma}
-  \begin{proof}
-    Because $U$ is a finite set, every measurable function $\function{X}{U}{\setReal}$ can be described as a linear combination of characteristic functions with respect to some real coefficients $α_u$ for all $u \in U$ in the following way.
-    \[
-      X = \sum_{u\in U} α_u \mathds{1}_{\set{u}{}}
-    \]
-    Hence, without loss of generality, it suffices to take only characteristic functions into account.
-    Let $u\in U$ be arbitrary.
-    The right-hand side of the definition will then result in the following.
-    \[
-      \integral{U}{}{\mathds{1}_{\set{u}{}}}{μ} = μ(\set{u}{})
-    \]
-    Applying the characteristic function together with the properties of a periodic sequence to the left-hand side of the definition, looks as follows.
-    \[
-      \begin{aligned}
-        \lim_{n\to\infty} \frac{1}{n} \sum_{k=1}^n \mathds{1}_{\set{u}{}}(u_k)
-        &= \lim_{n\to\infty} \frac{1}{n} \sum_{k=1}^{τ-1} \mathds{1}_{\set{u}{}}(u_k) + \lim_{n\to\infty} \frac{1}{n}\sum_{k=τ}^{τ+n-1} \mathds{1}_{\set{u}{}}(u_k) \\
-        &= \frac{1}{ρ} \sum_{k=τ}^{τ+ρ-1} \mathds{1}_{\set{u}{}}(u_k) \\
-        &= \frac{1}{ρ} \cdot \#\set{n\in\setNatural}{τ\leq n < ρ+τ, u_n = u}
-      \end{aligned}
-    \]
-    This shows the desired equivalence and proofs the lemma.
-  \end{proof}
+  % \begin{proof}[Lemma~\ref{lemma:equidistribution} on page \ref{lemma:equidistribution}]
+  %   Because $U$ is a finite set, every measurable function $\function{X}{U}{\setReal}$ can be described as a linear combination of characteristic functions with respect to some real coefficients $α_u$ for all $u \in U$ in the following way.
+  %   \[
+  %     X = \sum_{u\in U} α_u \mathds{1}_{\set{u}{}}
+  %   \]
+  %   Hence, without loss of generality, it suffices to take only characteristic functions into account.
+  %   Let $u\in U$ be arbitrary.
+  %   The right-hand side of the definition will then result in the following.
+  %   \[
+  %     \integral{U}{}{\mathds{1}_{\set{u}{}}}{μ} = μ(\set{u}{})
+  %   \]
+  %   Applying the characteristic function together with the properties of a periodic sequence to the left-hand side of the definition, looks as follows.
+  %   \[
+  %     \begin{aligned}
+  %       \lim_{n\to\infty} \frac{1}{n} \sum_{k=1}^n \mathds{1}_{\set{u}{}}(u_k)
+  %       &= \lim_{n\to\infty} \frac{1}{n} \sum_{k=1}^{τ-1} \mathds{1}_{\set{u}{}}(u_k) + \lim_{n\to\infty} \frac{1}{n}\sum_{k=τ}^{τ+n-1} \mathds{1}_{\set{u}{}}(u_k) \\
+  %       &= \frac{1}{ρ} \sum_{k=τ}^{τ+ρ-1} \mathds{1}_{\set{u}{}}(u_k) \\
+  %       &= \frac{1}{ρ} \cdot \#\set{n\in\setNatural}{τ\leq n < ρ+τ, u_n = u}
+  %     \end{aligned}
+  %   \]
+  %   This shows the desired equivalence and proofs the lemma.
+  % \end{proof}
   Based on this lemma, it directly follows that for equidistributed, pseudorandom sequences with a maximal period the number of different states has to be a multiple of the number of output values.
 
   \begin{corollary}[Equidistributed Pseudorandom Sequence with Maximal Period]
@@ -516,6 +519,7 @@
   Corresponding vector sequences inherit the property of being ultimately periodic.
 
   \begin{lemma}[Corresponding Vector Sequences are Ultimately Periodic]
+  \label{lemma:vector-sequences-periodicity}
     Let $U$ be a non-empty set of values and $(u_n)_{n\in\setNatural}$ be an ultimately periodic sequence in $U$ with period ρ and transient τ.
     In this case, every corresponding $k$-dimensional vector sequence $(v_n)_{n\in\setNatural}$ with translation $t$ is ultimately periodic with period $ρ'$ and transient $τ'$ defined as follows.
     \[
@@ -524,33 +528,33 @@
       τ' \define \ceilBrackets{\frac{\max(0,τ-1-t)}{k}} + 1
     \]
   \end{lemma}
-  \begin{proof}
-    Choose $n\in\setNatural_0$ and $i\in\setNatural$ with $i\leq k$ to be arbitrary.
-    We denote with $v^{(i)}_n$ the $i$.~coordinate of the $n$.~vector.
-    By definition the following equality holds.
-    \[
-      v^{(i)}_{τ' + n + ρ'} = u_{t + (τ'+n+ρ'-1)k + i}
-    \]
-    Observing the index, we separate it into three parts.
-    One for the index, one for the transient one for the period.
-    \[
-      t+(τ' + n + ρ' - 1)k + i = \underbrace{(t + τ'k - k + 1)}_{\reverseDefine \tilde{τ}} + \underbrace{(nk + i - 1)}_{\reverseDefine \tilde{n}}  + \underbrace{ρ'k}_{\reverseDefine \tilde{ρ}}
-    \]
-    The period part has to be a multiple of the period ρ of $(u_n)$ as can be seen in the following.
-    Hence, $\tilde{ρ}$ has the property of a period.
-    \[
-      \tilde{ρ} = ρ'k = \frac{ρk}{\mathrm{gcd}(ρ,k)} = ρ \frac{k}{\mathrm{gcd}(ρ,k)}
-    \]
-    To apply the periodicity of $(u_n)$, the transient part has to be bigger or equal to the transient τ of $(u_n)$.
-    \[
-      \tilde{τ} = t + τ'k - k + 1 = 1 + t + k \ceilBrackets{\frac{\max(0,τ-1-t)}{k}} \geq τ
-    \]
-    Inserting the results and applying the periodicity of $(u_n)$, we can conclude that the corresponding vector sequence has to be ultimately periodic as well.
-    \[
-      v^{(i)}_{τ' + n + ρ'} = u_{\tilde{τ} + \tilde{n} + \tilde{ρ}} = u_{\tilde{τ} + \tilde{n}} = u_{t + (τ' + n - 1)k + i} = v^{(i)}_{τ' + n}
-    \]
-    Due to the shown statements, $ρ'$ and $τ'$ are indeed the smallest possible values such that this equation holds and can therefore be denoted as period and transient of $(v_n)$ respectively.
-  \end{proof}
+  % \begin{proof}[Lemma \ref{lemma:vector-sequences-periodicity} on page \ref{lemma:vector-sequences-periodicity}]
+  %   Choose $n\in\setNatural_0$ and $i\in\setNatural$ with $i\leq k$ to be arbitrary.
+  %   We denote with $v^{(i)}_n$ the $i$.~coordinate of the $n$.~vector.
+  %   By definition the following equality holds.
+  %   \[
+  %     v^{(i)}_{τ' + n + ρ'} = u_{t + (τ'+n+ρ'-1)k + i}
+  %   \]
+  %   Observing the index, we separate it into three parts.
+  %   One for the index, one for the transient one for the period.
+  %   \[
+  %     t+(τ' + n + ρ' - 1)k + i = \underbrace{(t + τ'k - k + 1)}_{\reverseDefine \tilde{τ}} + \underbrace{(nk + i - 1)}_{\reverseDefine \tilde{n}}  + \underbrace{ρ'k}_{\reverseDefine \tilde{ρ}}
+  %   \]
+  %   The period part has to be a multiple of the period ρ of $(u_n)$ as can be seen in the following.
+  %   Hence, $\tilde{ρ}$ has the property of a period.
+  %   \[
+  %     \tilde{ρ} = ρ'k = \frac{ρk}{\mathrm{gcd}(ρ,k)} = ρ \frac{k}{\mathrm{gcd}(ρ,k)}
+  %   \]
+  %   To apply the periodicity of $(u_n)$, the transient part has to be bigger or equal to the transient τ of $(u_n)$.
+  %   \[
+  %     \tilde{τ} = t + τ'k - k + 1 = 1 + t + k \ceilBrackets{\frac{\max(0,τ-1-t)}{k}} \geq τ
+  %   \]
+  %   Inserting the results and applying the periodicity of $(u_n)$, we can conclude that the corresponding vector sequence has to be ultimately periodic as well.
+  %   \[
+  %     v^{(i)}_{τ' + n + ρ'} = u_{\tilde{τ} + \tilde{n} + \tilde{ρ}} = u_{\tilde{τ} + \tilde{n}} = u_{t + (τ' + n - 1)k + i} = v^{(i)}_{τ' + n}
+  %   \]
+  %   Due to the shown statements, $ρ'$ and $τ'$ are indeed the smallest possible values such that this equation holds and can therefore be denoted as period and transient of $(v_n)$ respectively.
+  % \end{proof}
   The given concept shall now be applied to define the equidistribution of a sequence in more than one dimension.
   As a result, the following property, called multidimensional equidistribution, becomes a generalization of equidistribution and quantifies in how many dimensions a PRNG can be used.
   We do not follow the typical definitions from \textcite{matsumoto1998,lecuyer1994}.
@@ -782,6 +786,22 @@
   \subsubsection*{Speed}
   \subsubsection*{Alignment, Caching, Code Size, Memory Size and Complexity}
   \subsubsection*{Scalability, Parallelism, Vectorization and Multiple Streams}
+
+  \autocite{lecuyer2017}
+
+  \begin{figure}
+    \center
+    \includegraphics[width=0.95\textwidth]{figures/seeding_multiple_streams.pdf}
+    \caption[Seeding Generation of Multiple Streams]{}
+    \label{fig:leapfrogging-multiple-streams}
+  \end{figure}
+
+  \begin{figure}
+    \center
+    \includegraphics[width=0.95\textwidth]{figures/leapfrogging_multiple_streams.pdf}
+    \caption[Leapfrogging Generation of Multiple Streams]{}
+    \label{fig:leapfrogging-multiple-streams}
+  \end{figure}
 
   \subsection{Analyzation}
   visualization, proof, experiments, benchmarks (runtime), test suites, code analyzation

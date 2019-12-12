@@ -21,6 +21,9 @@
 
 \bibliography{references}
 
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+
 \begin{document}
   \selectlanguage{english}
 
@@ -38,6 +41,8 @@
   \listoftables
   \listofmath
   \addcontentsline{toc}{section}{\listofmathcall}
+  \listofcode
+  \addcontentsline{toc}{section}{\listofcodecall}
   \import{sections/}{abbreviations.tex}
   \import{sections/}{symbol_table.tex}
 
@@ -63,6 +68,7 @@
 
   \appendix
   \pagenumbering{roman}
+  \import{sections/}{proofs.tex}
   \import{sections/}{further_results.tex}
 
   \pagenumbering{arabic}
