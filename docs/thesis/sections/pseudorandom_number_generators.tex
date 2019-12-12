@@ -888,6 +888,13 @@
         G(i,x) \define f_4 \circ f_3 \circ f_2 \circ f_1(x_i)
       \]
     \end{definition}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/mt19937_scheme.pdf}
+      \caption[MT19937 Scheme]{}
+      \label{fig:mt19937-scheme}
+    \end{figure}
   % subsection mersenne_twister (end)
 
   % \subsection{Permuted Congruential Generator} % (fold)
@@ -929,6 +936,12 @@
         G(x,y) \define x + y
       \]
     \end{definition}
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/xrsr128p_scheme.pdf}
+      \caption[Xoroshiro128+ Scheme]{}
+      \label{fig:xoroshiro-scheme}
+    \end{figure}
   % subsection xorshift_and_variants (end)
 
   % \subsection{Middle Square Weyl Sequence RNG} % (fold)
@@ -957,6 +970,13 @@
         G(w,x) \define x \mod 2^{32}
       \]
     \end{definition}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.7\textwidth]{figures/msws_scheme.pdf}
+      \caption[Middle Square Weyl Sequence RNG Scheme]{}
+      \label{fig:msws-scheme}
+    \end{figure}
   % subsection middle_square_weyl_sequence_rng (end)
 % section pseudorandom_number_generators (end)
 \end{document}
