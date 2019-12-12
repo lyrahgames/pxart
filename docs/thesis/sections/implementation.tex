@@ -35,7 +35,7 @@
     By designing a fast-forward constructor, it is possible to seed our own MT19937 with any other RNG including the default seeder.
 
     \inputCodeBlock[title = Scalar MT19937 Seeding]{code/mt19937/sisd/seeding.hpp}
-    Advancing the state of the MT199937 by asking for a random number is a more complicated algorithm.
+    Advancing the state of the MT19937 by asking for a random number is a more complicated algorithm.
     The recurrence of the Mersenne Twister is linear and gives us an equation on how to get to the next element based on the $624$ current elements.
     According to the mathematics, after the computation we would have to move every element of the state one step further.
     But accessing each element in the state vector for every random number would greatly reduce the performance due to cache misses and the time to move every element.
@@ -46,10 +46,24 @@
     The lambda expression keeps the code local in contrast to helper or member function.
     Hence, the compiler will probably inline all calls to the lambda expression optimizing the scalar code in the best possible way.
 
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{0.3\textwidth}
+        \center
+        \includegraphics[width=0.95\textwidth]{figures/mt19937_transition_short.pdf}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.68\textwidth}
+        \center
+        \includegraphics[width=0.95\textwidth]{figures/mt19937_loop_scheme.pdf}
+      \end{subfigure}
+      \caption[Mersenne Twister Loop Scheme]{}
+      \label{fig:mt-loop-scheme}
+    \end{figure}
+
     \inputCodeBlock[title = Scalar MT19937 Advancing]{code/mt19937/sisd/advance.hpp}
     The design of our Mersenne Twister ensures that the output will be the same as the output of the MT19937 from the STL of the C++ programming language.
     Additionally, the interface provides a more general seeding variant which improves statistical performance for seeding generators other than the default seeder.
-    The new initialization facility is easier to use and gives a better insight into the used seeding values to the reader of the code.
+    The new initialization facility is easier to use and gives a better {}insight into the used seeding values to the reader of the code.
     The function to advance the state is easier to understand, maintainable and generalizable.
     Last but not least, as we will show, our MT19937 implementation is able to provide a better performance in an actual application.
 
