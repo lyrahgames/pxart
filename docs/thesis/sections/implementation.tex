@@ -146,6 +146,13 @@
 
     \inputCodeBlock[title = AVX Xoroshiro128+ Structure]{code/xoroshiro128plus/simd256/struct.hpp}
 
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/xrsr128p_vector_layout.pdf}
+      \caption[Xoroshiro128+ Vector Layout]{}
+      \label{fig:xoroshiro-vector-layout}
+    \end{figure}
+
     With this approach, every instance of the generator is completely independent of the other instances.
     This is again perfect for the application of SIMD intrinsics.
     Thus, the function for advancing the state is implemented by its corresponding vector intrinsics.
@@ -153,10 +160,6 @@
     We do not want this branch to slow down the code by switching to scalar execution.
     Hence, we will map the branch to vector intrinsics by executing the inner computation in every case and masking the result based on the vectorized evaluation of the branch condition.
     \inputCodeBlock[title = AVX Xoroshiro128+ Advancing]{code/xoroshiro128plus/simd256/advance.hpp}
-
-    \inputCodeBlock[title = AVX Xoroshiro128+ Advancing Assembler]{code/xoroshiro128plus/simd256/advance.asm}
-    \inputCodeBlock[title = AVX Xoroshiro128+ Advancing $\times 2$ Assembler]{code/xoroshiro128plus/simd256/advance2.asm}
-    \inputCodeBlock[title = AVX Xoroshiro128+ Advancing $\times 4$ Assembler]{code/xoroshiro128plus/simd256/advance4.asm}
 
   % subsection xoroshiro (end)
 
@@ -194,12 +197,41 @@
 
     \inputCodeBlock[title = AVX MSWS Advancing]{code/msws/simd256/advance.hpp}
 
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/msws_vector_layout.pdf}
+      \caption[MSWS Vector Layout]{}
+      \label{fig:msws-vector-layout}
+    \end{figure}
+
+    \begin{figure}
+      \center
+      \begin{subfigure}[b]{\textwidth}
+        \center
+        \includegraphics[width=0.95\textwidth]{figures/msws_merge.pdf}
+      \end{subfigure}
+
+      \begin{subfigure}[b]{\textwidth}
+        \center
+        \includegraphics[width=0.95\textwidth]{figures/msws_merge2.pdf}
+      \end{subfigure}
+      \caption[MSWS Vector Merge Scheme]{}
+      \label{fig:msws-vector-merge-scheme}
+    \end{figure}
+
   % subsection middle_square_weyl_generator (end)
 
   \subsection{Uniform Distribution Functions for Reals} % (fold)
   \label{sub:uniform_real_distribution}
     \inputCodeBlock[title = Scalar Uniform 32bit]{code/uniform/sisd/uint32.hpp}
     \inputCodeBlock[title = AVX Uniform]{code/uniform/simd256/__m256i.hpp}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/uniform_implementation_scheme.pdf}
+      \caption[Real Uniform Distribution Function Implementation Scheme]{}
+      \label{fig:real-uniform-implementation-scheme}
+    \end{figure}
   % subsection uniform_real_distribution (end)
 
   \subsection{Uniform Distribution Functions for Integers} % (fold)

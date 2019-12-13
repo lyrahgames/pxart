@@ -1,0 +1,109 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 1.5cm and 2.0cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      % bottom color = white,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 2.0cm,
+      minimum height = 0.5cm
+    },
+    state2/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      % bottom color = white,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 1.0cm,
+      minimum height = 0.5cm
+    },
+    box/.style = {
+      rectangle,
+      % rounded corners,
+      % top color = white,
+      bottom color = processblue!4,
+      top color = processblue!4,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.0cm,
+      minimum height = 0.0cm
+    },
+    operation/.style = {
+      circle,
+      top color = white,
+      % bottom color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9cm
+    },
+    connect/.style = {
+      circle,
+      top color = black,
+      bottom color = black,
+      draw,
+      black,
+      text=black,
+      inner sep = 1pt,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{utilities}
+
+\begin{document}
+\begin{graph}
+  \node[state] (X1) {$x_1$};
+  \node[state] (X2) [right = of X1] {$x_2$};
+  \node[state] (X3) [right = of X2] {$x_3$};
+  \node[state] (X4) [right = of X3] {$x_4$};
+
+  \node[state] (Y1) [right = 3 of X4] {$x_5$};
+  \node[state] (Y2) [right = of Y1] {$x_6$};
+  \node[state] (Y3) [right = of Y2] {$x_7$};
+  \node[state] (Y4) [right = of Y3] {$x_8$};
+
+  \node[state2,anchor=west] (Z1) [below = of X3] {$u_1$};
+  \node[state2] (Z2) [right = 1 of Z1] {$u_2$};
+  \node[state2] (Z3) [right = 1 of Z2] {$u_3$};
+  \node[state2] (Z4) [right = 1 of Z3] {$u_4$};
+  \node[state2] (Z5) [right = 1 of Z4] {$u_5$};
+  \node[state2] (Z6) [right = 1 of Z5] {$u_6$};
+  \node[state2] (Z7) [right = 1 of Z6] {$u_7$};
+  \node[state2] (Z8) [right = 1 of Z7] {$u_8$};
+
+  \draw[->] (X1.south) -- (Z1.north);
+  \draw[->] (X2.south) -- (Z3.north);
+  \draw[->] (X3.south) -- (Z5.north);
+  \draw[->] (X4.south) -- (Z7.north);
+
+  \draw[->] (Y1.south) -- (Z2.north);
+  \draw[->] (Y2.south) -- (Z4.north);
+  \draw[->] (Y3.south) -- (Z6.north);
+  \draw[->] (Y4.south) -- (Z8.north);
+\end{graph}
+\end{document}
