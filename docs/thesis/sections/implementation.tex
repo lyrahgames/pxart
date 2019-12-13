@@ -60,6 +60,13 @@
       \label{fig:mt-loop-scheme}
     \end{figure}
 
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
+      \caption[Mersenne Twister Vector Loop Scheme]{}
+      \label{fig:mt-vector-loop-scheme}
+    \end{figure}
+
     \inputCodeBlock[title = Scalar MT19937 Advancing]{code/mt19937/sisd/advance.hpp}
     The design of our Mersenne Twister ensures that the output will be the same as the output of the MT19937 from the STL of the C++ programming language.
     Additionally, the interface provides a more general seeding variant which improves statistical performance for seeding generators other than the default seeder.
