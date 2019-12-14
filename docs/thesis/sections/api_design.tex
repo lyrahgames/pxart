@@ -2,20 +2,20 @@
 \begin{document}
 \section{Design of the Library Interface} % (fold)
 \label{sec:design_of_the_api}
-  The design of an API for a library making the use of vectorized PRNGs possible consists of multiple parts.
+  The design of a library API using various vectorized PRNGs consists of several parts.
   To exploit the statistical properties of all the implemented generators proper seeding routines have to be provided.
   Seeding of PRNGs should be easy but not magically hiding important information, like the RNG that is used for the initialization.
   The implementation of the MT19937 given by \code{std::mt19937} in the STL of the C++ programming language for example, internally uses an easier PRNG to initialize its whole state vector by only one truly random number \autocite{gcc-libstdcpp}.
   The interface of \code{std::mt19937} does not show this information to the programmer or the reader and even forces the user of the library to employ this process.
-  Furthermore, a generator \code{RNG} only used for seeding will typically constructed directly as an rvalue in the constructor of the \code{std::mt19937}.
+  Furthermore, a generator \code{RNG} only used for seeding will typically be constructed directly as an rvalue in the constructor of the \code{std::mt19937}.
   \[
     \text{\code{std::mt19937 rng\{RNG\{\}()\};}}
   \]
   Because we cannot use the complete RNG as an argument, we first have to make sure that we call the advancing routine of the seeding generator.
   This behavior reduces the statistical performances of the initialization and complicates the interface even more by adding an extra pair of parentheses.
 
-  Another part we have to deal with are fast and easy-to-use distributions for RNGs to at least generate uniform random numbers.
-  The current C++ standard supplies different distributions in form of functor templates that use the same algorithm for all generators by templatizing their function operators.
+  Other parts we have to deal with are fast and easy-to-use distributions for RNGs to at least generate uniform random numbers.
+  The current C++ standard supplies different distributions in the form of functor templates that use the same algorithm for all generators by templatizing their function operators.
   \[
     \text{\code{std::uniform\_real\_distribution<float> dist\{\}; auto x = dist(rng);}}
   \]
@@ -28,14 +28,15 @@
   The approach does not scale well with the number of different RNGs.
 
   In the last few years, there has been some development in the area of API design for RNGs.
-  \textcite{oneill-blog-api,oneill-blog-rd,cpp-std-seeding,cpp-std-random}, to name a few, provide perfect basic ideas to improve the usage of random utilities in the C++ language.
-  We will rely on this work and want to go a step further.
+  \textcite{oneill-blog-api,oneill-blog-rd,cpp-std-seeding,cpp-std-random}, to name a few.
+  They provide perfect basic ideas to improve the usage of random utilities in the C++ language.
+  We will rely on this work and go a step further.
   We strive for a transparent API that can be used easily with different seeding alternatives.
   Nearly every RNG should be available as a source for seeding another RNG.
   In addition, uniform distribution functions will be introduced that do not need to be called as functor objects.
   Through template meta programming, we give generators the possibility of specializing such helper functions through member functions of the same name.
   This idea makes it even possible to specialize these functions outside of the RNG structure for a non-intrusive adjustment.
-  Furthermore, by providing those functions we keep compatibility to the standard distributions.
+  Furthermore, by providing these functions we keep compatibility to the standard distributions.
 
   \begin{figure}
     \center
@@ -67,11 +68,11 @@
     In general, we would like to use helper functions, as well as member functions for specific tasks, like generating a vector of random numbers.
     If a generator provides a member function the helper function should use the given specialization whereas otherwise a default algorithm should be used.
     Hence, at compile-time we need to evaluate if calling a specific member is a valid expression.
-    In \textcite{vandevoorde2018}, there is given a technique that allows us to evaluate the validity of expressions.
+    In \textcite{vandevoorde2018}, there is a given technique that allows us to evaluate the validity of expressions.
 
     \inputCodeBlock[title = Is-Valid Utility]{code/is_valid.hpp}
-    This code makes highly use of template meta programming artifacts, like SFINAE and type traits.
-    First in the details, it uses an overloaded variadic helper function template \code{detail::is\_valid} to decide if the call of a specific function type \code{F} with the varying amount of argument types \code{Args} would be a valid call.
+    This code highly makes use of template meta programming artifacts, like SFINAE and type traits.
+    To be precise, it uses an overloaded variadic helper function template \code{detail::is\_valid} to decide if the call of a specific function type \code{F} with the varying amount of argument types \code{Args} would be a valid call.
     The call is put into an unevaluated context by using the \code{std::declval} template utility from C++ which is able to return an object of a class without specific constructors in such an unevaluated context.
     To decide the validity of this statement it relies on a default template parameter and the \code{decltype} utility of the C++ language.
     If the call to the given function object would be possible, \code{decltype} will indeed deduce the return type of the function call and correctly set the default template argument.
@@ -98,7 +99,7 @@
     In the template argument, we use the general pattern \code{has\_generate(rng,first,last)} and deduce its type by \code{decltype}.
     The type will either be \code{std::true\_type} or \code{std::false\_type}.
     In the first case, \code{std::enable\_if\_t} will be evaluated to be the type \code{void}.
-    In the other case, \code{std::enable\_if\_t} will be no valid type and the function will be not be taken into account in the overload resolution.
+    In the other case, \code{std::enable\_if\_t} will be no valid type and the function will not be taken into account in the overload resolution.
     The overloads of \code{generate} use complementary conditions in the template argument of \code{std::enable\_if\_t}, so that at all times only one of them will be available in the overload resolution.
     As a result, \code{generate(rng,first,last)} will call \code{rng.generate(first,last)} if the type of \code{rng} provides the named member function and \code{std::generate(first,last,std::ref(rng))} otherwise.
   % subsection utilities (end)
@@ -110,7 +111,7 @@
     Consider the following code snippet that introduces an arbitrary RNG type \code{rng\_type}.
 
     \inputCodeBlock[title = Seeding Strategy]{code/seeding.hpp}
-    \code{rng\_type} is a structure with an explicit forwarding constructor available for seeding which is able match any other RNG type.
+    \code{rng\_type} is a structure with an explicit forwarding constructor available for seeding which is able to match any other RNG type.
     Please note the typical usage of a universal reference to deduce forwarding types.
     The implementation of the constructor should call either the \code{generate} method or the function operator of the given RNG type to initialize its own state.
     For a few exceptional cases, the given code can lead to certain artifacts in the template deduction process.
@@ -131,7 +132,7 @@
     This time, we only have to take care of additional overloads.
     By calling \code{uniform} without function arguments, we have to provide the return type as a template argument.
     For floating-point types, the result should be a number in the interval $[0,1)$.
-    Specifying integer number types the output will use the complete range of the template argument.
+    Specifying integer number types the output is a value of the complete range of the template argument.
     If we call \code{uniform} with additional arguments specifying the range of the output, we are able to use template argument deduction for the return type based on the range arguments.
     We separate those two cases to further optimize the frequently used first function call without arguments.
     The following code shows the implementation.
@@ -146,7 +147,7 @@
     In this implementation, we are making sure its return type will be casted to the \code{uint32\_t} type.
 
     The defined API gives us the ability of a powerful default distribution together with the possibility of specializing it for some generators through member functions.
-    If we cannot access the inner structure of an RNG then we may even insert slightly more complicated helper specializations to adjust the output of RNGs not created by the programmer itself.
+    If we cannot access the inner structure of an RNG then we may even insert slightly more complicated helper specializations to adjust the output of RNGs which are not created by the programmer itself.
   % subsection distributions (end)
 
   % \subsection{Algorithms} % (fold)

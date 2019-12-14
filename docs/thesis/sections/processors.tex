@@ -38,8 +38,8 @@
     The processor in general consists of multiple arithmetic logic units (ALU) or execution units, a small number of registers and a control unit.
     The ALU performs arithmetic and logic operations and stores its results in registers.
     These registers also supply the operands for ALU operations.
-    To fetch program instructions from memory and executing them, the control unit directs the coordinated operations of the ALU, registers and other components.
-    Today, nearly every processor consists even of multiple processing cores each connected by a global control unit and containing its own registers and ALUs to provide an MIMD architecture.
+    To fetch program instructions from memory and execute them, the control unit directs the coordinated operations of the ALU, registers and other components.
+    Today, nearly every processor consists of multiple processing cores each connected by a global control unit and containing its own registers and ALUs to provide an MIMD architecture.
     In figure \ref{fig:cpu-components}, all the named components are shown schematically in a hierarchy to support the understanding.
     Here, we will focus on a single processing core.
 
@@ -58,57 +58,85 @@
     Basically we can say, each stage is completed after one CPU cycle.
     The number of CPU cycles an instruction needs to be finished and provide its result to the next instruction is called its latency.
     The throughput of an instruction is measured in cycles per instruction and specifies the number of cycles an instruction needs to reside in the execution unit.
-
-    To speed up the execution of independent instructions, in nearly all modern CPUs a so-called pipeline is used.
-    Independent instructions do not have to wait for the results of other immediate instructions and therefore do not need to stall the execution unit for their complete latency.
-    Instead, the processor is performing the different stages of different instructions concurrently according to their throughput.
-    For a better understanding, figure \ref{fig:pipeline} shows a schematic example of this pipeline process for four independent instructions with a latency of four and a throughput of one.
-    As a consequence, a pipeline does not reduce the latency of an instruction but increases its throughput.
-    It is therefore a form of instruction-level parallelism.
-    To further decrease the throughput of instructions, the processor core typically uses multiple execution units to run independent instructions directly in parallel.
-    This enhancement is shown in figure \ref{fig:multiple-unit-pipeline} with eight independent again with a latency of four and a throughput of one.
-    \autocite{dolbeau2016,fog2019a}
+    \autocite{intel-latency-throughput}
 
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/pipeline.pdf}
-      \caption[Pipeline Structure]{%
-        This figure shows the functioning of a pipeline.
+      \caption[Processor Pipeline]{%
+        This figure schematically shows the functioning of a processor pipeline with the help of an example.
+        Assume all Latin capital letters represent independent instructions with a latency of four and a throughput of one.
+        For any instruction $X$, we denote its four stages by $X_1$, $X_2$, $X_3$, and $X_4$.
+        After filling the pipeline, every cycle the result of an instruction will be available to the caller.
       }
       \label{fig:pipeline}
     \end{figure}
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/multiple_unit_pipeline.pdf}
+      \caption[Multiple Execution Unit Processor Pipeline]{%
+        This figure schematically shows the functioning of a processor pipeline using two execution units $p_1$ and $p_2$ with the help of an example.
+        It makes the same assumptions as in figure \ref{fig:pipeline}.
+        After filling the pipeline, every cycle the results of two instructions will be available to the caller.
+      }
+      \label{fig:multiple-unit-pipeline}
+    \end{figure}
+
+    To speed up the execution of independent instructions, in nearly all modern CPUs a so-called pipeline is used.
+    Independent instructions do not have to wait for the results of other immediate instructions and therefore do not need to stall the execution unit for their complete latency.
+    Instead, the processor performs the different stages of different instructions concurrently according to their throughput.
+    For a better understanding, figure \ref{fig:pipeline} shows a schematic example of this pipeline process for four independent instructions with a latency of four and a throughput of one.
+    As a consequence, a pipeline does not reduce the latency of an instruction but reduces its throughput.
+    It is therefore a form of instruction-level parallelism.
+    To further decrease the throughput of a sequence of instructions, the processor core typically uses multiple execution units, also known as ports, to run independent instructions directly in parallel.
+    This enhancement is shown in figure \ref{fig:multiple-unit-pipeline} with independent instructions again with a latency of four and a throughput of one.
+    In real-world processors, different instructions typically exhibit different latencies and throughputs.
+    The varying capabilities of different execution units concerning their instruction set do not allow instruction-level parallelization for arbitrary instructions.
+    \autocite{dolbeau2016,fog2019a,fog2019d,intel-kaby-lake,intel-intrinsics-guide}
+
     The theoretical performance of the CPU pipeline is reduced if it has to be stalled.
     These situations, also known as hazards, happen due to hardware resource conflicts, data dependencies and control instructions, like branches.
-    To handle control instructions and especially branches much more efficiently, the CPU uses branch prediction.
+    To efficiently handle control instructions, especially branches, the CPU uses branch prediction.
     The processor tries to guess the outcome of the branch condition to keep the pipeline filled.
     Should the estimated value proven to be wrong the pipeline has to be stalled and cleared.
     This process is called a branch miss and introduces an execution time penalty.
     Hence, we will strive for branchless code or for easy-to-predict branches if we have to insert them.
+    \autocite{hennessy2019,patterson2014,fog2019a}
+
     \begin{figure}
       \center
-      \includegraphics[width=0.95\textwidth]{figures/multiple_unit_pipeline.pdf}
-      \caption[Multiple Unit Pipeline Structure]{%
-        This figure shows the functioning of a pipeline.
+      \includegraphics[width=0.95\textwidth]{figures/simd_vector_operations.pdf}
+      \caption[SIMD Vector Registers and Operations]{%
+        The figure shows the functioning of SIMD vector registers and their operations by means of an addition applied to two 256-bit register each containing eight packed 32-bit values.
+        The result is again a 256-bit vector consisting of eight 32-bit values.
       }
-      \label{fig:multiple-unit-pipeline}
+      \label{fig:simd-vector-operation}
     \end{figure}
 
     For data-level parallelism, we want to focus on SIMD architectures.
     Intel CPUs establish this feature by using so-called vector registers of a fixed length.
     Vector registers contain more than one value at the same time.
-    For example, a $256\appendUnit{bit}$ register can contain four $64\appendUnit{bit}$ values or eight $32\appendUnit{bit}$ values.
+    For example, a 256-bit register of a processor featuring the AVX instruction set could contain four 64-bit double-precision or eight 32-bit single-precision floating-point numbers.
     One operation, like addition or multiplication, is then performed on all contained elements simultaneously.
-    The choice which pattern to use is based on the trade-off between precision and throughput.
-    If an application demands a high precision from the underlying floating-point operations, it will be more efficient to use four $64\appendUnit{bit}$ double precision values reducing the throughput instead of eight single precision values.
+    Advanced computations demand the use permutation and shuffle operations which are changing the order of elements inside the register to be able to use SIMD operations.
+    Figure \ref{fig:simd-vector-operation} shows the addition operation using two 256-bit registers each with eight 32-bit values.
+    The choice of pattern to use is based on the trade-off between precision and throughput.
+    If an application demands a high precision from the underlying floating-point operations, it will be more efficient to use four 64-bit double precision values reducing the throughput instead of eight single precision values.
+    Implementations of algorithms which are not using any SIMD utilities will be denoted as scalar implementations and as vectorized implementations otherwise.
+    The process of transforming a scalar implementation into a vectorized implementation is called vectorization.
+    \autocite{intel-optimization-reference,fog2019a,fog2019d,dolbeau2016}
+
+    \subsubsection*{The Memory}
 
     \begin{figure}
       \center
-      \includegraphics[width=0.95\textwidth]{figures/simd_vector_operations.pdf}
-      \caption[SIMD Vector and Operations]{}
-      \label{fig:simd-vector-operation}
+      \includegraphics[width=0.95\textwidth]{figures/memory.pdf}
+      \caption[Memory Structure]{%
+        This figure visualizes memory with $N\in\setNatural$ bytes as a sequence of bits where each byte can be referenced by its memory address.%
+      }
+      \label{fig:memory}
     \end{figure}
 
-    \subsubsection*{The Memory}
     Memory can be described as a finite sequence of bits, whereby each bit anytime represents either the value $0$ or $1$.
     Eight bits are grouped into a byte and enumerated with a natural number starting from zero.
     These numbers are called memory addresses and make it possible to specify the location of variables in memory.
@@ -116,14 +144,18 @@
     Fetching instructions from memory or transferring data between the CPU and memory, therefore requires the usage of those memory addresses to be able to reference data in the sequence of bytes.
     Each byte can be altered by program execution through storing instructions.
     \autocite{patterson2014}
-    \begin{figure}[H]
+
+    \begin{figure}
       \center
-      \includegraphics[width=0.95\textwidth]{figures/memory.pdf}
-      \caption[Memory Structure]{%
-        This figure visualizes memory with $N\in\setNatural$ bytes as a sequences of bits where each byte can be referenced by its memory address.%
+      \includegraphics[width=0.95\textwidth]{figures/memory_hierarchy.pdf}
+      \caption[Memory Hierarchy]{%
+        The figure shows a scheme of the non-persistent part of the memory hierarchy for a modern laptop or desktop computer.
+        Between the main memory and the CPU registers different levels of caches are used to reduce the latency for fetching instructions and data.
+        Modeled after \textcite[\pno~79]{hennessy2019}.
       }
-      \label{fig:memory}
+      \label{fig:memory-hierarchy}
     \end{figure}
+
     Because physically there is no possibility to provide an unlimited amount of fast memory, computer designers found a more economical solution.
     In the majority of cases, faster memory means reduced storage capabilities and vice versa.
     Hence, memory is built to be a hierarchy of several levels --- each smaller, faster, and more expensive per byte than the next lower level, which is farther from the processor.
@@ -133,28 +165,34 @@
     If on the other hand the data can be found in the cache, it can be directly used by the higher level cache or the processor itself.
     We call this a cache hit.
     A cache miss introduces a so-called miss penalty to the memory access time and should therefore be avoided to reduce the latency for fetching instructions and data.
+    Further reduction of the memory access latency is achieved by always fetching a fixed-length group of bytes which are called a cache line at once and by prefetching consecutive cache lines for content that is expected to be needed soon possibly wasting time if the data will not be used.
+    Modern architectures commonly featuring a cache line size of $64\appendUnit{byte}$.
     Figure \ref{fig:memory-hierarchy} shows a schematic view of a usual memory hierarchy found in today's laptops and desktop computers.
     In modern processor architectures, like the Kaby Lake microarchitecture from Intel, each processing core of the CPU features its own level one cache which is further split into an instruction cache and a data cache \autocite{intel-kaby-lake}.
     This reduces the overall complexity of level one caches and as a result decreases the cache access time.
-    \autocite[\ppno~78-83]{hennessy2019}
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{figures/memory_hierarchy.pdf}
-      \caption[Memory Hierarchy Scheme]{%
-        The figure shows a scheme of the non-persistent part of the memory hierarchy for a modern laptop or desktop computer.
-        Modeled after \textcite[\pno~79]{hennessy2019}.
-      }
-      \label{fig:memory-hierarchy}
-    \end{figure}
+    For example, the L1 cache of the \citetitle{intel-kaby-lake-i7} has a size of $256\appendUnit{KiB}$ divided into two 128-KiB caches for instructions and data.
+    The L2 cache has a size of $1\appendUnit{MiB}$ and the L3 cache a size of $8\appendUnit{MiB}$.
+    \autocites[\ppno~78-83]{hennessy2019}{intel-kaby-lake-i7}{intel-kaby-lake}
 
     % The size in bytes of a simple variable in memory can be expressed by a power of two.
     % In C++ for example, single and double precision floating-point numbers, as well as signed and unsigned integers fulfill this requirement.
     Let $n \define 2^k$ for some $k\in\setNatural_0$ be a power of two.
-    We say that a variable in memory is $n\appendUnit{Byte}$ aligned if its starting address is divisible by $n$ without remainder.
-    Modern systems typically provide a $16\appendUnit{Byte}$ alignment as default.
-    SSE vector registers have a size of $128\appendUnit{bit}$ and even demand that variables to be loaded from memory exhibit a $16\appendUnit{Byte}$ alignment.
-    The AVX architecture of Intel CPUs is working with $256\appendUnit{bit}$ or $32\appendUnit{Byte}$ long vector registers which do not have to be aligned but should provide a slightly improved performance otherwise.
+    We say that a variable in memory is $n$-byte aligned if its starting address is divisible by $n$ without remainder.
+    Due to the processor microarchitecture and the memory hierarchy variables either have to exhibit a certain alignment or enable faster access times when properly aligned.
+    Modern systems typically provide a 16-byte alignment as default.
+    SSE vector registers have a size of $128\appendUnit{bit}$ and even demand that variables to be loaded from memory exhibit a 16-byte alignment.
+    The AVX instruction set of Intel CPUs is working with 256-bit vector registers which do not have to be 32-byte aligned but should allow for a slightly improved performance otherwise.
+    Since the common sizes of cache lines today is 64 byte, arrays of data should be even 64-byte aligned to get the highest performance in a computation iterating over the data.
     \autocite{fog2019a}
+
+    Comparing the time of executing instructions in the CPU and fetching data from main memory, the memory access will in general be a hundred times higher.
+    The construction of processors and memory hierarchies therefore separates algorithms into two groups --- memory-bound and CPU-bound algorithms.
+    The performance of memory-bound algorithms is mainly determined by the access time and latency when communicating with memory or caches.
+    For example, this would be the case if a computation needs to access a lot of different data elements which are not fitting into the caches from memory and to use them only once.
+    The performance of an algorithm operating on data completely fitting into the caches or even CPU registers is typically bound by the latency and throughput of its instructions and the frequency of the processor.
+    Hence, we call it a CPU-bound algorithm.
+    Optimizing an algorithm for instruction-level and data-level parallelism by using SIMD vectors and tweaking latencies and throughput only makes sense if the processor does not have to wait for data from memory --- the algorithm has to be bound by the CPU.
+    \autocite{patterson2014,hennessy2019}
 
   \subsubsection*{SIMD Instruction Set Features in C++} % (fold)
   \label{sub:usage_in_c_}
@@ -169,7 +207,8 @@
     Typically, this process should be preferred in contrast to manually optimizing the code by introducing SSE or AVX instructions to provide machine independent code.
     Due to the compiler's knowledge of the underlying hardware, automatic vectorization often generates code that is superior to other variants.
     But sometimes the complexity of problems exhibits several data and instruction dependencies by using non-trivial branches with different code paths or long chains of dependent calculations.
-    In such cases, the compiler will not be able vectorize the code and we as programmers have to fall back to a manual alternative.
+    In such cases, the compiler will not be able to vectorize the code and we as programmers have to fall back to a manual alternative.
+    \autocite{fog2019a,fog2019b,fog2019c,fog2019d,fog2019e}
 
     To get the best of both worlds, Intel provides so-called SIMD intrinsics for the SSE and AVX instruction sets.
     Theses intrinsics describe abstract functions in the C++ language working with data types representing vector registers and are not defined by the language itself.
@@ -180,12 +219,13 @@
     Above all, taking care of alignment, latency and throughput of operations is made much simpler due to the abstraction of registers to variables.
     The latencies and throughputs of specific intrinsics for different microarchitectures is given by \textcite{intel-intrinsics-guide} and \textcite{fog2019d}.
     As a consequence, we rely on this variant to develop the vectorized implementations of PRNGs and algorithms.
+    \autocite{intel-optimization-reference,fog2019a,fog2019b,fog2019c,fog2019d,fog2019e}
 
-    The AVX intrinsic data types are given by \texttt{\_\_m256}, \texttt{\_\_m256d}, \texttt{\_\_m256i} representing eight single precision floating-point values, four double precision floating-point values and a different amount of integer numbers with different sizes.
-    The name of each intrinsic is based on the same pattern which first encodes the instruction set to use, followed by the code name of the operation, finished by identification of the storage pattern all separated by underscores.
-    The SSE instruction set is encoded by \texttt{\_mm} and the AVX instruction set by \texttt{\_mm256}.
-    For example, the name of the AVX intrinsic to add every element of two other vectors each containing eight single precision floating-point values is given by \texttt{\_mm256\_add\_ps}.
-    \autocite{intel-optimization-reference}
+    % The AVX intrinsic data types are given by \texttt{\_\_m256}, \texttt{\_\_m256d}, \texttt{\_\_m256i} representing eight single precision floating-point values, four double precision floating-point values and a different amount of integer numbers with different sizes.
+    % The name of each intrinsic is based on the same pattern which first encodes the instruction set to use, followed by the code name of the operation, finished by identification of the storage pattern all separated by underscores.
+    % The SSE instruction set is encoded by \texttt{\_mm} and the AVX instruction set by \texttt{\_mm256}.
+    % For example, the name of the AVX intrinsic to add every element of two other vectors each containing eight single precision floating-point values is given by \texttt{\_mm256\_add\_ps}.
+    % \autocite{intel-optimization-reference}
   % subsection usage_in_c_ (end)
 
   \subsubsection*{Floating-Point Representation} % (fold)
@@ -209,6 +249,7 @@
       }
       \label{fig:floating-point-encoding}
     \end{figure}
+
     Generating a sequence of random numbers uniformly distributed in the unit interval requires the result to be a floating-point value.
     Thus, we have to be able to transform a sequence of random bits representing an unsigned integer to real numbers.
     Today, types representing real numbers in a computer are typically encoded in the floating-point format that does not fix the binary point \autocite{patterson2014}.

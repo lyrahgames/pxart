@@ -6,7 +6,7 @@
   We will give a brief overview of the major contributions concerning the implementation of vectorized PRNGs.
 
   Because the SIMD routines are a form of data-level parallelism, their application to PRNGs has to exploit the facility of multiple streams for small generators to take full advantage of the whole size of vector registers.
-  According to \textcite{fog2015}, there is a number of techniques to initialize multiple, independent pseudorandom streams for vector registers.
+  According to \textcite{fog2015}, there are a number of techniques to initialize multiple, independent pseudorandom streams for vector registers.
   One of it uses multiple instances of the same generator with different seeds.
   This method can lead to overlapping subsequences.
   \citeauthor{fog2015} calculates the probability of this to happen and gives an example of when to ignore a possible overlap.
@@ -19,7 +19,7 @@
   \citeauthor{fog2015} compares these methods and gives a general advice.
   Furthermore, he explains that it will be better to combine different generators for superior statistical properties.
   But this approach has no direct impact on vectorization techniques as we first have to discuss the implementation of the stand-alone generators.
-  Combining those will then be a trivial operation that will be not be discussed here.
+  Combining those will then be a trivial operation that will not be discussed here.
 
   \textcite{saito2008} presented an alternative algorithm, called SFMT, to the widely used Mersenne Twister optimized for the SSE instruction set which is working with $128\appendUnit{bit}$ data types.
   The authors have been one of the first people to officially vectorize PRNGs.
@@ -32,12 +32,12 @@
   Especially we get variants of the standard Mersenne Twister MT19937 and the SFMT to name the most common generators.
   Because they develop their own CPUs, Intel is able to create fine-tuned code for nearly every given microarchitecture resulting in a high-quality of their implementations.
   However, the source code of the library is not open source and cannot be easily adjusted for differing architectures that are not built by Intel.
-  Furthermore, the interface to use the routines of the library tend to be complicated and due to their backwards compatibility it is unlikely that this will change.
+  Furthermore, the interface to use the routines of the library tend to be complicated and due to their backwards compatibility it is unlikely to change.
 
-  \textcite{barash2017} describes how to implement a lot of PRNGs by using the AVX instruction set.
+  \textcite{barash2017} describe how to implement a lot of PRNGs by using the AVX instruction set.
   They as well provide a library for academic use with an implementation of the MT19937 even surpassing Intel's implementation \autocite{rngavxlib,guskova2016}.
   But the interface of the library is again C-compatible and introduces an overhead in development time while using C++.
-  \citeauthor{barash2017} manually vectorize their code through inline assembly statements which make their code unreadable, difficult to understand and not generalizable to other SIMD architectures.
+  \citeauthor{barash2017} manually vectorize their code through inline assembly statements which makes it unreadable, difficult to understand and not generalizable to other SIMD architectures.
 
   In \textcite{lemire-pcg} and \textcite{lemire-xorshift}, \citeauthor{lemire-pcg} supplies two open source code snippets for the vectorization of a PCG and a Xorshift generator with the AVX and AVX512 instruction sets by using Intel intrinsics.
   Therefore the code is well suited for analyzing the application of SIMD intrinsics to PRNGs and comparing different vectorization schemes.

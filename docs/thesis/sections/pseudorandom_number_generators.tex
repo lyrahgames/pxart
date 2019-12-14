@@ -3,7 +3,7 @@
 \section{Pseudorandom Number Generators} % (fold)
 \label{sec:pseudorandom_number_generators}
   \subsection{Random Sequences}
-  In the above section \ref{sub:mathematical_preliminaries} the theory of probability was introduced to make an examination of randomness possible.
+  In the section \ref{sub:stochastics} the theory of probability was introduced to make an examination of randomness possible.
   Randomness is a difficult concept and drives many philosophical discussions.
   According to \textcite{volchan2002} and \textcite[\ppno~10-11]{kneusel2018}, humans have a bad intuition concerning the outcome of random experiments.
   But for our purposes, it would suffice to find a formal mathematical definition applicable to RNGs.
@@ -14,7 +14,7 @@
   To be more specific, we will observe randomness in form of random sequences of real numbers.
   But as stated in \textcite{volchan2002} the question if a sequence is random decides at infinity.
   As long as we are only observing finite sequences, we cannot decide if such a sequence is the outcome of a truly random experiment or the result of a non-random algorithm.
-  Following his explanation, \citeauthor{volchan2002} makes clear that typical characterizations of a random sequence are closely associated with noncomputability.
+  Following his explanation, \citeauthor{volchan2002} makes it clear that typical characterizations of a random sequence are closely associated with noncomputability.
   So even if we would be able to algorithmically produce an infinite amount of numbers, the resulting sequence could not be seen as truly random.
   A modified version of this idea which is easier to understand is given in \textcite{kneusel2018}, where a sequence of values $(x_n)_{n\in\setNatural}$ is truly random if there exists no algorithm such that for all $n\in\setNatural$ the value $x_{n+1}$ can be computed as a function of all $x_i$ with $i\in\setNatural$ and $i\leq n$.
   Put more simply, knowing finitely many elements of a truly random sequence does not enable us to predict the next values within a computer.
@@ -26,7 +26,7 @@
   A computer is only capable of using finite sequences of values and for the development of RNGs, it is enough to measure and compare different properties of truly random sequences to a sequence of real numbers.
   For this, we rely on probability theory and first define an abstract random sequence drawn from a random experiment.
   The definition will use realizations of random variables to model the samples of a random experiment.
-  We make sure that these variables are identically and independent distributed (iid).
+  We make sure that these variables are identically and independently distributed (iid).
   This makes analyzing other sequences simpler and imposes no boundary because every important distribution can be generated out of iid random variables \autocite[\ppno~81-111]{kneusel2018}.
 
   \begin{definition}[Random Sequence]
@@ -129,7 +129,7 @@
   Consequently, if a PRNG should be used as an oracle in that sense, the set of states and the transition function in its definition are obligatory.
 
   It will be shown that the number of different states a PRNG can reach greatly affects the randomness of a respective pseudorandom sequence.
-  A larger set of states is not a guarantee that the output of a PRNG will look more like a truly random sequence, but at least gives the opportunity to better mask its deterministic nature \autocite{oneill2014}.
+  A larger set of states is not a guarantee that the output of a PRNG will look more like a truly random sequence, but at least gives the opportunity to mask its deterministic nature very well \autocite{oneill2014}.
   Therefore the number of states in general is much bigger than the number of different outputs.
   Through the usage of output symbols together with a generator function a PRNG can take advantage of a large set of states while returning only a few different values.
   This idea has two important implications.
@@ -145,9 +145,9 @@
   Hence, a uniform function which maps to every output value the same number of input values is a perfect candidate \autocite{oneill2014}.
 
   \subsection{Randomization}
-  The goal of PRNGs is to imitate the properties of TRNGs as much as possible \autocite{lecuyer1994} and at the same time retaining executability by a computer system and reproducibility for a given seed \autocite{lecuyer2015}.
+  The goal of PRNGs is to imitate the properties of TRNGs as much as possible \autocite{lecuyer1994} and at the same time retain executability by a computer system and reproducibility for a given seed \autocite{lecuyer2015}.
   These restrictions make a pseudorandom sequence completely predictable and characterizable by its seed.
-  So up until now, we have not introduced any kind of randomness to the definition of a PRNG.
+  So until now, we have not introduced any kind of randomness to the definition of a PRNG.
   But to extend the process of generating a pseudorandom sequence with true randomness, the seed will be chosen to be a truly random number produced by a TRNG.
   \textcite{lecuyer1994} states that receiving such a seed is much less work and more reasonable than acquiring a long sequence of truly random values.
   A generator with a truly random seed can be seen as an extensor of randomness.
@@ -162,7 +162,7 @@
   \end{definition}
   As with abstract random sequences, a truly random seed value is again modeled by a realization of the random variable $X$.
   As a result, the randomized pseudorandom sequence becomes a sequence of random variables which all depend on $X$.
-  For the definition the explicit formulation in Lemma \ref{lemma:explicit-formulation-pseudorandom-sequence} was used.
+  For the definition the explicit formulation in lemma \ref{lemma:explicit-formulation-pseudorandom-sequence} was used.
   Typically, the distribution of seed values $P_X$ is chosen so that it is uniformly distributed in a certain subset of $S$ \autocite{matsumoto1998,oneill2014,lecuyer1994,lecuyer2015,bauke2007}.
   This makes sure that no bias will be introduced by the randomization.
 
@@ -194,11 +194,11 @@
      % with period ρ and transient τ.
     In particular, if τ equals to $1$ we call $(u_n)$ periodic with period ρ.
   \end{definition}
-  This means an ultimately periodic sequence will be periodic after it reached its transient.
+  This means an ultimately periodic sequence will be periodic after it has reached its transient.
   Every periodic sequence is therefore ultimately periodic but not vice versa and as another consequence, the given concept is more general than the typical one of a periodic sequence.
   Please note that the values for ρ and τ are not unique.
   Let $ρ^*$ be the period and $τ^*$ be the transient.
-  Then the equation given in the above definition holds for all values ρ and τ with respect to $m\in\setNatural$ and $n\in\setNatural_0$ in the following sense.
+  Then the equation given in the above definition holds for all the values of ρ and τ with respect to $m\in\setNatural$ and $n\in\setNatural_0$ in the following sense.
   \[
     ρ = mρ^*
     \separate
@@ -719,7 +719,7 @@
   \end{lemma}
   We will give no proof for this lemma.
   For linear PRNGs, it is not possible to get an equidistribution on the complete output space $U$.
-  Instead the zero element is always reached once less often, introducing bias in the respective probability distribution μ.
+  Instead the zero element is always reached once less often barely introducing bias in the respective probability distribution μ.
   But for big values of $p$, this bias is neglectable as the following limit states.
   \[
     \lim_{p\to\infty}\frac{1}{m^p-1} = 0
@@ -770,7 +770,7 @@
   % \subsubsection*{Discrepancy}
 
   \subsubsection*{Predictability and Security}
-  There are a lot applications where PRNGs are used to encrypt crucial data.
+  There are a lot of applications where PRNGs are used to encrypt crucial data.
   As a matter of fact, such usability infers certain restrictions on a PRNG.
   In general, PRNGs implemented for this way of use have to be secure and unpredictable in some sense.
   Making sure a PRNG is not predictable, typically goes at the cost of speed and reproducibility.

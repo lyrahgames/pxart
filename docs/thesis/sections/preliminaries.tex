@@ -2,12 +2,13 @@
 \begin{document}
 \section{Preliminaries} % (fold)
 \label{sub:preliminaries}
-  To systematically approach the implementation of PRNGs, basic knowledge in the topics of stochastics and finite fields is administrable.
+  To systematically approach the implementation of PRNGs, basic knowledge in the topics of stochastics and statistics is administrable.
   Together, these topics will give a deeper understanding of randomness in deterministic computer systems, a formal description of pseudorandom sequences and generators, and the mathematical foundation of Monte Carlo algorithms.
   Based on them, we are capable of scientifically analyzing PRNGs concerning their randomness properties.
+  Afterwards, we will give a brief overview of template mechanisms in the C++ programming language and the fundamentals of modern computer architecture.
 
   \subsection{Probability Theory} % (fold)
-  \label{ssub:stochastics}
+  \label{sub:stochastics}
     The observation of random experiments resulted in the construction of probability theory.
     But probability theory itself does not use a further formalized concept of randomness \autocite{schmidt2009}.
     % Randomness itself plays a minor role in probability theory and is used in form of realizations of random variables.
@@ -15,10 +16,10 @@
     % Actually, typical formalizations rely on probability theory.
     % This connection makes the development of RNGs possible.
     % Hence, in the following we will give only the formal definition of relevant structures without further discussions and will postpone an examination of randomness to the next section.
-    Hence, we will postpone an examination of truly random sequences to the next section.
+    Hence, we will postpone an examination of truly random sequences.
 
-    According to \textcite{schmidt2009}, Kolmogorov embedded probability theory in the theory of measure and integration.
-    Albeit it heavily relies on measure-theoretical structures, probability theory is one of the most important applications of measure and integration theory.
+    According to \textcite{schmidt2009}, Kolmogorov embedded probability theory in the theory of measurement and integration.
+    Although it heavily relies on these theoretical structures, probability theory is one of the most important applications of measurement and integration theory.
     Therefore we will assume basic knowledge in this topic and refer to \textcite{schmidt2009} and \textcite{elstrodt2011} for a more detailed introduction to measure spaces, measurable functions, and integrals.
     Propositions and theorems will be given without proof.
 
@@ -55,8 +56,8 @@
     If we think of random variables as observables then their independence means that their outcomes do not influence each other.
     % It makes only sense in the context of probability theory
     For our purposes, the general definition of all three forms of independence is distracting.
-    In a computer, it makes no sense to talk about infinite sequences.
-    Therefore the following definition of independence takes only a finite sequence of random variables into account.
+    In a computer, it makes no sense to talk about uncountably many elements.
+    Therefore the following definition of independence takes only a countable sequence of random variables into account.
     Furthermore, to make it more understandable, this definition uses a theorem from \textcite[p.~238]{schmidt2009} which characterizes the independence of random variables.
     % Here, we will use a simpler equivalent definition  because, for a computer, all we need are finite sequences of random variables.
 
@@ -65,11 +66,10 @@
       % Two events $A, B \in \mathscr{F}$ are independent if $P(A\cap B)=P(A)P(B)$.
       % Let $(\Sigma_i,\mathscr{A}_i)$ for $i\in\set{1,2}{}$ be measurable spaces and $X_i$ random variables with $X\define X_1\times X_2$.
       % They are called independent if $P_X = P_{X_1} \otimes P_{X_2}$.
-      Let $n\in\setNatural$ and $X_i$ be a random variable for all $i\in\setNatural$ with $i\leq n$.
-      We denote the respective random vector with $X \define \roundBrackets{X_i}_{i=1}^n$.
-      Then these random variables are independent if the following equation holds.
+      Let $I\subset\setNatural$ and $X_i$ be a random variable for all $i\in I$.
+      Then these random variables are independent if the following equation holds for all finite subsets $J\subset I$ whereby we denote the respective random vector with $X_J \define \roundBrackets{X_i}_{i\in J}$.
       \[
-        P_X = \bigotimes_{i=1}^n P_{X_i}
+        P_{X_J} = \bigotimes_{i\in J} P_{X_i}
       \]
     \end{definition}
     Typical observations of random sequences include the estimation of the expectation value and the variance.
@@ -167,7 +167,7 @@
   \subsection{The C++ Programming Language} % (fold)
   \label{sub:the_c_programming_language}
     As already told in the introductory section \ref{sec:introduction}, the C++ programming language is the perfect candidate for developing high-performance low-level structures while keeping the high degree of abstraction that makes the use of libraries easier and more consistent.
-    C++ features multiple programming styles, like procedural programming, data abstraction, object-oriented programming, as well as generic programming, also known as template metaprogramming \autocite{stroustrup2014,vandevoorde2018}.
+    C++ features multiple programming styles, like procedural programming, data abstraction, object-oriented programming, as well as generic programming which is also known as template metaprogramming \autocite{stroustrup2014,vandevoorde2018}.
     The type mechanism makes C++ a strongly typed language.
     To exploit this, we will always try to map problems to an abstract data structure.
     Furthermore, the built-in facilities of C++, such as templates, function overloading, type deduction, and lambda expressions, simplify the type handling and the generalization of algorithms.
@@ -176,22 +176,22 @@
     We will also assume basic knowledge in C++ and refer to \textcite{stroustrup2014} and \textcite{meyers2014} for a detailed introduction to the general usage of the language.
     A complete online reference of the language is given by \textcite{cppreference}.
 
-    The C++ programming language evolves over time by defining different language standards every three years which are published by the ISO C++ standardization committee.
+    The C++ programming language keeps evolving by defining different language standards every three years which are published by the ISO C++ standardization committee.
     Newer standards typically introduce modern language features, fix old behavior and add new algorithms and templates to the STL.
     Hence, modern C++ separates into the standards C++11, C++14, and C++17 each published in the year 2011, 2014, and 2017, respectively.
-    Currently, we are waiting for the C++20 standard specification to be able to use even more advanced features concerning template metaprogramming and concurrency.
-    At the time of writing this thesis, C++17 is most modern specification and as a consequence it will be used throughout the code.
+    Currently, we are waiting for the C++20 standard specification which will provides even more advanced features concerning template metaprogramming and concurrency.
+    At the time of writing this thesis, C++17 is the most modern specification and as a consequence it will be used throughout the code.
     \autocite{stroustrup2014,meyers2014,vandevoorde2018}
 
     To design the API of a library supplying vectorized RNGs and some advanced utilities, we will heavily rely on different template metaprogramming techniques.
-    For getting deeper into the topic, we refer to \textcite{vandevoorde2018} and again to \textcite{meyers2014}.
+    For getting deeper into the topic, we will refer to \textcite{vandevoorde2018} and again to \textcite{meyers2014}.
     Here, we will only be able to list the most important terms, techniques and rules that will be used throughout the code.
 
     \begin{description}
       \item[Template Argument Deduction]
         \textquote[\cite{cppreference}]{%
           In order to instantiate a function template, every template argument must be known, but not every template argument has to be specified.
-          When possible, the compiler will deduce the missing template arguments from the function arguments.
+          If possible, the compiler will deduce the missing template arguments from the function arguments.
         }
       \item[Overloading Function Templates]
         \textquote[\cite{vandevoorde2018}]{%
@@ -209,17 +209,17 @@
         % \autocite{vandevoorde2018}
       \item[SFINAE]
         Substituting template arguments to resolve function template overloading could lead to errors by creating code that makes no sense.
-        The principle \enquote{substitution failure is not an error} (SFINAE) states that in these circumstances the overload candidates with such substitution problems will simply ignored.
+        The principle \enquote{substitution failure is not an error} (SFINAE) states that in these circumstances the overload candidates with such substitution problems will be simply ignored.
         % \autocite{vandevoorde2018}
-      \item[\code{decltype}]
+      \item[{\footnotesize \texttt{\textbf{decltype}}}]
         This is a specifier introducing an unevaluated context from which it is deducing the type of the given expression without actually evaluating the expression.
         % \autocite{stroustrup2014}
-      \item[\code{std::enable_if_t}]
+      \item[\texttt{\textbf{\footnotesize std::enable\_if\_t}}]
         This is a helper template from the STL to ignore function templates by using SFINAE under certain compile conditions.
         If the template argument evaluates to true then \code{std::enable\_if\_t} will evaluate to an actual type.
         Otherwise, it will have no meaning triggering the SFINAE principle for overloads.
         % \autocite{vandevoorde2018}
-      \item[\text{\code{std::declval}}]
+      \item[\texttt{\textbf{\footnotesize std::declval}}]
         The given STL function template is only declared, not defined and therefore cannot be called in evaluated contexts.
         It can be used as a placeholder for an object reference of a specific type.
         Typically, this routine will be inserted instead of a default constructor in the unevaluated context argument of \code{decltype}.

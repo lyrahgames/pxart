@@ -3,7 +3,7 @@
 \section{Physical Simulations and Monte Carlo Methods} % (fold)
 \label{sub:simulation_in_physics_and_mathematics}
   For our purposes, it is enough to explain the application of PRNGs to some given simulation procedures because there is no generic approach on how to randomize an arbitrary physical problem.
-  Hence, we will not provide an excessive explanation on the theory of Monte Carlo methods and their application to general physical problems.
+  Hence, we will not provide an excessive explanation to the theory of Monte Carlo methods and their application to general physical problems.
   Instead, the focus lies on the understanding of basic concepts and their implementation with respect to well-chosen examples.
 
   As mentioned in the introduction, the simulation of physical and mathematical systems can be quite time intensive.
@@ -172,7 +172,7 @@
       \end{subfigure}
       \caption[Monte Carlo Integration and the Computation of π]{%
         The figures show the sample points for different realizations of the Monte Carlo integration $\mathrm{MCI}_n(f)$ for the computation of π.
-        Points that lie in the quarter of the unit circle are shown in a blue color whereas other points are shown in orange color.
+        Points that lie in the quarter of the unit circle are shown in blue color whereas other points are shown in orange color.
         The unit circle is represented by a black line.
         The result of the realizations is expressed by the sample mean μ and the relative error with respect to π is expressed by ε.
         The variable $s$ names the count of samples that lie in the unit circle.
@@ -226,15 +226,15 @@
         \includegraphics[width=\linewidth]{../../../examples/monte_carlo_pi_plot_error.pdf}
       \end{subfigure}
       \caption[Monte Carlo Integration Plots for the Computation of π]{%
-        Each of the diagrams shows two different versions, colored in orange and blue, of realizations of the Monte Carlo integration $\mathrm{MCI}_n(f)$ for the computation of π for different values of $n$.
+        Each of the diagram shows two different versions, colored in orange and blue, of realizations of the Monte Carlo integration $\mathrm{MCI}_n(f)$ for the computation of π for different values of $n$.
         The left one displays the estimated value of π and the right one displays its relative error with respect to π.
-        Hereby the black line shows the exact relative standard deviation with respect to π of the Monte Carlo integration.
+        The black line hereby shows the exact relative standard deviation with respect to π of the Monte Carlo integration.
       }
       \label{fig:pi-computation-plots}
     \end{figure}
 
     Later, we will use the computation of π as benchmark routine to measure the performance of PRNGs with respect to different aspects of their implementation.
-    In these cases, the error of π should be in some given range
+    In these cases, the error of π should be in some given range.
     Assume we want to use $10^8$ samples to estimate the value of π.
     According to the formula above for the standard deviation, we get an error of approximately $0,00016$ which means we should at least get a precision of four digits, such that π should approach the value $3.1415$ with a varying last digit.
 
@@ -256,7 +256,7 @@
     The computation of π is only an academic example that should not be used in reality because there are much more efficient ways to estimate it.
     But as we will see, it is perfectly suited as a benchmark to test different kinds of RNGs because the main part of the algorithm consists of generating a lot of random numbers while using their values to actually compute a result.
     Evaluating the circle condition for generated random numbers is fast and will not introduce a lot of bias in the actual measurement.
-    Besides, it is the most simplest example of a non-trivial Monte Carlo integration.
+    Besides, it is the most common example of a non-trivial Monte Carlo integration.
     A lot of physical problems rely on Monte Carlo integration.
     In the end, all these problems can be broken down into similar form as the computation of π.
   % subsection monte_carlo_integration_and_the_computation_of_ (end)

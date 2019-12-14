@@ -20,7 +20,7 @@
 
     In \textcite{kneusel2018}, a special seeding routine was used, such that the actual initialization process only needs one truly random number.
     In the STL of the C++ programming language the MT19937 is already implemented.
-    The corresponding class is called \code{std::mt19937} and offers a constructor with only one integral number of $32\appendUnit{bit}$ length as seeding value.
+    The corresponding class is called \code{std::mt19937} and offers a constructor with only one integral number of 32-bit length as seeding value.
     This constructor uses the initialization routine described by \textcite{kneusel2018}.
     We want to make sure, that our implementation gives exactly the same output as the standard variant while keeping the advantages of our own API.
     As a consequence, we have to introduce a structure which can be interpreted as a PRNG and should serve as a default seeder for the MT19937.
@@ -78,17 +78,17 @@
     The scalar implementation offers a large degree of data independence.
     After the regeneration of the complete state vector, the generator function has to be applied on each individual element to provide random numbers.
     This problem describes the perfect use case for SIMD intrinsics.
-    In the AVX case, we can read eight $32\appendUnit{bit}$ values at the same time by the usage of a vector register and apply the generator function on each element in parallel by using the respective intrinsics.
+    In the AVX case, we can read eight 32-bit values at the same time by the usage of a vector register and apply the generator function on each element in parallel by using the respective intrinsics.
     In the SSE case, we would only read four elements.
-    The number of elements in the state vector is divisible by the eight and four without remainder.
+    The number of elements in the state vector is divisible by eight and four without remainder.
     Hence, we do not have to take care of the boundaries of the state vector.
 
-    The moment every package of eight or four elements in the state vector was read, the regeneration has to be triggered.
+    The moment every package of eight or four elements in the state vector is read, the regeneration has to be triggered.
     The computation of the new state vector exhibits some data dependencies we have to take care of.
     In the scalar variant of the regeneration process the loop of all elements was split into three parts --- one for the first $227$ elements, one for the following $396$ elements and one for the last element.
     The splitting followed from the dependencies given by the recurrence defining the Mersenne Twister algorithm.
     All elements in the first loop have to access the elements at the same position, one position ahead and $397$ steps ahead.
-    Reaching the $227$.~element will then forbid us to go $397$ steps further, because the position would not lie inside the state vector.
+    Reaching the $227$th~element will then forbid us to go $397$ steps further, because the position would not lie inside the state vector.
     But the requested element has already been produced at position zero.
     Therefore all elements in the second loop need to access the elements at the same position, one position ahead and $227$ steps backwards.
     For the last element the successive element would again lie outside the state vector.
@@ -116,7 +116,7 @@
     \inputCodeBlock[title = AVX MT19937 Advancing]{code/mt19937/simd256/advance.hpp}
     Because the state vector is aligned, we can exploit this by using aligned load operations for elements that will be used without a shift.
     For all other elements, we still have to use unaligned load operations.
-    All parts in the vectorized advancing routine were then directly translated into their corresponding vector intrinsics.
+    All parts in the vectorized advancing routine are then directly translated into their corresponding vector intrinsics.
 
   % subsection mersenne_twister (end)
 
@@ -126,8 +126,8 @@
     \citeauthor{vigna-xoroshiro} provides the C code for the generator on his website \autocite{vigna-xoroshiro}.
     We again use a functor which saves the state and advances it by calling the function operator.
     Compile-time constants will again be declared as \code{static constexpr} to reduce the runtime overhead.
-    In comparison to the MT19937, the state of the Xoroshiro128+ can be easily described by two $64\appendUnit{bit}$ unsigned integer values.
-    For the advancing routine, the generator needs a utility which is rotating the bits of a $64\appendUnit{bit}$ unsigned integer.
+    In comparison to the MT19937, the state of the Xoroshiro128+ can be easily described by two 64-bit unsigned integer values.
+    For the advancing routine, the generator needs a utility which is rotating the bits of a 64-bit unsigned integer.
 
     \inputCodeBlock[title = Scalar Xoroshiro128+ Structure]{code/xoroshiro128plus/sisd/struct.hpp}
     The Xoroshiro128+ offers a jump-ahead feature for discarding $2^{64}$ or $2^{96}$ elements of the output.
@@ -142,7 +142,7 @@
     \citeauthor{vigna-xoroshiro} only gives one parameter set for the PRNG.
     As a consequence, we have to use different seeds for all instances possibly causing overlapping subsequences or the jump-ahead feature to make sure the instances do not overlap for at least $2^{64}$ or $2^{96}$ values.
     For the AVX implementation, we will use four instances of the Xoroshiro128+.
-    The underlying therefore does not really change and uses the SIMD types instead of the $64\appendUnit{bit}$ unsigned integer values.
+    The underlying therefore does not really change and uses the SIMD types instead of the 64-bit unsigned integer values.
 
     \inputCodeBlock[title = AVX Xoroshiro128+ Structure]{code/xoroshiro128plus/simd256/struct.hpp}
 
@@ -165,7 +165,7 @@
 
   \subsection{MSWS} % (fold)
   \label{sub:middle_square_weyl_generator}
-    The MSWS is a simple, modern, and non-linear PRNG that uses a state based on $64\appendUnit{bit}$ unsigned integer values but is returning only a $32\appendUnit{bit}$ unsigned integer.
+    The MSWS is a simple, modern, and non-linear PRNG that uses a state based on 64-bit unsigned integer values but is returning only a 32-bit unsigned integer.
     The scalar implementation will again use the same approach as the MT19937 and the Xoroshiro128+ as it is given as a C implementation in \textcite{widynski2019}.
     The seeding routine for the MSWS is more complicated and requires a more sophisticated algorithm.
 
@@ -173,25 +173,25 @@
     The MSWS does not provide different parameters or a jump-ahead feature.
     Its small state size requires us to use multiple instances of independent generators to exploit the size of the vector registers.
     Thus, all instances have to be initialized with different seeds possibly generating overlapping subsequences.
-    But because its output is only given by a $32\appendUnit{bit}$ value, we have to generate eight random numbers at once.
+    But because its output is only given by a 32-bit value, we have to generate eight random numbers at once.
     We can decide to call four instances of the same generator twice or instead use eight instances.
     While benchmarking the generators, the variant for calling each instance twice reduced the actual throughput of the vectorized PRNG and was therefore discarded from the implementation and measurement.
     In our vectorized implementation, we use eight instances of the MSWS resulting in the following data structure.
 
     \inputCodeBlock[title = AVX MSWS Structure]{code/msws/simd256/struct.hpp}
-    Advancing the state of the vectorized MSWS introduced difficulties because we have to compute the square of the first $64\appendUnit{bit}$ value.
-    Either the AVX nor the SSE instruction set is providing a multiplication for $64\appendUnit{bit}$ unsigned integer numbers.
-    Accordingly, we have to implement our own function for squaring the $64\appendUnit{bit}$ values in a vector register based on given intrinsics.
-    Let $x\in\setNatural_0$ with $x < 2^{64}$ be a $64\appendUnit{bit}$ unsigned integer and let $x_0,x_1\in\setNatural_0$ with $x_0,x_1 < 2^{32}$ be its $32\appendUnit{bit}$ representation, such that $x = x_1 2^{32} + x_0$.
+    Advancing the state of the vectorized MSWS introduced difficulties because we have to compute the square of the first 64-bit value.
+    Either the AVX nor the SSE instruction set is providing a multiplication for 64-bit unsigned integer numbers.
+    Accordingly, we have to implement our own function for squaring the 64-bit values in a vector register based on given intrinsics.
+    Let $x\in\setNatural_0$ with $x < 2^{64}$ be a 64-bit unsigned integer and let $x_0,x_1\in\setNatural_0$ with $x_0,x_1 < 2^{32}$ be its 32-bit representation, such that $x = x_1 2^{32} + x_0$.
     \[
       x^2 = x_1^2 2^{64} + 2x_1x_0 2^{32} + x_0^2 \equiv 2x_1x_0 2^{32} + x_0^2 \mod 2^{64}
     \]
-    This equation uses a $64\appendUnit{bit}$ multiplication for $32\appendUnit{bit}$ numbers to deal with the carry bits of the computation.
+    This equation uses a 64-bit multiplication for 32-bit numbers to deal with the carry bits of the computation.
     The SSE and AVX instruction sets provide this operation, such that the added complexity of the computation can be used to find an optimal implementation.
 
     Afterwards, the first part of the vectorization is again straightforward because all the instances are independent so that every statement can directly be interchanged with its corresponding vector intrinsic.
-    At the end of the first part, two variables of SIMD type will provide $64\appendUnit{bit}$ values as random numbers.
-    The MSWS algorithm forces us to use only the lower $32\appendUnit{bit}$ of the given values resulting in only one vector type with the doubled amount of values as result.
+    At the end of the first part, two variables of SIMD type will provide 64-bit values as random numbers.
+    The MSWS algorithm forces us to use only the lower 32-bit of the given values resulting in only one vector type with the doubled amount of values as result.
     To do that, both variables have to be convoluted by shuffle and permutation operations.
     The squaring function and the permutation operations at the end will probably exhibit a high latency and therefore reduce the speed-up of the vectorization.
 
