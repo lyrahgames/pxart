@@ -4,10 +4,10 @@
 \label{sec:introduction}
 
 For various mathematical and physical problems, there exists no feasible, deterministic algorithm to solve them.
-Especially, the simulation of physical systems with many coupled degrees of freedom, such as fluids and global illumination, seem to be difficult to compute due to their high dimensionality.
+Especially, the simulations of physical systems with many coupled degrees of freedom, such as fluids and global illumination, seem to be difficult to compute due to their high dimensionality.
 Instead, a class of randomized algorithms, called Monte Carlo methods, are used to approximate the actual outcome.
 Monte Carlo methods rely on repeated random sampling to obtain a numerical result.
-Hence, they are not bound to the curse of dimensionality and are able to quickly evaluate complex equations.
+Hence, they are not bound to the \enquote{curse of dimensionality} and are able to quickly evaluate complex equations.
 \autocite{pharr2016,bauke2007,mueller2012,landau2014}
 
 To obtain precise answers with a small relative error, Monte Carlo algorithms have to use a tremendous amount of random numbers.
@@ -22,22 +22,22 @@ The sequence of numbers is not truly random but fulfills several properties of t
 The structure of Monte Carlo methods causes a program to spend most of its time with the construction of random numbers.
 Even the application of PRNGs does not change that.
 Today's computer processors provide functionality for the parallel execution of code in different ways, mainly single instruction multiple data (SIMD) and multiple instruction multiple data (MIMD).
-Hence, to efficiently use the computing power of a processor for Monte Carlo algorithms not bound by memory PRNGs have to be vectorized and parallelized to exploit such features.
+Hence, to efficiently use the computing power of a processor for Monte Carlo algorithms not bound by memory, PRNGs have to be vectorized and parallelized to exploit such features.
 Whereas parallelization takes place at a high level, vectorization has to be done by the compiler or manually by the programmer at a much lower level.
-The implementation of PRNGs constraints automatic vectorization due to internal flow and data dependencies.
+The implementation of PRNGs constrains automatic vectorization due to internal flow and data dependencies.
 To lift this restriction, a manual vectorization concerning data dependence and latencies appears to be the right way.
 Often, there are already manually vectorized algorithms that need to use random numbers.
 As a consequence, vectorizing PRNGs is even essential to provide the utilities for these implementations.
 \autocite{lecuyer2017,bauke2007,hennessy2019,patterson2014,barash2017,dolbeau2016,intel-optimization-reference,fog2019a,fog2019b,fog2019c,fog2019d,fog2019e}
 
-The C++ programming language is a perfect candidate for the development of vectorized PRNGs.
-It is one of the most used languages in the world and can be applied to small research projects as well as large enterprise programs.
-The language allows for the high-level abstraction of algorithms and structures.
+The C++ programming language is an adequate candidate for the development of vectorized PRNGs.
+It is one of the most used programming languages in the world and can be applied to small research projects as well as large enterprise programs.
+C++ allows for the high-level abstraction of algorithms and structures.
 On the other hand, it is capable of accessing low-level routines to exploit special hardware features, like Intel's Streaming SIMD Extensions (SSE), Intel's Advanced Vector Extensions (AVX), and threads.
 A typical C++ compiler is able to optimize the code with respect to such features automatically.
 But we as programmers are not bound to this and can manually optimize the code further.
-Every three years, a new standard is published, such as the new C++20 language specification.
-The language is evolving by its communities improvements and therefore it keeps to be a modern language.
+Every three years, a new standard is published, such as the latest language specification called C++17.
+The language is evolving by its communities improvements and therefore it keeps to be modern.
 On top of this, other languages, such as Python, usually provide an interface to communicate with the C programming language.
 Through the design of an efficient implementation in C++, we can easily add support for other languages as well by providing a standard C interface.
 \autocite{stroustrup2014,meyers2014,vandevoorde2018,intel-intrinsics-guide,reddy2011,cppreference,isocpp}
@@ -45,9 +45,10 @@ Through the design of an efficient implementation in C++, we can easily add supp
 Lots of PRNGs have been implemented by different libraries with different Application Programming Interfaces (APIs), such as the STL of C++, \citetitle{boost}, \citetitle{intel-mkl}, and \citetitle{rngavxlib}.
 For example, the STL and \citetitle{boost} provide a large set of robust PRNGs which are not vectorized but well documented.
 Their API makes them likely to be used but shows some flaws.
-It does not allow to explicitly use the vectorization capabilities of a PRNG, gives you a bad default seeding and makes use of standard distributions difficult and not adjustable.
+It does not allow to explicitly use the vectorization capabilities of a PRNG and gives you a bad default seeding.
+The use of standard distributions is difficult and not adjustable.
 \citetitle{rngavxlib} provides highly optimized, open-source, vectorized implementations with bad documentation and difficult-to-use code.
-The \citetitle{intel-mkl} too provides vectorized PRNGs but is not available as open-source and uses difficult-to-use interfaces.
+The \citetitle{intel-mkl}, too, provides vectorized PRNGs, but is not available as open-source and uses difficult-to-use interfaces.
 Besides complete libraries, there are also standalone implementations of vectorized PRNGs in \textcite{lemire-pcg} and \textcite{lemire-xorshift}.
 So far, there has been no easily-accessible, portable, and open-source software library written in C++ which gives a coherent, easy-to-use and consistent interface for vectorized PRNGs.
 \autocite{intel-mkl,boost,guskova2016,oneill-blog-api,gcc-libstdcpp}

@@ -6,8 +6,8 @@
   Hence, we will not provide an excessive explanation to the theory of Monte Carlo methods and their application to general physical problems.
   Instead, the focus lies on the understanding of basic concepts and their implementation with respect to well-chosen examples.
 
-  As mentioned in the introduction, the simulation of physical and mathematical systems can be quite time intensive.
-  Many degrees of freedom in a resulting partial differential equation makes the problem infeasible to solve deterministically \autocite{landau2014}.
+  As mentioned in the introduction, section \ref{sec:introduction}, the simulation of physical and mathematical systems can be quite time intensive.
+  Many degrees of freedom in a resulting partial differential equation make the problem infeasible to solve deterministically \autocite{landau2014}.
   This is typically called the \enquote{curse of dimensionality} \autocite{mueller2012}.
   As a consequence, we rely on probability theory to estimate the respective solutions and speed-up the simulation.
   Such randomized algorithms are in general called Monte Carlo methods \autocite{mueller2012,landau2014}.
@@ -23,7 +23,7 @@
   This behavior lets them overcome the curse of dimensionality and as a result they represent an efficient family of generalized algorithms to solve high-dimensional problems.
 
   To get the idea behind Monte Carlo methods, the observation of direct simulations as given in \textcite{mueller2012} will serve perfectly.
-  For some dimension $d\in\setReal$, we want to approximate a value $r\in\setReal^d$ by a Monte Carlo method.
+  For some dimension $d\in\setNatural$, we want to approximate a value $r\in\setReal^d$ by a Monte Carlo method.
   Direct simulation needs an already existent sequence of iid random variables with their expectation value equal to $r$ which we interpret as random samples.
   But this does not impose strong restrictions because we are mostly able to find such random variables.
 

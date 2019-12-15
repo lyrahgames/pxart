@@ -3,6 +3,11 @@
 % \subsection{SIMD-Capable Processors} % (fold)
 \subsection{Fundamentals of Computer Architecture}
 \label{sub:simd-capable_processors}
+  To be able to design and implement vectorized algorithms for SIMD architectures, we have to explain how data-level and instruction-level parallelism can be used to raise the performance of a computer program.
+  % Vectorization techniques can be conceptualized by the architecture of modern SIMD-capable multiprocessors and their instruction sets.
+  Especially the knowledge of typical instructions will make the design of a new API and its application to Monte Carlo simulations clear.
+  Therefore, we will briefly introduce the fundamentals of computer architecture and refer to \textcite{patterson2014} and \textcite{hennessy2019} for a more detailed observation.
+
   According to \textcite[\ppno~10-11]{hennessy2019}, in the year 1966, Flynn classified parallel architectures of computers with respect to their data-level and task-level parallelism.
   Based on this classification, a conventional uniprocessor has a single instruction stream and single data stream, also known as single instruction single data (SISD) architecture \autocite[\ppno~509-510]{patterson2014}.
   The single instruction multiple data (SIMD) architecture exploits data-level parallelism by applying the same operations to multiple items of independent data at the same time \autocite{hennessy2019} which, from the programmer's perspective, is close to the SISD mode of operation \autocite{patterson2014}.
@@ -12,10 +17,6 @@
   At the same time, MIMD utilities are implemented through multiple processor cores and multithreading.
   In a modern processor, SIMD and MIMD are orthogonal features of its design and can therefore be discussed independently.
   Hence, we will not focus on the exploitation of the MIMD architecture.
-  To be able to design and implement vectorized algorithms for an SIMD architecture, we have to explain how data-level and instruction-level parallelism can be used to raise the performance of a computer program.
-  % Vectorization techniques can be conceptualized by the architecture of modern SIMD-capable multiprocessors and their instruction sets.
-  Especially the knowledge of typical instructions will make the design of a new API and its application to Monte Carlo simulations clear.
-  Therefore, we will briefly introduce the fundamentals of computer architecture and refer to \textcite{patterson2014} and \textcite{hennessy2019} for a more detailed observation.
   In reality, there are several different SIMD-capable CPU architectures.
   Here, we will restrict our discussions to the SSE and AVX instruction set architectures from modern Intel processors, like the \citetitle{intel-kaby-lake-i7} and the \citetitle{intel-kaby-lake-i5} used to test implementations of described PRNGs \autocite{intel-kaby-lake-i5,intel-kaby-lake-i7}.
 
@@ -43,11 +44,12 @@
     In figure \ref{fig:cpu-components}, all the named components are shown schematically in a hierarchy to support the understanding.
     Here, we will focus on a single processing core.
 
-    The set of instructions a CPU is able to execute is called its architecture.
+    The set of instructions, a CPU is able to execute, is called its architecture.
     Usually, processor architectures provide commands to move data between memory and registers and simple arithmetic and logic operations, like addition and multiplication of integral or floating-point numbers, to actually compute results of algorithms.
     The actual implementation of an instruction set in form of a processor circuit is called the microarchitecture.
     It defines how instructions are executed in reality by providing different execution units and modes of operation.
-    Hence, with respect to the microarchitecture instructions suddenly exhibit physical properties, like the time to execute the given instruction, that were not considered by the abstract processor architecture.
+    Hence, with respect to the microarchitecture, instructions suddenly exhibit physical properties, like the time to execute the given instruction.
+    These were not considered by the abstract processor architecture.
     \autocite{hennessy2019,patterson2014}
 
     Executing an instruction in the processor is done in several stages.
@@ -60,23 +62,25 @@
     The throughput of an instruction is measured in cycles per instruction and specifies the number of cycles an instruction needs to reside in the execution unit.
     \autocite{intel-latency-throughput}
 
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{figures/pipeline.pdf}
-      \caption[Processor Pipeline]{%
-        This figure schematically shows the functioning of a processor pipeline with the help of an example.
-        Assume all Latin capital letters represent independent instructions with a latency of four and a throughput of one.
-        For any instruction $X$, we denote its four stages by $X_1$, $X_2$, $X_3$, and $X_4$.
-        After filling the pipeline, every cycle the result of an instruction will be available to the caller.
-      }
-      \label{fig:pipeline}
-    \end{figure}
+    % \begin{figure}
+    %   \center
+    %   \includegraphics[width=0.95\textwidth]{figures/pipeline.pdf}
+    %   \caption[Processor Pipeline]{%
+    %     This figure schematically shows the functioning of a processor pipeline with the help of an example.
+    %     Assume all Latin capital letters represent independent instructions with a latency of four and a throughput of one.
+    %     For any instruction $X$, we denote its four stages by $X_1$, $X_2$, $X_3$, and $X_4$.
+    %     After filling the pipeline, every cycle the result of an instruction will be available to the caller.
+    %   }
+    %   \label{fig:pipeline}
+    % \end{figure}
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/multiple_unit_pipeline.pdf}
       \caption[Multiple Execution Unit Processor Pipeline]{%
         This figure schematically shows the functioning of a processor pipeline using two execution units $p_1$ and $p_2$ with the help of an example.
-        It makes the same assumptions as in figure \ref{fig:pipeline}.
+        % It makes the same assumptions as in figure \ref{fig:pipeline}.
+        Assume all capital letters represent independent instructions with a latency of four and a throughput of one.
+        For any instruction $X$, we denote its four stages by $X_1$, $X_2$, $X_3$, and $X_4$.
         After filling the pipeline, every cycle the results of two instructions will be available to the caller.
       }
       \label{fig:multiple-unit-pipeline}
@@ -85,11 +89,12 @@
     To speed up the execution of independent instructions, in nearly all modern CPUs a so-called pipeline is used.
     Independent instructions do not have to wait for the results of other immediate instructions and therefore do not need to stall the execution unit for their complete latency.
     Instead, the processor performs the different stages of different instructions concurrently according to their throughput.
-    For a better understanding, figure \ref{fig:pipeline} shows a schematic example of this pipeline process for four independent instructions with a latency of four and a throughput of one.
+    % For a better understanding, figure \ref{fig:pipeline} shows a schematic example of this pipeline process for four independent instructions with a latency of four and a throughput of one.
     As a consequence, a pipeline does not reduce the latency of an instruction but reduces its throughput.
     It is therefore a form of instruction-level parallelism.
     To further decrease the throughput of a sequence of instructions, the processor core typically uses multiple execution units, also known as ports, to run independent instructions directly in parallel.
-    This enhancement is shown in figure \ref{fig:multiple-unit-pipeline} with independent instructions again with a latency of four and a throughput of one.
+    % This enhancement is shown in figure \ref{fig:multiple-unit-pipeline} with independent instructions again with a latency of four and a throughput of one.
+    A pipeline with two execution units executing a sequence of independent instructions with a latency of four and a throughput of one is shown in figure \ref{fig:multiple-unit-pipeline}.
     In real-world processors, different instructions typically exhibit different latencies and throughputs.
     The varying capabilities of different execution units concerning their instruction set do not allow instruction-level parallelization for arbitrary instructions.
     \autocite{dolbeau2016,fog2019a,fog2019d,intel-kaby-lake,intel-intrinsics-guide}
@@ -168,8 +173,8 @@
     Further reduction of the memory access latency is achieved by always fetching a fixed-length group of bytes which are called a cache line at once and by prefetching consecutive cache lines for content that is expected to be needed soon possibly wasting time if the data will not be used.
     Modern architectures commonly featuring a cache line size of $64\appendUnit{byte}$.
     Figure \ref{fig:memory-hierarchy} shows a schematic view of a usual memory hierarchy found in today's laptops and desktop computers.
-    In modern processor architectures, like the Kaby Lake microarchitecture from Intel, each processing core of the CPU features its own level one cache which is further split into an instruction cache and a data cache \autocite{intel-kaby-lake}.
-    This reduces the overall complexity of level one caches and as a result decreases the cache access time.
+    In modern processor architectures, like the Kaby Lake microarchitecture from Intel, each processing core of the CPU features its own L1 cache which is further split into an instruction cache and a data cache \autocite{intel-kaby-lake}.
+    This reduces the overall complexity of L1 caches and as a result decreases the cache access time.
     For example, the L1 cache of the \citetitle{intel-kaby-lake-i7} has a size of $256\appendUnit{KiB}$ divided into two 128-KiB caches for instructions and data.
     The L2 cache has a size of $1\appendUnit{MiB}$ and the L3 cache a size of $8\appendUnit{MiB}$.
     \autocites[\ppno~78-83]{hennessy2019}{intel-kaby-lake-i7}{intel-kaby-lake}
@@ -196,7 +201,8 @@
 
   \subsubsection*{SIMD Instruction Set Features in C++} % (fold)
   \label{sub:usage_in_c_}
-    To force the usage of the SSE or AVX instructions which exploit the SIMD capabilities on modern Intel processors, assembler code resulting from compiling a given program has to explicitly call the according instructions of the microarchitecture.
+    Exploiting the SIMD capabilities on modern Intel processors is done by using the SSE and AVX instruction set features of the underlying microarchitecture in the assembler code.
+    % To force the usage of the SSE or AVX instructions, which exploit the SIMD capabilities on modern Intel processors, assembler code resulting from compiling a given program has to explicitly call the according instructions of the microarchitecture.
     To achieve this behavior in C++, there are several variants.
 
     First, we could use inline assembly code to directly call the appropriate instructions.
@@ -210,8 +216,8 @@
     In such cases, the compiler will not be able to vectorize the code and we as programmers have to fall back to a manual alternative.
     \autocite{fog2019a,fog2019b,fog2019c,fog2019d,fog2019e}
 
-    To get the best of both worlds, Intel provides so-called SIMD intrinsics for the SSE and AVX instruction sets.
-    Theses intrinsics describe abstract functions in the C++ language working with data types representing vector registers and are not defined by the language itself.
+    To get the best of both techniques, Intel provides so-called SIMD intrinsics for the SSE and AVX instruction sets.
+    These intrinsics describe abstract functions in the C++ language working with data types representing vector registers and are not defined by the language itself.
     Each intrinsic is basically substituting an assembler instruction.
     With these utilities, it is possible to manually vectorize the code without the need to use inline assembly statements.
     Therefore, we are able to use high-level abstraction features of C++ to create a usable API and make the code maintainable while inserting low-level routines to improve its performance.
@@ -262,7 +268,7 @@
     \begin{definition}[Floating-Point Format for Normalized Numbers]
       Let $p,q\in\setNatural$ be the numbers of bits used for the exponent and the fraction respectively.
       Furthermore, let $b\define (b_i)_{i=0}^{p+q}$ be a finite sequence of bits in $\mathds{F}_2$.
-      We define the sign $s$, the exponent $e$ the offset $o$, and the significand $m$ as follows.
+      We define the sign $s$, the exponent $e$, the offset $o$, and the significand $m$ as follows.
       \[
         s \define b_{p+q}
         \separate

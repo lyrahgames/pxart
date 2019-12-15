@@ -67,13 +67,15 @@
   \end{tikzpicture}
 }
 
+\usepackage{times}
+
 \begin{document}
 \begin{graph}
-  \node (C1) {Processor Core};
+  \node (C1) {Processor Core 1};
   \node[test] (R1) [below=0.8cm of C1] {Registers};
   \node[test] (ALU1) [below=0.8cm of R1] {ALU};
 
-  \node (C2) [right=3.5cm of C1] {Processor Core};
+  \node (C2) [right=3.5cm of C1] {Processor Core 2};
   \node[test] (R2) [below=0.8cm of C2] {Registers};
   \node[test] (ALU2) [below=0.8cm of R2] {ALU};
 
