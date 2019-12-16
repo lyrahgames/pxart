@@ -4,6 +4,7 @@
 \label{sec:previous_work}
   In the last few years, the vectorization of PRNGs has not received great attention.
   We will give a brief overview of the major contributions concerning the implementation of vectorized PRNGs.
+  The respective mathematical concepts and properties concerning PRNGs are given in section \ref{sec:pseudorandom_number_generators}.
 
   Because the SIMD routines are a form of data-level parallelism, their application to PRNGs has to exploit the facility of multiple streams for small generators to take full advantage of the whole size of vector registers.
   According to \textcite{fog2015}, there are a number of techniques to initialize multiple, independent pseudorandom streams for vector registers.

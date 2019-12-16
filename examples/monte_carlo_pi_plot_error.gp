@@ -5,16 +5,19 @@ set logscale x
 set format x "$10^{%L}$"
 set format y "$%.2f$"
 
-set rmargin 1
-set tmargin 0.5
-set lmargin 4
-set bmargin 1.5
+# set rmargin 1
+# set tmargin 0.5
+# set lmargin 4
+# set bmargin 1.5
+
+set xl "Samples $n$"
+set yl "Relative Error"
 
 set xr [10:10**7]
 set yr [-0.01:0.12]
 
 set xtics 10, 100
-set ytics 0.0, 0.03
+set ytics 0.0, 0.05
 
 pi = 3.141592
 f(x) = sqrt((4 - pi) / (pi * x))

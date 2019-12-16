@@ -1,8 +1,5 @@
-#pragma once
-#include <random>
-
 template <typename Real, typename Integer, typename RNG>
-inline Real monte_carlo_pi(RNG& rng, Integer samples) noexcept {
+inline Real monte_carlo_pi(RNG&& rng, Integer samples) noexcept {
   std::uniform_real_distribution<Real> dist{0, 1};
   Integer samples_in_circle{};
   for (auto i = samples; i > 0; --i) {

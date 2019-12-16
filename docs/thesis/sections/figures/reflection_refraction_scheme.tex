@@ -1,0 +1,46 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 3.0cm and 2.5cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 3.0cm,
+      minimum height = 1.0cm
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+
+\begin{document}
+\begin{graph}
+  \node (A) {};
+  \node[circle,black,draw,inner sep = 1pt,inner color=black, outer color = black] (B) [right = of A] {};
+  \node (C) [right = of B] {};
+  \draw[-] (B) -- +(2,0) -- node [above right] {$\eta_\mathrm{i}$} node [below right] {$\eta_\mathrm{t}$} +(3,0);
+  \draw[-] (B) -- +(-2,0) -- node[below] {Surface} +(-3,0);
+  \draw[<-] (B) -- node {$\omega_\mathrm{i}$} +(140:2);
+  \draw[->] (B) -- node[below right] {$\omega_\mathrm{r}$} +(40:2);
+  \draw[->] (B) -- node {$\omega_\mathrm{t}$} +(-60:2);
+
+  \draw[->] (B) -- node[right] {$n$} +(90:2);
+  \draw[-,dashed] (B) -- +(-90:2);
+\end{graph}
+\end{document}

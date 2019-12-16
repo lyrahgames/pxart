@@ -5,10 +5,13 @@ set logscale x
 set format x "$10^{%L}$"
 set format y "$%.1f$"
 
-set rmargin 1
-set tmargin 0.5
-set lmargin 4
-set bmargin 1.5
+# set rmargin 1
+# set tmargin 0.5
+# set lmargin 4
+# set bmargin 1.5
+
+set xl "Samples $n$"
+set yl "Sampled $\\mathrm{MCI}_n(f)$"
 
 set xr [10:10**7]
 set yr [2.8:3.5]

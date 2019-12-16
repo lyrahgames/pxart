@@ -46,7 +46,9 @@
   The respective structure and algorithm which produced the sequence is then called a PRNG.
 
   For computer programming and simulations, the usage of a TRNG would introduce severe disadvantages in contrast to a PRNG.
-  Concerning program verification, debugging, and the comparison of similar systems, the reproducibility of results is essential \autocite{lecuyer2015}.
+  A PRNG generates numbers according to a deterministic algorithm.
+  Therefore its output cannot be seen as truly random.
+  But concerning program verification, debugging, and the comparison of similar systems, the reproducibility of results is essential \autocite{lecuyer2015}.
   A truly random sequence produced by physical devices, such as thermal noise diodes or photon trajectory detectors, is not reproducible and can therefore not be conveniently used for mathematical and physical simulations \autocite{lecuyer2015}.
   According to \textcite{lecuyer2015}, a given simulation should produce the same results on different architectures for every run.
   This property becomes even more important if parallel generation of random numbers with multiple streams is taken into account.
@@ -166,7 +168,7 @@
   Typically, the distribution of seed values $P_X$ is chosen so that it is uniformly distributed in a certain subset of $S$ \autocite{matsumoto1998,oneill2014,lecuyer1994,lecuyer2015,bauke2007}.
   This makes sure that no bias will be introduced by the randomization.
 
-  \subsection{Distributions}
+  % \subsection{Distributions}
 
   \subsection{Limitations and Mathematical Properties}
   As was already discussed, PRNGs have certain advantages in comparison with TRNGs.
@@ -292,7 +294,7 @@
   \medskip
   \par
   \noindent
-  The first example shows a transition function which is not bijective but does not map any element of $S$ to itself.
+  The first example shows a transition function which is not bijective and does not map any element of $S$ to itself.
   Hence, in all cases we get a period of $2$.
   The transient varies between $1$ and $2$ and depends on the seed value.
 
@@ -483,7 +485,7 @@
   \subsubsection*{Multidimensional Equidistribution}
   In physical problems, we typically have to deal with partial differential equations in many dimensions.
   Finding deterministic, numerical solutions through iterated integrals becomes infeasible due to the resulting degrees of freedom.
-  This is called the \enquote{curse of dimensionality}.
+  % This is called the \enquote{curse of dimensionality}.
   With the use of Monte Carlo integration, we can overcome this burden so that for high-dimensional problems we are able to reduce the error of the estimated solutions for every iteration much faster.
   % The advantage of using Monte Carlo methods to solve a problem is that through the use of random numbers we are able to overcome the curse of dimensionality.
   % As a consequence, a PRNG should provide random vectors for a different number of dimensions.
@@ -779,6 +781,16 @@
   Therefore no further discussion or rigorous concept of security will be given.
 
   \subsection{Implementation-Specific Properties and Features}
+  The implementation of a PRNG in a computer exhibits properties, such as code size, memory size, and speed, that cannot be described by its abstract definition.
+  In general, we strive for simple and portable code but typically we have to find a trade-off between usability and runtime performance.
+  Both, code size and memory size, should be as small as possible so that the data structure and the advancing routine of a generator fit into the caches of the computer.
+  In this case, their execution is only bound by the CPU.
+  To raise the speed of random number generation, optimizing code complexity concerning flow and data dependencies is necessary.
+
+  To use PRNGs for vectorized or parallelized algorithms, we have to provide multiple independent streams of random numbers.
+  There are several methods to create and initialize such random streams.
+  Exploiting vectorization facilities, usually multiple instances of the same generator which are seeded differently are used.
+
   \subsubsection*{Seekability}
   \subsubsection*{Seeding and Consistency}
   \subsubsection*{Ease of Implementation}
@@ -803,14 +815,14 @@
     \label{fig:leapfrogging-multiple-streams}
   \end{figure}
 
-  \subsection{Analyzation}
-  visualization, proof, experiments, benchmarks (runtime), test suites, code analyzation
+  % \subsection{Analyzation}
+  % visualization, proof, experiments, benchmarks (runtime), test suites, code analyzation
 
-  statistical quality and performance vs implementation quality and performance
+  % statistical quality and performance vs implementation quality and performance
 
-  Visualizations: randograms 2d and 3d, histograms, simulation plots and images
+  % Visualizations: randograms 2d and 3d, histograms, simulation plots and images
 
-  Period and Uniformity, Empirical Testing, predictability and Security, Speed, Memory Size, Code Size, Output Range, Seekability, multiple streams, k-dimensional equidistribution, theoretical support, repeatability, portability, ease of implementation
+  % Period and Uniformity, Empirical Testing, predictability and Security, Speed, Memory Size, Code Size, Output Range, Seekability, multiple streams, k-dimensional equidistribution, theoretical support, repeatability, portability, ease of implementation
   % subsection random_and_pseudorandom_number_generators (end)
 
   \subsection{Examples}
@@ -833,10 +845,6 @@
       We call $\mathrm{LCG}(m,a,c)$ the linear congruential generator with modulus $m$, multiplier $a$ and increment $c$.
     \end{definition}
   % subsection linear_congruential_generator (end)
-
-    \begin{definition}[Linear Feedback Shift Registers]
-
-    \end{definition}
 
   % \subsection{Mersenne Twister} % (fold)
   % \label{ssub:mersenne_twister}
@@ -899,22 +907,22 @@
 
   % \subsection{Permuted Congruential Generator} % (fold)
   % \label{ssub:permuted_congruential_generator}
-    \begin{definition}[Permuted Congruential Generator]
-      Given $\mathscr{G}\define \mathrm{LCG}(b,a,c)$ with transition function $T$.
-      Let $t\in\setInteger_{b}$ and $\function{f_c}{\setInteger_{2^{b-t}}}{\setInteger_{2^{b-t}}}$ be a permutation for all $c \in \setInteger_{2^t}$.
-      \[
-        S \define \setInteger_{2^b}
-        \separate
-        U \define \setInteger_{2^{b-t}}
-      \]
-      \[
-        G \define π_2 \circ f_* \circ \mathrm{split}_t
-      \]
-      \[
-        f_*(a,b) \define (a,f_a(b))
-      \]
-      $\mathrm{PCG}(\mathscr{G},t,\set{f_c}{c\in\setInteger_{2^t}}) \define (S,T,U,G)$
-    \end{definition}
+    % \begin{definition}[Permuted Congruential Generator]
+    %   Given $\mathscr{G}\define \mathrm{LCG}(b,a,c)$ with transition function $T$.
+    %   Let $t\in\setInteger_{b}$ and $\function{f_c}{\setInteger_{2^{b-t}}}{\setInteger_{2^{b-t}}}$ be a permutation for all $c \in \setInteger_{2^t}$.
+    %   \[
+    %     S \define \setInteger_{2^b}
+    %     \separate
+    %     U \define \setInteger_{2^{b-t}}
+    %   \]
+    %   \[
+    %     G \define π_2 \circ f_* \circ \mathrm{split}_t
+    %   \]
+    %   \[
+    %     f_*(a,b) \define (a,f_a(b))
+    %   \]
+    %   $\mathrm{PCG}(\mathscr{G},t,\set{f_c}{c\in\setInteger_{2^t}}) \define (S,T,U,G)$
+    % \end{definition}
   % subsection permuted_congruential_generator (end)
 
   % \subsection{Xorshift and Variants} % (fold)
