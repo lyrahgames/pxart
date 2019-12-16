@@ -849,59 +849,70 @@
   % \subsection{Mersenne Twister} % (fold)
   % \label{ssub:mersenne_twister}
     \begin{definition}[Mersenne Twister]
+    \label{def:mersenne-twister}
       Let $w, n, m\in \setNatural$ and $r\in\setNatural_0$ with $m \leq n$ and $r < w$.
-      Further, let $a,b,c \in \setInteger_2^w$ and $u,s,t,l \in \setInteger_w$.
+      Further, let $a,b,c \in \mathds{F}_2^w$ and $u,s,t,l \in \setInteger_w$.
       Then the Mersenne Twister $\mathrm{MT}(w,n,m,r,a,b,c,u,s,t,l)\define (S,T,U,G)$ is defined as a PRNG in the following way.
       \[
-        S \define \setInteger_n \times \setInteger_2^{w\times n}
+        S \define \roundBrackets{\mathds{F}_2^w}^n
         \separate
-        U \define \setInteger_2^w
+        U \define \mathds{F}_2^w
       \]
       \[
         \function{T}{S}{S}
+        \separate
+        \function{G}{S}{U}
+        \separate
+        G(x) \define F(x_{n-1})
+      \]
+      For all $k\in\setNatural_0$ with $k < n-1$, we define $T$ as follows.
+      \[
+        T_k\roundBrackets{x} = x_{k+1}
+        \separate
+        T_{n-1}\roundBrackets{x} = x_{m} \oplus A\roundBrackets{υ(x_0) \,\middle\vert\, λ(x_{1})}
+      \]
+      Hereby, the following helper functions are used.
+      \[
+        \function{υ,λ}{\mathds{F}_2^w}{\mathds{F}_2^w}
       \]
       \[
-        \forall i\in\setInteger_{n-1}: T(i, x) \define (i + 1, x)
+        υ(x) = \underbrace{x_{w-1}\cdots x_r}_{w-r}\underbrace{0\cdots 0}_{r}
+        \separate
+        λ(x) = \underbrace{0\cdots 0}_{w-r}\underbrace{x_{r-1}\cdots x_0}_{r}
       \]
       \[
-        T(n-1, x) \define (0, y)
-      \]
-      \begin{align*}
-        \forall i\in\setInteger_{n-m}: y_i &\define x_{m+i} \oplus \roundBrackets{x_i^u \middle\vert x_{i+1}^l}A \\
-        \forall i\in\setInteger_{m-1} + (n-m): y_i &\define y_{i-(n-m)} \oplus \roundBrackets{x_i^u \middle\vert x_{i+1}^l}A \\
-        y_{n-1} &\define y_{m-1} \oplus \roundBrackets{x^u_{n-1} \middle\vert y_0^l}A
-      \end{align*}
-      \[
-        xA \define
+        \function{A}{\mathds{F}_2^w}{\mathds{F}_2^w}
+        \separate
+        A(x) \define
         \begin{cases}
-          x \gg 1 &: x_0 = 0 \\
-          (x \gg 1) \oplus a &: x_0 = 1
+          x \rightarrow 1 &: x_0 = 0 \\
+          (x \rightarrow 1) \oplus a &: x_0 = 1
         \end{cases}
       \]
       \[
-        f_1(x) \define x \oplus (x \gg u)
+        \function{f_1,f_2,f_3,f_4}{\mathds{F}_2^w}{\mathds{F}_2^w}
       \]
+      \begin{align*}
+        f_1(x) &\define x \oplus (x \rightarrow u) &
+        f_2(x) &\define x \oplus ((x \leftarrow s) \odot b) \\
+        f_3(x) &\define x \oplus ((x \leftarrow t) \odot c) &
+        f_4(x) &\define x \oplus (x \rightarrow l)
+      \end{align*}
       \[
-        f_2(x) \define x \oplus ((x \ll s) \odot b)
-      \]
-      \[
-        f_3(x) \define x \oplus ((x \ll t) \odot c)
-      \]
-      \[
-        f_4(x) \define x \oplus (x \gg l)
-      \]
-      \[
-        \function{G}{S}{U}
+        \function{F}{\mathds{F}_2^w}{\mathds{F}_2^w}
         \separate
-        G(i,x) \define f_4 \circ f_3 \circ f_2 \circ f_1(x_i)
+        F(x) \define f_4 \circ f_3 \circ f_2 \circ f_1(x)
       \]
     \end{definition}
 
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/mt19937_scheme.pdf}
-      \caption[MT19937 Scheme]{}
-      \label{fig:mt19937-scheme}
+      \caption[Mersenne Twister Transition and Generation]{
+        Transition and generator function of the Mersenne Twister.
+        The notation is taken from definition \ref{def:mersenne-twister}.
+      }
+      \label{fig:mersenne-twister-transition-generation}
     \end{figure}
   % subsection mersenne_twister (end)
 
@@ -928,16 +939,24 @@
   % \subsection{Xorshift and Variants} % (fold)
   % \label{ssub:xorshift_and_variants}
     \begin{definition}[Xoroshiro128+]
+    \label{def:xoroshiro}
       Let $a,b,c \in \setInteger_{64}$.
+      Then the Xoroshiro128+ $\mathrm{Xoroshiro128+}(a,b,c)\define (S,T,U,G)$ is defined as a PRNG in the following way.
       \[
-        S \define \setInteger_{2^{64}}^2
+        S \define \roundBrackets{\mathds{F}_2^{64}}^2
         \separate
-        U \define \setInteger_{2^{64}}
+        U \define \mathds{F}_2^{64}
+        \separate
+        \function{T}{S}{S}
+        \separate
+        \function{G}{S}{U}
       \]
       \[
-        T(x,y) \define (x \circlearrowleft a \oplus f(x,y) \oplus (f(x,y) \leftarrow b), f(x,y) \circlearrowleft c)
+        T(x,y) \define (x \circlearrowleft a \oplus f(x,y) \oplus \boxBrackets{f(x,y) \leftarrow b},\ f(x,y) \circlearrowleft c)
       \]
       \[
+        \function{f}{\mathds{F}_2^{64}}{\mathds{F}_2^{64}}
+        \separate
         f(x,y) \define x \oplus y
       \]
       \[
@@ -947,7 +966,10 @@
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/xrsr128p_scheme.pdf}
-      \caption[Xoroshiro128+ Scheme]{}
+      \caption[Xoroshiro128+ Transition and Generation]{
+        Transition and generation function of the Xoroshiro128+.
+        The notation is taken from \ref{def:xoroshiro}.
+      }
       \label{fig:xoroshiro-scheme}
     \end{figure}
   % subsection xorshift_and_variants (end)
@@ -955,35 +977,33 @@
   % \subsection{Middle Square Weyl Sequence RNG} % (fold)
   % \label{ssub:middle_square_weyl_sequence_rng}
     \begin{definition}[Middle Square Weyl Sequence RNG]
-      Let $s\in\setInteger_{2^{64}}$ be an odd constant.
-      The middle square Weyl sequence RNG $\mathrm{MSWS}(s)\define(S,T,U,G)$ is defined as a PRNG in the following way.
+    \label{def:msws}
+      We define $\mathrm{MSWS}\define(S,T,U,G)$ as a PRNG in the following way.
       \[
-        S \define \setInteger_{2^{64}}^2
+        S \define \setInteger_{2^{64}}^3
         \separate
         U \define \setInteger_{2^{32}}
       \]
       \[
         \function{T}{S}{S}
         \separate
-        T(w,x) = (w+s, f(x^2 + w + s))
-      \]
-      \[
-        \function{f}{\setInteger_{2^{64}}}{\setInteger_{2^{64}}}
-        \separate
-        f(x) \define (x \gg 32) \mathrm{or} (x \ll 32)
+        T(x,w,s) = ((x^2 + w + s)\circlearrowleft 32, w+s, s)
       \]
       \[
         \function{G}{S}{U}
         \separate
-        G(w,x) \define x \mod 2^{32}
+        G(x,w,s) \define x \mod 2^{32}
       \]
     \end{definition}
 
     \begin{figure}
       \center
       \includegraphics[width=0.7\textwidth]{figures/msws_scheme.pdf}
-      \caption[Middle Square Weyl Sequence RNG Scheme]{}
-      \label{fig:msws-scheme}
+      \caption[Middle Square Weyl Sequence RNG Transition and Generation]{
+        Transition and generation function of the middle square Weyl sequence RNG (MSWS).
+        The notation is taken from \ref{def:msws}.
+      }
+      \label{fig:msws-transition-generation}
     \end{figure}
   % subsection middle_square_weyl_sequence_rng (end)
 % section pseudorandom_number_generators (end)
