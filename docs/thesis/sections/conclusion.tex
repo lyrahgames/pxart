@@ -2,7 +2,7 @@
 \begin{document}
 \section{Conclusions and Future Work} % (fold)
 \label{sec:conclusions}
-  We were able to show that the vectorization of PRNGs and distributions based on SIMD intrinsics can improve the performance of physical simulations which need to access a large amount of random numbers.
+  We were able to show that the vectorization of PRNGs and distributions based on SIMD intrinsics can improve the performance of physical simulations, such as the propagation of photons, which need to access a large amount of random numbers.
   By applying current statistical and empirical test suites, it was demonstrated that the vectorization of multiple instances does not reduce the statistical performance of the given generators.
   The time and effort taken to implement the vectorized data structures and advancing routines do not outweigh the enhancement in speed-up but have to be considered when deciding to vectorize an actual application to further increase performance.
   We made clear that measuring the performance of PRNGs in general should be done inside an actual application that is using random numbers to compute a testable result to not falsify outcomes.

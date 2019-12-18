@@ -90,7 +90,7 @@
   % \node[buffer,label=left:10] (x10) [below = of x9] {};
   % \node[buffer,label=left:11] (x11) [below = of x10] {};
 
-  \node[state] (y0) [right = 6 of x0] {};
+  \node[state] (y0) [right = 9 of x0] {};
   \node[state] (y1) [below = of y0] {};
   \node[state] (y2) [below = of y1] {};
   \node[state] (y3) [below = of y2] {};
@@ -112,6 +112,28 @@
   % \draw[-] (x8) -- (y8);
   % \draw[-] (x9) -- (y9);
 
+  \node[state] (w0) [left = 3 of y0] {};
+  \node[state] (w1) [below = of w0] {};
+  \node[state] (w2) [below = of w1] {};
+  \node[state] (w3) [below = of w2] {};
+  \node[state] (w4) [below = of w3] {};
+  \node[state] (w5) [below = of w4] {};
+  \node[state] (w6) [below = of w5] {};
+  \node[state] (w7) [below = of w6] {};
+  \node[buffer] (w8) [below = of w7] {};
+  \node[buffer] (w9) [below = of w8] {};
+
+  \draw[-] (y0) -- (w0);
+  \draw[-] (y1) -- (w1);
+  \draw[-] (y2) -- (w2);
+  \draw[-] (y3) -- (w3);
+  \draw[-] (y4) -- (w4);
+  \draw[-] (y5) -- (w5);
+  \draw[-] (y6) -- (w6);
+  \draw[-] (y7) -- (w7);
+  \draw[-] (y8) -- (w8);
+  \draw[-] (y9) -- (w9);
+
   \node[operation] (a1) [right = of x0] {};
   \node[connect] (b1) [right = of x1] {};
   \node[connect] (c1) [right = of x5] {};
@@ -124,28 +146,30 @@
 
   \node[box,fit=(a1) (c1) (a2) (c2),fill opacity = 0] (tmp) {};
 
-  \node[operation] (a1) [right = 3 of x2] {};
-  \node[connect] (b1) [right = 3 of x3] {};
-  \node[connect] (c1) [right = 3 of x7] {};
+  \node[operation] (a1) [left = 2 of y2] {};
+  \node[connect] (b1) [left = 2 of y3] {};
+  \node[connect] (c1) [left = 2 of y7] {};
   \draw[-] (a1) -- (b1) -- (c1);
 
-  \node[operation] (a2) [right = 4 of x3] {};
-  \node[connect] (b2) [right = 4 of x4] {};
-  \node[connect] (c2) [right = 4 of x8] {};
+  \node[operation] (a2) [left = 1 of y3] {};
+  \node[connect] (b2) [left = 1 of y4] {};
+  \node[connect] (c2) [left = 1 of y8] {};
   \draw[-] (a2) -- (b2) -- (c2);
 
   \node[box,fit=(a1) (c1) (a2) (c2),fill opacity = 0] (tmp) {};
 
-  \draw[-] (x8) -- (c2);
+  % \draw[-] (x8) -- (c2);
 
-  \node[connect] (copyx0) [left = 2 of y0] {};
-  \node[connect] (copyx1) [left = 2 of y1] {};
-  \node (swapx0) [left = 1.5 of y0] {};
-  \node (swapx1) [left = 1.5 of y1] {};
-  \node (swapy8) [left = 0.5 of y8] {};
-  \node (swapy9) [left = 0.5 of y9] {};
-  \draw[-,rounded corners] (copyx0) -- (swapx0.center) -- (swapy8.center) -- (y8);
-  \draw[-,rounded corners] (copyx1) -- (swapx1.center) -- (swapy9.center) -- (y9);
+  \node[connect] (copyx0) [right = 3.0 of x0] {};
+  \node[connect] (copyx1) [right = 3.0 of x1] {};
+  \node (swapx0) [right = 3.5 of x0] {};
+  \node (swapx1) [right = 3.5 of x1] {};
+  \node (swapy8) [left = 1.0 of w8] {};
+  \node (swapy9) [left = 1.0 of w9] {};
+  \draw[-,rounded corners] (copyx0) -- (swapx0.center) -- (swapy8.center) -- (w8);
+  \draw[-,rounded corners] (copyx1) -- (swapx1.center) -- (swapy9.center) -- (w9);
+
+  \node[box,fit=(copyx0) (copyx1) (swapx0) (swapx1) (swapy8) (swapy9),fill opacity = 0] (tmp) {};
 
   \node[state,label=right:0] (z0) [right = 5 of y0] {};
   \node[state,label=right:1] (z1) [below = of z0] {};

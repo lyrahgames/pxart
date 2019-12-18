@@ -42,14 +42,14 @@
       \center
       \includegraphics[width=0.95\textwidth]{figures/interleaving_multiple_streams.pdf}
       \caption[Combined Stream by Interleaving Samples of Multiple Streams]{%
-        The figure shows how the samples of multiple streams can be interleaved to produce a combined stream which can be used as input for common statistical test suites.
+        Interleaving samples of multiple streams of random numbers to produce a combined stream which can be used as input for common statistical test suites.
         Modeled after \textcite[\pno~161]{kneusel2018}.
       }
       \label{fig:combined-stream}
     \end{figure}
 
     By using the described method, testing vectorized PRNGs without multiple instances will not give us further insights to their randomness properties because interleaving the samples would produce the same output as the scalar version.
-    This especially true for the MT19937.
+    Especially, this is true for the MT19937.
     Hence, we only test the output of the vectorized Xoroshiro128+ and the MSWS to guarantee the vectorization process is not reducing the statistical performance of the generators.
     The process of testing was geared to \textcite[\ppno~141-155]{kneusel2018} and \textcite{oneill-blog-testu01}.
 
@@ -162,12 +162,13 @@
     Adding the second instance to the naive algorithm is simple.
     We use the first instance of the RNG to generate the first random number \code{x} and the  second instance to the generate the second random number \code{y}.
 
-    A first improvement to the naive version can be introduced by removing \code{std::uniform_real_distribution} given by the STL and instead using our custom uniform distribution function.
+    Removing \code{std::uniform_real_distribution} given by the STL and instead using our custom uniform distribution function would be a first improvement to the naive version.
+    % A first improvement to the naive version can be introduced by removing \code{std::uniform_real_distribution} given by the STL and instead using our custom uniform distribution function.
     This is done to be able to fairly evaluate the efficiency of the vectorization process for PRNGs.
     Again, the algorithm is only applicable to scalar generators.
 
     \inputCodeBlock[title = Monte Carlo π Benchmark with Custom Distribution]{code/monte_carlo_pi/uniform.hpp}
-    To show the superiority of vectorized PRNGs, we need a variant of the Monte Carlo π benchmark that is able to use vectorized PRNGs without the need the vectorize the computation itself.
+    To show the superiority of vectorized PRNGs, we need a variant of the Monte Carlo π benchmark that is able to use vectorized PRNGs without the need to vectorize the computation itself.
     We should see an improvement in performance.
     A developer therefore can use the generator without changing the complete implementation of his or her algorithm.
 
@@ -201,7 +202,7 @@
     The last addition is carried out by a scalar operation.
 
     Concerning the precision of the output, the sample count is important and has to be expressed as \code{uint32_t} or \code{uint64_t}.
-    To reach the full precision of a single precision floating point value, we have to fill 23 bits of the fraction.
+    To reach the full precision of a single precision floating point value, we have to fill $23\appendUnit{bits}$ of the fraction.
     Doing this would need approximately $2^{44}$ samples and therefore a \code{uint64_t} as a type of the sample variable.
     With \code{uint32_t}, we can reach a precision of $2^{-15} \approx 3.05\cdot 10^{-5}$.
   % subsection monte_carlo_π_benchmark (end)

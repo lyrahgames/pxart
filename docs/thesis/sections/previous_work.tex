@@ -45,16 +45,18 @@
   Therefore the code is well suited for analyzing the application of SIMD intrinsics to PRNGs and comparing different vectorization schemes.
   His implementations are not tested and not well documented.
 
-  \textcite{vigna-xoroshiro} presents a modern PRNG with good statistical properties.
+  \textcite{vigna-xoroshiro} presents a modern PRNG with good statistical properties which is also known as Xoroshiro128+.
   In his explanation, \citeauthor{vigna-xoroshiro} talks about triggering automatic vectorization by using four independent streams of the named generator.
   He mentions, that it sometimes seems to be difficult to successfully force the compiler to generate vector intrinsics.
   As a consequence, a manual vectorization technique should be much more appropriate as we will show in the next sections.
+  \textcite{blacher2018} already uses a vectorized implementation of the Xoroshiro128+ to calculate the pivot of randomized and vectorized quicksort implementation without further testing its performance or quality.
 
   According to the explanations and descriptions given, we have chosen to vectorize another variant of the MT19937 with the SSE and AVX instruction set because, even if it shows some statistical flaws and has a big state, it is the de facto standard for current applications.
   Additionally, the MT19937 is reliable, has an extremely long period, can be used for multidimensional simulations and will perfectly serve as an academic example on how to vectorize a PRNG.
-  Furthermore, we will show how to implement two PRNGs with the SSE and AVX instruction set, namely the Xoroshiro128+ and the Middle Square Weyl Sequence RNG (MSWS), which were not vectorized yet.
-  The idea is to raise the performance of the Xoroshiro128+ in comparison to an automatic vectorization process.
-  The MSWS is a non-linear but fast and modern generator for which we have to use a slightly different vectorization technique.
+  Furthermore, we will show how to implement two PRNGs with the SSE and AVX instruction set, namely the Xoroshiro128+ and the Middle Square Weyl Sequence RNG (MSWS).
+  The idea is to raise the performance of the Xoroshiro128+ in comparison to an automatic vectorization process and to measure its statistical quality and speed-up.
+  The MSWS has not been vectorized, yet.
+  It is a non-linear but fast and modern generator for which we have to use a slightly different vectorization technique.
   All this will give us an insight into the vectorization of PRNGs.
 % section previous_work (end)
 \end{document}

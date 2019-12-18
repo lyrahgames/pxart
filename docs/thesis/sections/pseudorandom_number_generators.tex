@@ -62,7 +62,7 @@
   As of \textcite{bauke2007}, almost all PRNGs produce a sequence of numbers by a recurrence.
   Hence, the given formalization is widely accepted and builds the basis for further discussions about pseudorandom numbers \autocite{lecuyer1994,lecuyer2015,barash2017,bauke2007}.
 
-  \begin{definition}[Pseudorandom Number Generator]
+  \begin{definition}[Pseudorandom Number Generator (PRNG)]
     Let $\mathscr{G}\define (S,T,U,G)$ be a tuple consisting of a non-empty, finite set of states $S$, a transition function $\function{T}{S}{S}$, a non-empty, finite set of output symbols $U$ and an output function $\function{G}{S}{U}$.
     In this case $\mathscr{G}$ is called a PRNG.
   \end{definition}
@@ -92,7 +92,7 @@
     % \end{minipage}
     \includegraphics[width=0.7\textwidth]{figures/sequence_generation_scheme.pdf}
     \caption[Generation of a Pseudorandom Sequence]{%
-      The figure shows a scheme about the generation of a pseudorandom sequence for a given PRNG $\mathscr{G}\define (S,T,U,G)$ and seed value $s_0\in S$.
+      Generation of a pseudorandom sequence for a given PRNG $\mathscr{G}\define (S,T,U,G)$ and seed value $s_0\in S$.
       The internal state is advanced by the transition function $T$ through a recurrence relation.
       To get an output value for the pseudorandom sequence the generator function $G$ is used.
     }
@@ -428,7 +428,7 @@
   \[
     \integral{U}{}{X}{μ} = \expect X = \sum_{u\in U} f(u) μ(\set{u}{})
   \]
-  To make sure the generalization is working properly, we proof the following lemma which states that, while observing pseudorandom sequences, the relative frequency in one period of an arbitrary element must be given by its probability.
+  To make sure the generalization is working properly, we proof the following lemma in appendix \ref{sec:proofs} which states that, while observing pseudorandom sequences, the relative frequency in one period of an arbitrary element must be given by its probability.
 
   \begin{lemma}[Equidistributed Pseudorandom Sequences]
   \label{lemma:equidistribution}
@@ -585,9 +585,9 @@
   For the full period, the definition of multidimensional equidistribution given here is equivalent to the typical definition given in \textcite{lecuyer1994}.
   If the corresponding vector sequence consists of a smaller period then the given concept is stronger than the typical one.
   We will again show some idealized examples to explain the details of the result and to understand its principles.
-  For this, let $\mathscr{G}\define (S,T,U,G)$ again be a PRNG, $s_0\in S$ its initial state and $(u_n)_{n\in\setNatural}$ the respective pseudorandom sequence with period ρ.
+  For this, let $\mathscr{G}\define (S,T,U,G)$ be a PRNG, $s_0\in S$ its initial state and $(u_n)_{n\in\setNatural}$ the respective pseudorandom sequence with period ρ.
   The corresponding $k$-dimensional vector sequence with translation $t$ will be called $(v_n)_{n\in\setNatural}$.
-  Sequences will again be denoted by writing their elements consecutively with their periodic part marked by an overline.
+  Sequences will be denoted by writing their elements consecutively with their periodic part marked by an overline.
   $G$ will be shown as table which maps values from the first line to values in the second line.
 
   \noindent
@@ -656,7 +656,7 @@
     (v_n) = \overline{(00)(01)(11)(01)(00)(11)(10)(10)}
   \]
   In three dimensions, we get the full period and an equidistribution in $U^3$.
-  A different translation would again only result in a cyclic permutation of the periodic part.
+  A different translation would only result in a cyclic permutation of the periodic part.
   \[
     (v_n) =
     \begin{aligned}[t]
@@ -804,14 +804,20 @@
   \begin{figure}
     \center
     \includegraphics[width=0.95\textwidth]{figures/seeding_multiple_streams.pdf}
-    \caption[Seeding Generation of Multiple Streams]{}
+    \caption[Seeding Generation of Multiple Streams]{
+      Generation of multiple streams by randomly seeding multiple instances of the same PRNG.
+      Multiple instances of a full-period generator will cause overlapping subsequences.
+    }
     \label{fig:leapfrogging-multiple-streams}
   \end{figure}
 
   \begin{figure}
     \center
     \includegraphics[width=0.95\textwidth]{figures/leapfrogging_multiple_streams.pdf}
-    \caption[Leapfrogging Generation of Multiple Streams]{}
+    \caption[Leapfrogging Generation of Multiple Streams]{
+      Generation of multiple streams by leapfrogging the output of a single PRNG instance.
+      Consecutive values of a pseudorandom sequence will belong to different streams.
+    }
     \label{fig:leapfrogging-multiple-streams}
   \end{figure}
 
@@ -968,9 +974,9 @@
       \includegraphics[width=0.95\textwidth]{figures/xrsr128p_scheme.pdf}
       \caption[Xoroshiro128+ Transition and Generation]{
         Transition and generation function of the Xoroshiro128+.
-        The notation is taken from \ref{def:xoroshiro}.
+        The notation is taken from definition \ref{def:xoroshiro}.
       }
-      \label{fig:xoroshiro-scheme}
+      \label{fig:xoroshiro-transition-generation}
     \end{figure}
   % subsection xorshift_and_variants (end)
 
@@ -1001,7 +1007,7 @@
       \includegraphics[width=0.7\textwidth]{figures/msws_scheme.pdf}
       \caption[Middle Square Weyl Sequence RNG Transition and Generation]{
         Transition and generation function of the middle square Weyl sequence RNG (MSWS).
-        The notation is taken from \ref{def:msws}.
+        The notation is taken from definition \ref{def:msws}.
       }
       \label{fig:msws-transition-generation}
     \end{figure}

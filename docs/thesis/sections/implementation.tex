@@ -56,14 +56,24 @@
         \center
         \includegraphics[width=0.95\textwidth]{figures/mt19937_loop_scheme.pdf}
       \end{subfigure}
-      \caption[Mersenne Twister Loop Scheme]{}
+      \caption[Mersenne Twister Loop Scheme]{
+        Implementation of the Mersenne twister by precomputing its transition through a loop over the elements in the state.
+        The left image shows a shorthand notation for a single call to the transition function.
+        The right image visualizes the loop over all elements by using the simpler notation for a simplified version of the Mersenne Twister with a state size of eight and a shift size of five.
+      }
       \label{fig:mt-loop-scheme}
     \end{figure}
 
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
-      \caption[Mersenne Twister Vector Loop Scheme]{}
+      \caption[Mersenne Twister Vector Loop Scheme]{
+        Vectorization of the loop of Mersenne twister implementation by adding a buffer (gray) with the size of an SIMD vector at the end of the state.
+        Here, the same simplified version as in figure \ref{fig:mt-loop-scheme} is used.
+        It is assumed SIMD vectors are able to contain two elements of the state at once.
+        Vectorizable operations are shown in boxes.
+        By copying the first vector containing the new state elements into the buffer, no SIMD vector will overlap the first and the second loop.
+      }
       \label{fig:mt-vector-loop-scheme}
     \end{figure}
 
@@ -111,12 +121,14 @@
     \inputCodeBlock[title = AVX MT19937 Structure]{code/mt19937/simd256/struct.hpp}
     As explained, the structure of the vectorized version does not really change.
     We should only make sure that the state vector will be at least $32\appendUnit{Byte}$ aligned.
-    To further optimize the structure, we could force $64\appendUnit{Byte}$ Alignment to provide improved caching possibilities by starting with a cache line.
+    To further optimize the structure, we could force 64-byte alignment to provide improved caching possibilities by starting with a cache line.
 
     \inputCodeBlock[title = AVX MT19937 Advancing]{code/mt19937/simd256/advance.hpp}
     Because the state vector is aligned, we can exploit this by using aligned load operations for elements that will be used without a shift.
     For all other elements, we still have to use unaligned load operations.
     All parts in the vectorized advancing routine are then directly translated into their corresponding vector intrinsics.
+
+    In listing \ref{code:mt19937-avx-advance-asm}, we see the assemble output.
 
   % subsection mersenne_twister (end)
 
@@ -149,7 +161,10 @@
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/xrsr128p_vector_layout.pdf}
-      \caption[Xoroshiro128+ Vector Layout]{}
+      \caption[Xoroshiro128+ Vector Layout]{%
+        Memory layout concerning SIMD vectors of four instances of the Xoroshiro128+.
+        SIMD vectors are shown as blue box.
+      }
       \label{fig:xoroshiro-vector-layout}
     \end{figure}
 
@@ -165,7 +180,7 @@
 
   \subsection{MSWS} % (fold)
   \label{sub:middle_square_weyl_generator}
-    The MSWS is a simple, modern, and non-linear PRNG that uses a state based on 64-bit unsigned integer values but is returning only a 32-bit unsigned integer.
+    The MSWS is a simple, modern, and non-linear PRNG that uses a state which is based on 64-bit unsigned integer values but is returning only a 32-bit unsigned integer.
     The scalar implementation will again use the same approach as the MT19937 and the Xoroshiro128+ as it is given as a C implementation in \textcite{widynski2019}.
     The seeding routine for the MSWS is more complicated and requires a more sophisticated algorithm.
 
@@ -200,7 +215,10 @@
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/msws_vector_layout.pdf}
-      \caption[MSWS Vector Layout]{}
+      \caption[MSWS Vector Layout]{%
+        Memory layout concerning SIMD vectors of eight instances of the MSWS.
+        SIMD vectors are shown as blue box.
+      }
       \label{fig:msws-vector-layout}
     \end{figure}
 
@@ -215,7 +233,9 @@
         \center
         \includegraphics[width=0.95\textwidth]{figures/msws_merge2.pdf}
       \end{subfigure}
-      \caption[MSWS Vector Merge Scheme]{}
+      \caption[MSWS Vector Merge Scheme]{%
+        Two variants of merging the two output vectors of the vectorized MSWS containing 64-bit integers into one SIMD vector containing 32-bit integers by means of AVX vector registers.
+      }
       \label{fig:msws-vector-merge-scheme}
     \end{figure}
 
@@ -229,7 +249,10 @@
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/uniform_implementation_scheme.pdf}
-      \caption[Real Uniform Distribution Function Implementation Scheme]{}
+      \caption[Real Uniform Distribution Function Implementation Scheme]{%
+        Generating a uniformly distributed floating-point number by shifting bits of a given random integer of the same size.
+        According to the IEEE 754 floating-point standard, sign and exponent bits have to be set, such that the number will be in the interval $[1,2)$.
+      }
       \label{fig:real-uniform-implementation-scheme}
     \end{figure}
   % subsection uniform_real_distribution (end)

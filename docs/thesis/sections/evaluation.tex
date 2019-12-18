@@ -22,18 +22,18 @@
   \subsection{Statistical Quality} % (fold)
   \label{sub:statistical_quality}
     From a theoretical point of view, interleaving multiple streams of random numbers based on multiple instances of the same generator should not reduce the randomness of the output, such that test suites will be able to measure it.
-    Using multiple instances through SSE/AVX vector registers the state of the vectorized PRNG becomes at least two times as big as the scalar variant.
+    Using multiple instances through SSE/AVX vector registers, the state of the vectorized PRNG becomes at least two times as big as the scalar variant.
     According to \textcite{oneill-blog-toobig}, creating a larger state will even make a weak generator stronger concerning its statistical performance.
     On the other hand, \textcite{fog2015} states that the use of multiple instances of the same generator with different seeds can lead to overlapping subsequences.
 
-    For testing the statistical performance, we have used TestU01 version 1.2.3 and version 3.31.1 of dieharder.
+    For testing the statistical performance, we have used \citetitle{testu01-lib} version 1.2.3 and version 3.31.1 of \citetitle{dieharder}.
     The computation time to run all the tests in the test batteries of TestU01 approximately ranged from $5\appendUnit{s}$ for SmallCrush over $20\appendUnit{min}$ for Crush to $150\appendUnit{min}$ for BigCrush.
     While executing the BigCrush battery, 160 statistics were used to estimate the statistical performance of the generators.
-    The execution of all 30 dieharder tests with different parameters always took several minutes.
+    The execution of all 30 \citetitle{dieharder} tests with different parameters always took several minutes.
 
     Running the statistical test suites, we could not find any vulnerabilities.
     Neither the scalar nor the vectorized versions of the Xoroshiro128+ and the MSWS systematically failed an empirical test.
-    Even a truly random sequence will fail tests from time to time \autocite[\pno~142]{kneusel2018} and so after running the test suites multiple times, we wer able to confirm this for our implementations, too.
+    Even a truly random sequence will fail tests from time to time \autocite[\pno~142]{kneusel2018} and so after running the test suites multiple times, we were able to confirm this for our implementations, too.
     Every generator rarely produced test failures that did not follow any pattern.
     We conclude that the usage of multiple instances to vectorize the generators did not reduce their statistical quality.
   % subsection statistical_quality (end)
@@ -51,7 +51,7 @@
     \begin{table}[H]
       \center
       \caption[Generation Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
-        The table shows the results achieved by running the generation benchmark on the \citetitle{intel-kaby-lake-i7} at a frequency of $4.51\appendUnit{GHz}$ with all implemented variants of given PRNGs.
+        Results achieved by running the generation benchmark on the \citetitle{intel-kaby-lake-i7} at a frequency of $4.51\appendUnit{GHz}$ with all implemented variants of given PRNGs.
         While running the benchmark, $16\appendUnit{GiB}$ of random numbers were generated and temporarily stored in a cache of size $16384\appendUnit{B}$ by iterating $2^{20}$ times over its content.
         During the execution, there were no cache or branch misses.
         The values for cycles, instructions, and IPCs were averaged over the calls to the advancing routine of the respective generator.
@@ -66,7 +66,7 @@
       \center
       \includegraphics[width=0.95\textwidth]{plots/generation_desktop.pdf}
       \caption[Generation Benchmark Performance for \citetitle{intel-kaby-lake-i7}]{%
-        The plot shows the performance resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} measured in $\mathrm{GiB}$ of random numbers per second for the different variants of the implemented PRNGs.
+        Performance resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} measured in $\mathrm{GiB}$ of random numbers per second for the different variants of the implemented PRNGs.
         For convenience, the performances of the STL and Boost implementation of the MT19937 are shown as well.
         The data can be found in table \ref{tab:generation-data-i7}.
       }
@@ -77,7 +77,7 @@
       \center
       \includegraphics[width=0.95\textwidth]{plots/generation_desktop_speedup.pdf}
       \caption[Generation Benchmark Speed-Up for \citetitle{intel-kaby-lake-i7}]{%
-        The plot shows the speed-up in execution time with respect to the single-instance scalar version resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs.
+        Speed-up in execution time with respect to the single-instance scalar version resulting from the generation benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs.
         For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
         The data can be found in table \ref{tab:generation-data-i7}.
       }
@@ -99,6 +99,16 @@
     But this also means that for this scenario the compiler is not able to fully vectorize the scalar implementations automatically, such that manually vectorizing the code is necessary for speeding up the execution.
     In general, the MT19937 speed-ups introduced by SSE and AVX are close to the theoretical maximum.
     Thus, taking the extra effort of vectorizing this generator paid off.
+    Additionally, comparing the overall performance of the MT19937 to the other generators by looking at figure \ref{fig:generation-performance-i7} and table \ref{tab:generation-data-i7}, we see that it is competitive.
+    For the vectorized versions, the MT19937 is even faster than the MSWS which has a much smaller state size.
+    The caching mechanisms of modern computer architecture make it possible to completely keep the state of the MT19937 in the cache while generating new random numbers.
+    Furthermore, the transition function is linear and does not exhibit difficult flow or data dependencies as can be seen in figure \ref{fig:mersenne-twister-transition-generation}.
+    The advancing routine can therefore exploit modern processor features much better than the implementations of the MSWS or the Xoroshiro128+.
+    Due to its non-linearity, the MSWS uses complex functions when advancing its state.
+    Looking at figures \ref{fig:xoroshiro-transition-generation} and \ref{fig:msws-transition-generation}, both generators show a higher data dependency which reduces the efficiency of the processor pipeline.
+    Hence, the modern design of processors makes it difficult to theoretically analyze the implementations of PRNGs.
+    It can even support generators that seem to be slow such that they show a much higher performance than their counterparts.
+
 
     The Xoroshiro128+ indeed executes faster by using SSE/AVX intrinsics.
     The SSE variant realizes a speed-up of approximately $1.1$ and the AVX variant a speed-up of $2.2$.
@@ -129,7 +139,7 @@
     \begin{table}
       \center
       \caption[Monte Carlo π Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
-        The table shows the results achieved by running the Monte Carlo π Benchmark on the \citetitle{intel-kaby-lake-i7} with all implemented variants of given PRNGs and benchmark scenarios.
+        Results achieved by running the Monte Carlo π Benchmark on the \citetitle{intel-kaby-lake-i7} with all implemented variants of given PRNGs and benchmark scenarios.
         While running the benchmark, $10^{8}$ samples in the unit square were used to estimate the value of π.
         It was ensured that the estimation error was small enough according to the calculation at the end of section \ref{sub:monte_carlo_integration}.
         During the execution, there were no cache or branch misses.
@@ -161,7 +171,7 @@
         \caption{MSWS}
       \end{subfigure}
       \caption[Monte Carlo π Benchmark Speed-Up for \citetitle{intel-kaby-lake-i7}]{%
-        The plot shows the speed-up in execution time with respect to the single-instance uniform version resulting from the Monte Carlo π benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs and benchmark scenarios.
+        Speed-up in execution time with respect to the single-instance uniform version resulting from the Monte Carlo π benchmark running on the \citetitle{intel-kaby-lake-i7} for the different variants of the implemented PRNGs and benchmark scenarios.
         For convenience, the speed-ups of the STL and Boost implementation of the MT19937 are shown with respect to our implementation.
         The data can be found in table \ref{tab:monte-carlo-pi-data-i7}.
       }
@@ -170,7 +180,9 @@
 
     Looking at the data and plots of the Monte Carlo π benchmark in table \ref{tab:monte-carlo-pi-data-i7} and figure \ref{fig:monte-carlo-pi-speedup-i7}, we first expected to see similar results.
     As before, all the vectorized implementations were able to increase the performance of the program.
+    Again, although the MT19937 has a much bigger state, its performance is competitive to the other generators as can be seen in table \ref{tab:monte-carlo-pi-data-i7}.
     Especially the fast uniform distribution function even outperforms the naive scenario for scalar generators in all cases.
+    The Monte Carlo π benchmark is a CPU-bound algorithm and therefore we expected such an outcome.
     But this time the compiler was rarely capable of automatically vectorizing the code.
     As a consequence, we could detect much higher speed-ups for the Xoroshiro128+ and MSWS by using vector intrinsics.
     The speed-ups of the MT19937 are reduced.

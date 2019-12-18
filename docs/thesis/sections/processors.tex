@@ -30,7 +30,7 @@
       \center
       \includegraphics[width=0.5\textwidth]{figures/cpu_components.pdf}
       \caption[Hierarchical Order of CPU Components]{%
-        The figure shows the basic components of a typical CPU with multiple processing cores in an hierarchical order.
+        Basic components of a typical CPU with multiple processing cores in an hierarchical order.
         There is only one control unit which is handling communication between different cores by coordinating the execution of program instructions.
         Every processor core employs its own registers and ALUs to provide an MIMD architecture.
       }
@@ -77,7 +77,7 @@
       \center
       \includegraphics[width=0.95\textwidth]{figures/multiple_unit_pipeline.pdf}
       \caption[Multiple Execution Unit Processor Pipeline]{%
-        This figure schematically shows the functioning of a processor pipeline using two execution units $p_1$ and $p_2$ with the help of an example.
+        Functioning of a processor pipeline with four stages using two execution units $p_1$ and $p_2$.
         % It makes the same assumptions as in figure \ref{fig:pipeline}.
         Assume all capital letters represent independent instructions with a latency of four and a throughput of one.
         For any instruction $X$, we denote its four stages by $X_1$, $X_2$, $X_3$, and $X_4$.
@@ -112,7 +112,7 @@
       \center
       \includegraphics[width=0.95\textwidth]{figures/simd_vector_operations.pdf}
       \caption[SIMD Vector Registers and Operations]{%
-        The figure shows the functioning of SIMD vector registers and their operations by means of an addition applied to two 256-bit register each containing eight packed 32-bit values.
+        Functioning of SIMD vector registers and their operations by means of an addition applied to two 256-bit register each containing eight packed 32-bit values.
         The result is again a 256-bit vector consisting of eight 32-bit values.
       }
       \label{fig:simd-vector-operation}
@@ -137,7 +137,7 @@
       \center
       \includegraphics[width=0.95\textwidth]{figures/memory.pdf}
       \caption[Memory Structure]{%
-        This figure visualizes memory with $N\in\setNatural$ bytes as a sequence of bits where each byte can be referenced by its memory address.%
+        Visualization of memory with $N\in\setNatural$ bytes as a sequence of bits where each byte can be referenced by its memory address.%
       }
       \label{fig:memory}
     \end{figure}
@@ -154,7 +154,7 @@
       \center
       \includegraphics[width=0.95\textwidth]{figures/memory_hierarchy.pdf}
       \caption[Memory Hierarchy]{%
-        The figure shows a scheme of the non-persistent part of the memory hierarchy for a modern laptop or desktop computer.
+        Non-persistent part of the memory hierarchy for a modern laptop or desktop computer.
         Between the main memory and the CPU registers different levels of caches are used to reduce the latency for fetching instructions and data.
         Modeled after \textcite[\pno~79]{hennessy2019}.
       }
@@ -248,7 +248,7 @@
         \includegraphics[width=\textwidth]{figures/floating-point_encoding_double.pdf}
       \end{subfigure}
       \caption[Single- and Double-Precision Floating-Point Layout]{%
-        The figure shows a schematic view of the single- (top) and double-precision (bottom) floating-point layout according to the IEEE 754 standard.
+        Single- (top) and double-precision (bottom) floating-point layout according to the IEEE 754 standard.
         The boxes represent the bits of the underlying registers and the numbers above them mark the bit index.
         Both encodings consist of a sign, a fractional part and an exponent.
         The figure was modeled after \textcite[\ppno~197-198]{patterson2014}.

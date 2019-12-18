@@ -41,7 +41,11 @@
   \begin{figure}
     \center
     \includegraphics[width=0.95\textwidth]{figures/api_parts.pdf}
-    \caption[Parts of the API Design]{}
+    \caption[Main Parts of the API Design]{
+      Main parts to be considered for a software library that is providing access to scalar and vectorized PRNGs.
+      The arrows show possible interactions between different parts for which convenient interfaces should be created.
+      In this thesis, algorithms will not be considered.
+    }
     \label{fig:api-parts}
   \end{figure}
 
@@ -132,7 +136,7 @@
     This time, we only have to take care of additional overloads.
     By calling \code{uniform} without function arguments, we have to provide the return type as a template argument.
     For floating-point types, the result should be a number in the interval $[0,1)$.
-    Specifying integer number types the output is a value of the complete range of the template argument.
+    Specifying integer number types, the output is a value of the complete range of the template argument.
     If we call \code{uniform} with additional arguments specifying the range of the output, we are able to use template argument deduction for the return type based on the range arguments.
     We separate those two cases to further optimize the frequently used first function call without arguments.
     The following code shows the implementation.
