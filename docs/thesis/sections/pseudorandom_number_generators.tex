@@ -90,7 +90,7 @@
     %   &u_1 &&u_2 &&\ldots
     % \end{alignat*}
     % \end{minipage}
-    \includegraphics[width=0.7\textwidth]{figures/sequence_generation_scheme.pdf}
+    \includegraphics[width=0.5\textwidth]{figures/sequence_generation_scheme.pdf}
     \caption[Generation of a Pseudorandom Sequence]{%
       Generation of a pseudorandom sequence for a given PRNG $\mathscr{G}\define (S,T,U,G)$ and seed value $s_0\in S$.
       The internal state is advanced by the transition function $T$ through a recurrence relation.
@@ -787,20 +787,6 @@
   In this case, their execution is only bound by the CPU.
   To raise the speed of random number generation, optimizing code complexity concerning flow and data dependencies is necessary.
 
-  To use PRNGs for vectorized or parallelized algorithms, we have to provide multiple independent streams of random numbers.
-  There are several methods to create and initialize such random streams.
-  Exploiting vectorization facilities, usually multiple instances of the same generator which are seeded differently are used.
-
-  \subsubsection*{Seekability}
-  \subsubsection*{Seeding and Consistency}
-  \subsubsection*{Ease of Implementation}
-  \subsubsection*{Portability}
-  \subsubsection*{Speed}
-  \subsubsection*{Alignment, Caching, Code Size, Memory Size and Complexity}
-  \subsubsection*{Scalability, Parallelism, Vectorization and Multiple Streams}
-
-  \autocite{lecuyer2017}
-
   \begin{figure}
     \center
     \includegraphics[width=0.95\textwidth]{figures/seeding_multiple_streams.pdf}
@@ -808,8 +794,21 @@
       Generation of multiple streams by randomly seeding multiple instances of the same PRNG.
       Multiple instances of a full-period generator will cause overlapping subsequences.
     }
-    \label{fig:leapfrogging-multiple-streams}
+    \label{fig:seeding-multiple-streams}
   \end{figure}
+
+  To use PRNGs for vectorized or parallelized algorithms, we have to provide multiple independent streams of random numbers.
+  There are several methods to create and initialize such random streams.
+  Exploiting vectorization facilities, usually multiple instances of the same generator which are seeded differently are used.
+  For a full-period PRNG different seeds generate the same periodic part of a pseudorandom sequence starting at varying positions.
+  Therefore the random initialization of all instances may cause the overlap of subsequences which is reducing statistical quality.
+  Figure \ref{fig:seeding-multiple-streams} shows this overlap by means of an example.
+  \autocite{fog2015,lecuyer2017}
+
+  Some generators provide a so-called jumping routine that is able to advance the state of the PRNG by a large amount of steps.
+  The Xoroshiro128+ for example makes it possible to discard $2^{64}$ or $2^{96}$ random numbers at once.
+  Initializing multiple instances by using a jumping routine would guarantee non-overlapping subsequences with a length of the amount of random numbers discarded.
+  \autocite{fog2015,lecuyer2017}
 
   \begin{figure}
     \center
@@ -820,6 +819,12 @@
     }
     \label{fig:leapfrogging-multiple-streams}
   \end{figure}
+
+  If the state of the generator is sufficiently large, only one instance would be used.
+  Multiple streams are then constructed by the leafrogging method which can be seen in figure \ref{fig:leapfrogging-multiple-streams}.
+  In this case, consecutive pseudorandom values will belong to different streams.
+  \autocite{fog2015,lecuyer2017}
+
 
   % \subsection{Analyzation}
   % visualization, proof, experiments, benchmarks (runtime), test suites, code analyzation
@@ -832,8 +837,13 @@
   % subsection random_and_pseudorandom_number_generators (end)
 
   \subsection{Examples}
-  % \subsection{Linear Congruential Generator} % (fold)
+  \subsubsection*{Linear Congruential Generator} % (fold)
   % \label{ssub:linear_congruential_generator}
+    A linear congruential Generator (LCG) is the most simplest example of an actual PRNG.
+    The LCG uses modular arithmetic together with a simple recurrence relation.
+    By carefully tweaking the parameters of the generator, enough randomness tests can be passed.
+    \autocite{kneusel2018}
+
     \begin{definition}[Linear Congruential Generator]
       Let $m\in\setNatural$ with $m\geq 2$ and $a,c\in\setInteger_m$.
       We define the PRNG $\mathrm{LCG}(m,a,c) \define (S,T,U,G)$
@@ -850,15 +860,36 @@
       Multiplication and addition are understood in the sense of $\setInteger_m$.
       We call $\mathrm{LCG}(m,a,c)$ the linear congruential generator with modulus $m$, multiplier $a$ and increment $c$.
     \end{definition}
+    If $c\neq 0$ then the LCG is non-linear and is able to provide equidistributed pseudorandom sequences with a maximum period of $m$.
+    The generator function is the identity and therefore the LCG should not be used in more than one dimension.
+    \autocite{kneusel2018}
   % subsection linear_congruential_generator (end)
 
-  % \subsection{Mersenne Twister} % (fold)
+  \subsubsection*{Mersenne Twister} % (fold)
   % \label{ssub:mersenne_twister}
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/mt19937_scheme.pdf}
+      \caption[Mersenne Twister Transition and Generation]{
+        Transition and generator function of the Mersenne Twister.
+        The notation is taken from definition \ref{def:mersenne-twister}.
+      }
+      \label{fig:mersenne-twister-transition-generation}
+    \end{figure}
+
+    The Mersenne twister is a linear PRNG with a maximum period of $2^{19937}-1$.
+    Currently, it is the de facto standard when generating pseudorandom sequences.
+    The mathematics behind the Mersenne twister are quite complex and we are not able to provide a rigorous introduction.
+    But we will give an exact definition in the strict sense of a PRNG which was omitted in the original paper \autocite{matsumoto1998}.
+    Additionally, figure \ref{fig:mersenne-twister-transition-generation} gives a schematic view of its transition and generator function.
+    The generator was the first fast generator to produce 32-bit random numbers which exhibits 623-dimensional equidistribution and a high statistical quality.
+    \autocite{kneusel2018}
+
     \begin{definition}[Mersenne Twister]
     \label{def:mersenne-twister}
       Let $w, n, m\in \setNatural$ and $r\in\setNatural_0$ with $m \leq n$ and $r < w$.
       Further, let $a,b,c \in \mathds{F}_2^w$ and $u,s,t,l \in \setInteger_w$.
-      Then the Mersenne Twister $\mathrm{MT}(w,n,m,r,a,b,c,u,s,t,l)\define (S,T,U,G)$ is defined as a PRNG in the following way.
+      Then the Mersenne twister $\mathrm{MT}(w,n,m,r,a,b,c,u,s,t,l)\define (S,T,U,G)$ is defined as a PRNG in the following way.
       \[
         S \define \roundBrackets{\mathds{F}_2^w}^n
         \separate
@@ -909,17 +940,16 @@
         \separate
         F(x) \define f_4 \circ f_3 \circ f_2 \circ f_1(x)
       \]
+      The Mersenne twister with the following parameters is called the MT19937.
+      \begin{align*}
+        w &= 32 & a &= \texttt{{0x9908b0df}} & u &= 11 \\
+        n &= 624 & b &= \texttt{{0x9d2c5680}} & s &= 7 \\
+        m &= 397 & c &= \texttt{{0xefc60000}} & t &= 15 \\
+        r &= 31 & & & l &= 18
+      \end{align*}
     \end{definition}
+    % The state of the Mersenne Twister consists of 624 32-bit integers.
 
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{figures/mt19937_scheme.pdf}
-      \caption[Mersenne Twister Transition and Generation]{
-        Transition and generator function of the Mersenne Twister.
-        The notation is taken from definition \ref{def:mersenne-twister}.
-      }
-      \label{fig:mersenne-twister-transition-generation}
-    \end{figure}
   % subsection mersenne_twister (end)
 
   % \subsection{Permuted Congruential Generator} % (fold)
@@ -942,12 +972,28 @@
     % \end{definition}
   % subsection permuted_congruential_generator (end)
 
-  % \subsection{Xorshift and Variants} % (fold)
+  \subsubsection*{Xoroshiro128+} % (fold)
   % \label{ssub:xorshift_and_variants}
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/xrsr128p_scheme.pdf}
+      \caption[Xoroshiro128+ Transition and Generation]{
+        Transition and generation function of the Xoroshiro128+.
+        The notation is taken from definition \ref{def:xoroshiro}.
+      }
+      \label{fig:xoroshiro-transition-generation}
+    \end{figure}
+
+    The Xoroshiro128+ is a scrambled linear PRNG with a maximum period of $2^{128}-1$.
+    Figure \ref{fig:xoroshiro-transition-generation} visualizes its transition and generator function which are introduced in the following definition.
+    Its state consists of two 64-bit integers that are interleaved by the use of different linear transformations when calling the transition function.
+    The generator function scrambles the output through the use of a non-linear addition operation and returns a 64-bit integer.
+    \autocite{kneusel2018,vigna-xoroshiro}
+
     \begin{definition}[Xoroshiro128+]
     \label{def:xoroshiro}
       Let $a,b,c \in \setInteger_{64}$.
-      Then the Xoroshiro128+ $\mathrm{Xoroshiro128+}(a,b,c)\define (S,T,U,G)$ is defined as a PRNG in the following way.
+      Then $\mathrm{Xoroshiro128+}(a,b,c)\define (S,T,U,G)$ is defined as a PRNG in the following way.
       \[
         S \define \roundBrackets{\mathds{F}_2^{64}}^2
         \separate
@@ -968,21 +1014,29 @@
       \[
         G(x,y) \define x + y
       \]
+      If not otherwise stated, we assume $a=24$, $b=16$, and $c=37$.
     \end{definition}
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{figures/xrsr128p_scheme.pdf}
-      \caption[Xoroshiro128+ Transition and Generation]{
-        Transition and generation function of the Xoroshiro128+.
-        The notation is taken from definition \ref{def:xoroshiro}.
-      }
-      \label{fig:xoroshiro-transition-generation}
-    \end{figure}
+
   % subsection xorshift_and_variants (end)
 
-  % \subsection{Middle Square Weyl Sequence RNG} % (fold)
+  \subsubsection*{Middle Square Weyl Sequence RNG} % (fold)
   % \label{ssub:middle_square_weyl_sequence_rng}
-    \begin{definition}[Middle Square Weyl Sequence RNG]
+    \begin{figure}
+      \center
+      \includegraphics[width=0.7\textwidth]{figures/msws_scheme.pdf}
+      \caption[Middle Square Weyl Sequence RNG Transition and Generation]{
+        Transition and generation function of the middle square Weyl sequence RNG (MSWS).
+        The notation is taken from definition \ref{def:msws}.
+      }
+      \label{fig:msws-transition-generation}
+    \end{figure}
+
+    The middle square Weyl sequence RNG (MSWS) is another modern generator which is based on a non-linear squaring routine in its transition function.
+    It provides pseudorandom sequences of 32-bit integers with a period of $2^{64}$.
+    In figure \ref{fig:msws-transition-generation}, again a schematic view of the transition and generator function is given.
+    \autocite{widynski2019}
+
+    \begin{definition}[Middle Square Weyl Sequence RNG (MSWS)]
     \label{def:msws}
       We define $\mathrm{MSWS}\define(S,T,U,G)$ as a PRNG in the following way.
       \[
@@ -1002,15 +1056,6 @@
       \]
     \end{definition}
 
-    \begin{figure}
-      \center
-      \includegraphics[width=0.7\textwidth]{figures/msws_scheme.pdf}
-      \caption[Middle Square Weyl Sequence RNG Transition and Generation]{
-        Transition and generation function of the middle square Weyl sequence RNG (MSWS).
-        The notation is taken from definition \ref{def:msws}.
-      }
-      \label{fig:msws-transition-generation}
-    \end{figure}
   % subsection middle_square_weyl_sequence_rng (end)
 % section pseudorandom_number_generators (end)
 \end{document}
