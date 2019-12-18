@@ -233,6 +233,14 @@
 
     \inputCodeBlock[title = AVX MSWS Advancing]{code/msws/simd256/advance.hpp}
 
+    In the AVX implementation, we use \code{_mm256_mul_epu32} and \code{_mm256_mullo_epi32} to compute the square of the first element in the state.
+    They exhibit a latency of $5$ and $10$ and a throughput of $0.5$ and $1$ on the typical microarchitectures, respectively.
+    Thus, in comparison to the other intrinsics, they tremendously reduce the performance of the advancing routine.
+    To exploit their throughput, we would have to run ten of these instructions for independent AVX vectors consecutively.
+    One 256-bit SIMD vector contains four 64-bit MSWS generators.
+    Therefore at least 40 instances of the PRNG have to be called in parallel to remove the latency bottleneck of the multiplication operations.
+    Due to the risk of lowering the statistical quality, we have only used eight generators in parallel.
+
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/msws_vector_layout.pdf}

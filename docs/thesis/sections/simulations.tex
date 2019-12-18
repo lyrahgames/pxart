@@ -429,21 +429,56 @@
 
     \subsubsection*{Volume Scattering} % (fold)
     \label{ssub:volume_scattering}
-      \begin{definition}[Henyey-Greenstein Function]
+      Photons propagating through participating media are affected by absorption and scattering.
+      Both processes are in general modeled by statistical processes.
+      For our purpose, absorption will be ignored to reduce the complexity of the physical simulation.
+      Scattering changes the direction of the photon.
+      This process is described by rotation matrices and therefore scattering is much more appropriate for vectorization than absorption.
+      \autocite{pharr2016}
+
+      As a photon passes through a medium, it may collide with other particles and be scattered in different directions.
+      The probability of a scattering event is modeled by the scattering coefficient which in our case equals to the extinction.
+      We will only assume homogeneous media with a constant extinction.
+      Hence, the actual probability of a scattering event after traveling a short distance is given by Beer's law.
+      Because we want to show the application of RNGs to physical simulations, it is sufficient to directly define this probability without using the extinction.
+      \autocite{pharr2016}
+
+      Scattering itself is described by phase functions which are probability densities.
+      Based on an incoming direction, they give the probability that the photon will be scattered in a certain outgoing direction.
+      In this thesis, isotropic phase functions are used.
+      They are invariant under rotations and therefore only depend on the angle between the incoming and outgoing direction.
+      According to \textcite{pharr2016}, a widely used family of phase functions was developed by Henyey and Greenstein in the year 1941.
+      This family cannot be deduced by physical laws but instead was specifically designed to be easy to fit to measured scattering data by only using a single parameter.
+      \autocite{pharr2016,wang1995}
+
+      \begin{definition}[Henyey-Greenstein Family of Phase Functions]
+        Let $g\in [-1,1]$ be the asymmetry parameter, $ω_\mathrm{i}\in\mathscr{S}^2$ be the incoming direction of a photon and $ω_\mathrm{o}\in\mathscr{S}^2$ be a possible outgoing direction.
+        The probability density $\function{p}{[-1,1]}{[0,\infty)}$ describing the distribution of $\cos ϑ \define \scalarProduct{ω_\mathrm{i}}{ω_\mathrm{o}}$ after a scattering process has taken place is then given by the following equation.
         \[
-          p(\cos ϑ) \define \frac{1}{2} \frac{1-g^2}{(1+g^2 - 2g\cos ϑ)^{\frac{3}{2}}}
+          p_g(\cos ϑ) \define \frac{1}{2} \frac{1-g^2}{(1+g^2 - 2g\cos ϑ)^{\frac{3}{2}}}
         \]
       \end{definition}
+      To actually use the probability density $p_g$, we have to sample it.
+      That means we have to construct a sequence of iid random variables with a distribution given by $p_g$.
+      For this we will rely on a uniformly distributed sequence of iid random variables by applying a transformation to change their distribution.
+      The following lemma can be shown by using the inversion method.
+      A detailed derivation is given in \textcite{wang1995}.
 
-      \begin{lemma}[Sampling Henyey-Greenstein Function]
+      \begin{lemma}[Sampling Henyey-Greenstein Phase Functions]
+        Let $g\in [-1,1]$ be the asymmetry parameter, $(X_n)_{n\in\setNatural}$ be a uniformly distributed sequence of iid random variables in the unit interval.
+        Furthermore, let $(\cos ϑ_n)_{n\in\setNatural}$ be a sequence of random variables given by the following transformation.
         \[
-          \cos ϑ =
+          \cos ϑ_n =
           \begin{cases}
-            \frac{1}{2g} \boxBrackets{1 + g^2 - \roundBrackets{\frac{1-g^2}{1-g+2gξ}}^2} &: g\neq 0 \\
-            2ξ - 1 &: g = 0
+            \frac{1}{2g} \boxBrackets{1 + g^2 - \roundBrackets{\frac{1-g^2}{1-g+2gX_n}}^2} &: g\neq 0 \\
+            2X_n - 1 &: g = 0
           \end{cases}
         \]
+        Then, $(\cos ϑ_n)$ is a sequence of iid random variables distributed according to $p_g$.
       \end{lemma}
+
+      The given lemma makes it possible to simulate scattering processes adhering to the probability density $p_g$ only by using uniformly distributed random numbers in the unit interval.
+
     % subsubsection volume_scattering (end)
   % subsection photon_propagation_and_physically_based_rendering (end)
 % section simulation_in_physics_and_mathematics (end)
