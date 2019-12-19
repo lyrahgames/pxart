@@ -596,7 +596,7 @@
   \[
     S \define \setInteger_{8}
     \separate
-    G \define \setInteger_2
+    U \define \setInteger_2
     \separate
     T(x) \define x + 1 \mod 8
     \separate
@@ -634,7 +634,7 @@
   \[
     S \define \setInteger_{16}
     \separate
-    G \define \setInteger_2
+    U \define \setInteger_2
     \separate
     T(x) \define x + 1 \mod 16
     \separate
@@ -855,9 +855,9 @@
       \[
         \function{T}{S}{S}
         \separate
-        T(x) \define a x + c
+        T(x) \define a x + c \mod m
       \]
-      Multiplication and addition are understood in the sense of $\setInteger_m$.
+      % Multiplication and addition are understood in the sense of $\setInteger_m$.
       We call $\mathrm{LCG}(m,a,c)$ the linear congruential generator with modulus $m$, multiplier $a$ and increment $c$.
     \end{definition}
     If $c\neq 0$ then the LCG is non-linear and is able to provide equidistributed pseudorandom sequences with a maximum period of $m$.

@@ -12,8 +12,8 @@ int main() {
 
   // Initialize RNG.
   pxart::simd256::xrsr128p rng{random_device{}};
-  // Write the binary representation of generated random numbers into the
-  // bitstream.
+  // Write the binary representation of generated
+  // random numbers into the bitstream.
   while (true) {
     const auto sample = rng();
     cout.write(reinterpret_cast<const char*>(&sample), sizeof(sample));

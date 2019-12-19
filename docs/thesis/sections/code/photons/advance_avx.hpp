@@ -1,55 +1,57 @@
 template <typename RNG>
 inline void advance(photons& sys, RNG& rng) noexcept {
-  const auto time = 1e-1f;
-  const float g = -0.8f;
-  const float absorption = 0.1;
-  const auto free_time = std::exp(-absorption * time);
+  const auto zero = _mm256_setzero_ps();
+  const auto one = _mm256_set1_ps(1);
+  const auto half = _mm256_set1_ps(0.5);
 
-  const auto v_time = _mm256_set1_ps(time);
-  const auto v_free_time = _mm256_set1_ps(free_time);
+  const auto time_step = _mm256_set1_ps(sys.time_step);
+  const auto scatter = _mm256_set1_ps(sys.scatter);
 
-  for (int i = 0; i < sys.size(); i += 8) {
-    const auto pos_x = _mm256_loadu_ps(&sys.pos_x[i]);
-    const auto pos_y = _mm256_loadu_ps(&sys.pos_y[i]);
+  for (int i = 0; i < sys.p_x.size(); i += 8) {
+    // Load positions and velocities of eight photons.
+    const auto p_x = _mm256_loadu_ps(&sys.p_x[i]);
+    const auto p_y = _mm256_loadu_ps(&sys.p_y[i]);
     const auto v_x = _mm256_loadu_ps(&sys.v_x[i]);
     const auto v_y = _mm256_loadu_ps(&sys.v_y[i]);
-    const auto new_pos_x = _mm256_add_ps(pos_x, _mm256_mul_ps(v_time, v_x));
-    const auto new_pos_y = _mm256_add_ps(pos_y, _mm256_mul_ps(v_time, v_y));
-    // const auto new_pos_x = _mm256_fmadd_ps(v_time, v_x, pos_x);
-    // const auto new_pos_y = _mm256_fmadd_ps(v_time, v_y, pos_y);
-    _mm256_storeu_ps(&sys.pos_x[i], new_pos_x);
-    _mm256_storeu_ps(&sys.pos_y[i], new_pos_y);
+    // Move photons according to their velocity.
+    const auto new_p_x = _mm256_add_ps(p_x, _mm256_mul_ps(time_step, v_x));
+    const auto new_p_y = _mm256_add_ps(p_y, _mm256_mul_ps(time_step, v_y));
+    // Store the new positions.
+    _mm256_storeu_ps(&sys.p_x[i], new_p_x);
+    _mm256_storeu_ps(&sys.p_y[i], new_p_y);
 
+    // Evaluate which photon has to be scattered.
     const auto rnd = pxart::simd256::uniform<float>(rng);
-    const auto mask = _mm256_cmp_ps(rnd, v_free_time, _CMP_LT_OQ);
+    const auto mask = _mm256_cmp_ps(rnd, scatter, _CMP_LT_OQ);
 
-    const auto v_g = _mm256_set1_ps(g);
-    const auto v_g2 = _mm256_mul_ps(v_g, v_g);
-    const auto one = _mm256_set1_ps(1);
-    const auto mone = _mm256_set1_ps(-1);
-    const auto two = _mm256_set1_ps(2);
-    const auto v_2g = _mm256_mul_ps(two, v_g);
-    auto denom = _mm256_sub_ps(one, v_g);
-    denom = _mm256_add_ps(denom, _mm256_mul_ps(v_2g, rnd));
-    const auto numer = _mm256_sub_ps(one, v_g2);
+    // Sample the Henyey-Greenstein phase function.
+    const auto g = _mm256_set1_ps(sys.g);
+    const auto sq_g = _mm256_mul_ps(g, g);
+    const auto g2 = _mm256_add_ps(g, g);
+    auto denom = _mm256_sub_ps(one, g);
+    denom = _mm256_add_ps(denom, _mm256_mul_ps(g2, rnd));
+    const auto numer = _mm256_sub_ps(one, sq_g);
     const auto frac = _mm256_div_ps(numer, denom);
-    auto brackets = _mm256_add_ps(one, v_g2);
+    auto brackets = _mm256_add_ps(one, sq_g);
     brackets = _mm256_sub_ps(brackets, _mm256_mul_ps(frac, frac));
-    const auto cos_angle = _mm256_div_ps(brackets, v_2g);
+    const auto cos_angle = _mm256_div_ps(brackets, g2);
 
+    // Sample the sign of the sine of the angle.
     const auto rnd2 = pxart::simd256::uniform<float>(rng);
-
     const auto abs_sin_angle =
         _mm256_sqrt_ps(_mm256_sub_ps(one, _mm256_mul_ps(cos_angle, cos_angle)));
-    const auto lr_mask = _mm256_cmp_ps(rnd2, _mm256_set1_ps(0.5), _CMP_LT_OQ);
+    const auto lr_mask = _mm256_cmp_ps(rnd2, half, _CMP_LT_OQ);
     const auto sin_angle = _mm256_blendv_ps(
-        abs_sin_angle, _mm256_mul_ps(mone, abs_sin_angle), lr_mask);
+        abs_sin_angle, _mm256_sub_ps(zero, abs_sin_angle), lr_mask);
 
-    const auto new_x = _mm256_sub_ps(_mm256_mul_ps(cos_angle, v_x),
-                                     _mm256_mul_ps(sin_angle, v_y));
-    const auto new_y = _mm256_add_ps(_mm256_mul_ps(sin_angle, v_x),
-                                     _mm256_mul_ps(cos_angle, v_y));
-    _mm256_storeu_ps(&sys.v_x[i], _mm256_blendv_ps(new_x, v_x, mask));
-    _mm256_storeu_ps(&sys.v_y[i], _mm256_blendv_ps(new_y, v_y, mask));
+    // Rotate velocity of photons by matrix-vector product with rotation matrix.
+    const auto new_v_x = _mm256_sub_ps(_mm256_mul_ps(cos_angle, v_x),
+                                       _mm256_mul_ps(sin_angle, v_y));
+    const auto new_v_y = _mm256_add_ps(_mm256_mul_ps(sin_angle, v_x),
+                                       _mm256_mul_ps(cos_angle, v_y));
+
+    // Store velocities according to scattering evaluation.
+    _mm256_storeu_ps(&sys.v_x[i], _mm256_blendv_ps(new_v_x, v_x, mask));
+    _mm256_storeu_ps(&sys.v_y[i], _mm256_blendv_ps(new_v_y, v_y, mask));
   }
 }

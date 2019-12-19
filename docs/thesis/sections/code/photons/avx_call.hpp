@@ -1,0 +1,1 @@
+const auto rnd = pxart::simd256::uniform<float>(rng);
