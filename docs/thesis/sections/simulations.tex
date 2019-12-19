@@ -336,92 +336,92 @@
 
     % \end{definition}
 
-    \subsubsection*{Surface Interaction} % (fold)
-    \label{ssub:surface_interaction}
-      The interaction of photons with surfaces of objects is strongly associated with the properties of the materials the objects consist of.
-      Typically, the behavior can be modeled by bidirectional scattering distribution functions (BSDFs) which give the portion of light scattered in the outgoing direction with respect to the incoming direction.
-      Concerning photons, for a fixed incoming direction BSDFs can be thought of as probability densities over the outgoing direction of the photon after the surface scattering has taken place.
-      We refer again to \textcite{pharr2016} and \textcite{pawellek2017}.
-      To simulate complex optical properties of object materials BSDFs have to be sampled with the usage of appropriate random variables.
-      In this context, we will only assume ideal reflection and refraction of photons to not introduce unnecessary complexness to the application.
+    % \subsubsection*{Surface Interaction} % (fold)
+    % \label{ssub:surface_interaction}
+    %   The interaction of photons with surfaces of objects is strongly associated with the properties of the materials the objects consist of.
+    %   Typically, the behavior can be modeled by bidirectional scattering distribution functions (BSDFs) which give the portion of light scattered in the outgoing direction with respect to the incoming direction.
+    %   Concerning photons, for a fixed incoming direction BSDFs can be thought of as probability densities over the outgoing direction of the photon after the surface scattering has taken place.
+    %   We refer again to \textcite{pharr2016} and \textcite{pawellek2017}.
+    %   To simulate complex optical properties of object materials BSDFs have to be sampled with the usage of appropriate random variables.
+    %   In this context, we will only assume ideal reflection and refraction of photons to not introduce unnecessary complexness to the application.
 
-      \begin{figure}
-        \center
-        \includegraphics[height=0.3\textwidth]{figures/reflection_refraction_scheme.pdf}
-        \caption[Ideal Reflection and Refraction]{%
-          Ideal reflection and refraction scheme and notation.
-          The surface with surface normal $n$ separates the outer medium with refractive index $η_\mathrm{i}$ from the inner medium with refractive index $η_\mathrm{t}$.
-          $ω_\mathrm{i}$, $ω_\mathrm{r}$, and $ω_\mathrm{t}$ denote the incoming, reflection, and refraction direction, respectively.
-        }
-        \label{fig:reflection-refraction-scheme}
-      \end{figure}
+    %   \begin{figure}
+    %     \center
+    %     \includegraphics[height=0.3\textwidth]{figures/reflection_refraction_scheme.pdf}
+    %     \caption[Ideal Reflection and Refraction]{%
+    %       Ideal reflection and refraction scheme and notation.
+    %       The surface with surface normal $n$ separates the outer medium with refractive index $η_\mathrm{i}$ from the inner medium with refractive index $η_\mathrm{t}$.
+    %       $ω_\mathrm{i}$, $ω_\mathrm{r}$, and $ω_\mathrm{t}$ denote the incoming, reflection, and refraction direction, respectively.
+    %     }
+    %     \label{fig:reflection-refraction-scheme}
+    %   \end{figure}
 
-      Ideal reflection of a photon means that the angle between its incoming direction and the surface normal is the same as the angle between the outgoing direction and the surface normal.
-      In general, we can define it as follows.
+    %   Ideal reflection of a photon means that the angle between its incoming direction and the surface normal is the same as the angle between the outgoing direction and the surface normal.
+    %   In general, we can define it as follows.
 
-      \begin{definition}[Ideal Reflection]
-        For any incoming direction $ω_\mathrm{i}\in \mathscr{S}^2$ its ideally reflected direction $ω_\mathrm{r}$ with respect to a surface with surface normal $n\in\mathscr{S}^2$ is given by the following equation.
-        \[
-          ω_\mathrm{r} = ω_\mathrm{i} - 2 \scalarProduct{n}{ω_\mathrm{i}} n
-        \]
-      \end{definition}
-      A refractive index is a dimensionless number and represents the slow-down in speed when light is traveling through the according medium.
-      The ideal refraction of photons traveling through a surface which is separating two media with varying refractive indices can be described by the following definition.
+    %   \begin{definition}[Ideal Reflection]
+    %     For any incoming direction $ω_\mathrm{i}\in \mathscr{S}^2$ its ideally reflected direction $ω_\mathrm{r}$ with respect to a surface with surface normal $n\in\mathscr{S}^2$ is given by the following equation.
+    %     \[
+    %       ω_\mathrm{r} = ω_\mathrm{i} - 2 \scalarProduct{n}{ω_\mathrm{i}} n
+    %     \]
+    %   \end{definition}
+    %   A refractive index is a dimensionless number and represents the slow-down in speed when light is traveling through the according medium.
+    %   The ideal refraction of photons traveling through a surface which is separating two media with varying refractive indices can be described by the following definition.
 
-      \begin{definition}[Ideal Refraction]
-        For any incoming direction $ω_\mathrm{i}\in \mathscr{S}^2$ its ideally refracted direction $ω_\mathrm{t}$ with respect to a surface with surface normal $n\in\mathscr{S}^2$ is given by the following equation.
-        \[
-          ω_\mathrm{t} =
-          \begin{cases}
-            \frac{η_\mathrm{i}}{η_\mathrm{t}} \roundBrackets{ ω_\mathrm{i} - \scalarProduct{n}{ω_\mathrm{i}} n} - \sqrt{ξ} n & :ξ > 0 \\
-            ω_\mathrm{r} & :ξ \leq 0
-          \end{cases}
-        \]
-        \[
-          ξ \define \frac{η^2_\mathrm{i}}{η^2_\mathrm{t}}\roundBrackets{1 - \scalarProduct{n}{ω_\mathrm{i}}^2}
-        \]
-        Hereby, we assume that $ω_\mathrm{r}$ is the ideally reflected direction and that the surface is separating the outer medium with refractive index $η_\mathrm{i}\in [1,\infty)$ from the inner medium with refractive index $η_\mathrm{t}\in [1,\infty)$.%
-      \end{definition}
-      Figure \ref{fig:reflection-refraction-scheme} shows ideal reflection and refraction schematically.
-      The connection between the angle of incidence and the angle of emergence is given by Snell's law.
-      If the outer medium exhibits a larger refractive index than the inner medium then there exists a critical incident angle at which total reflection of the incoming photon occurs.
-      This explains the distinction of cases in the above definition.
-      Here, the second case represents total reflection.
+    %   \begin{definition}[Ideal Refraction]
+    %     For any incoming direction $ω_\mathrm{i}\in \mathscr{S}^2$ its ideally refracted direction $ω_\mathrm{t}$ with respect to a surface with surface normal $n\in\mathscr{S}^2$ is given by the following equation.
+    %     \[
+    %       ω_\mathrm{t} =
+    %       \begin{cases}
+    %         \frac{η_\mathrm{i}}{η_\mathrm{t}} \roundBrackets{ ω_\mathrm{i} - \scalarProduct{n}{ω_\mathrm{i}} n} - \sqrt{ξ} n & :ξ > 0 \\
+    %         ω_\mathrm{r} & :ξ \leq 0
+    %       \end{cases}
+    %     \]
+    %     \[
+    %       ξ \define \frac{η^2_\mathrm{i}}{η^2_\mathrm{t}}\roundBrackets{1 - \scalarProduct{n}{ω_\mathrm{i}}^2}
+    %     \]
+    %     Hereby, we assume that $ω_\mathrm{r}$ is the ideally reflected direction and that the surface is separating the outer medium with refractive index $η_\mathrm{i}\in [1,\infty)$ from the inner medium with refractive index $η_\mathrm{t}\in [1,\infty)$.%
+    %   \end{definition}
+    %   Figure \ref{fig:reflection-refraction-scheme} shows ideal reflection and refraction schematically.
+    %   The connection between the angle of incidence and the angle of emergence is given by Snell's law.
+    %   If the outer medium exhibits a larger refractive index than the inner medium then there exists a critical incident angle at which total reflection of the incoming photon occurs.
+    %   This explains the distinction of cases in the above definition.
+    %   Here, the second case represents total reflection.
 
-      A photon can either be reflected or transmitted but not both at the same time.
-      Hence, the surface coefficients $α,β\in [0,1]$ for reflection and refraction with $α+β=1$ of photons should be interpreted as probabilities.
-      The interaction process can then be described by a probability density $p_{\omega_\mathrm{i}}$ over the outgoing directions $ω_\mathrm{o}\in \mathscr{S}^2$ with a fixed incoming direction $ω_\mathrm{i}\in\mathscr{S}^2$.
-      In the case of ideal reflection $ω_\mathrm{r}$ and refraction $ω_\mathrm{t}$, we have
-      \[
-        p_{ω_\mathrm{i}}(ω_\mathrm{o}) \define α δ_{ω_\mathrm{o}}(ω_\mathrm{r}) + β δ_{ω_\mathrm{o}}(ω_\mathrm{t})
-      \]
-      where $δ_{ω_\mathrm{o}}$ denotes the Dirac delta distribution over $\mathscr{S}^2$.
-      To sample the photon paths from such a probability density, Russian roulette is used to choose between reflection and refraction.
+    %   A photon can either be reflected or transmitted but not both at the same time.
+    %   Hence, the surface coefficients $α,β\in [0,1]$ for reflection and refraction with $α+β=1$ of photons should be interpreted as probabilities.
+    %   The interaction process can then be described by a probability density $p_{\omega_\mathrm{i}}$ over the outgoing directions $ω_\mathrm{o}\in \mathscr{S}^2$ with a fixed incoming direction $ω_\mathrm{i}\in\mathscr{S}^2$.
+    %   In the case of ideal reflection $ω_\mathrm{r}$ and refraction $ω_\mathrm{t}$, we have
+    %   \[
+    %     p_{ω_\mathrm{i}}(ω_\mathrm{o}) \define α δ_{ω_\mathrm{o}}(ω_\mathrm{r}) + β δ_{ω_\mathrm{o}}(ω_\mathrm{t})
+    %   \]
+    %   where $δ_{ω_\mathrm{o}}$ denotes the Dirac delta distribution over $\mathscr{S}^2$.
+    %   To sample the photon paths from such a probability density, Russian roulette is used to choose between reflection and refraction.
 
-      \begin{lemma}[Russian Roulette]
-        Choose the same settings as in definition \ref{definition:monte-carlo-integration}.
-        Furthermore, assume $α,β\in [0,1]$ with $α+β=1$ and $f=αf_1 + βf_2$ for functions $f_1,f_2\in\mathrm{L}^2(U,λ)$.
-        We define the roulette function $R$ as follows.
-        \[
-          \function{R}{[0,1]}{\set{1,2}{}}
-          \separate
-          R(x) \define
-          \begin{cases}
-            1 &: x \leq α \\
-            2 &: \mathrm{else}
-          \end{cases}
-        \]
-        In this case, for all $x\in U$ and $k\in\setNatural$ the following equation holds.
-        \[
-          f(x) = \expect f_{R\circ X_k} (x)
-        \]
-      \end{lemma}
-      We will give no proof of this lemma.
-      Russian roulette does not introduce any bias and allows us to only choose one path for the photon.
-      This comes at the cost of a higher variance of the estimation.
-      If we would evaluate both, reflection and refraction, at once and scale the results according to α and β then the estimation would have a variance of zero.
-      But always tracing the possible paths soon becomes infeasible due to the exponential growth of different paths for every surface interaction.
-      Russian roulette reduces this computational amount.
+    %   \begin{lemma}[Russian Roulette]
+    %     Choose the same settings as in definition \ref{definition:monte-carlo-integration}.
+    %     Furthermore, assume $α,β\in [0,1]$ with $α+β=1$ and $f=αf_1 + βf_2$ for functions $f_1,f_2\in\mathrm{L}^2(U,λ)$.
+    %     We define the roulette function $R$ as follows.
+    %     \[
+    %       \function{R}{[0,1]}{\set{1,2}{}}
+    %       \separate
+    %       R(x) \define
+    %       \begin{cases}
+    %         1 &: x \leq α \\
+    %         2 &: \mathrm{else}
+    %       \end{cases}
+    %     \]
+    %     In this case, for all $x\in U$ and $k\in\setNatural$ the following equation holds.
+    %     \[
+    %       f(x) = \expect f_{R\circ X_k} (x)
+    %     \]
+    %   \end{lemma}
+    %   We will give no proof of this lemma.
+    %   Russian roulette does not introduce any bias and allows us to only choose one path for the photon.
+    %   This comes at the cost of a higher variance of the estimation.
+    %   If we would evaluate both, reflection and refraction, at once and scale the results according to α and β then the estimation would have a variance of zero.
+    %   But always tracing the possible paths soon becomes infeasible due to the exponential growth of different paths for every surface interaction.
+    %   Russian roulette reduces this computational amount.
       % \[
       %   \mathrm{RR} \define \frac{λ(U)}{n} \sum_{k=1}^n f_{R(X_{2k})}\circ X_{2k-1}
       % \]
@@ -464,6 +464,8 @@
       The following lemma can be shown by using the inversion method.
       A detailed derivation is given in \textcite{wang1995}.
 
+      \newpage
+
       \begin{lemma}[Sampling Henyey-Greenstein Phase Functions]
         Let $g\in [-1,1]$ be the asymmetry parameter, $(X_n)_{n\in\setNatural}$ be a uniformly distributed sequence of iid random variables in the unit interval.
         Furthermore, let $(\cos ϑ_n)_{n\in\setNatural}$ be a sequence of random variables given by the following transformation.
@@ -476,7 +478,6 @@
         \]
         Then, $(\cos ϑ_n)$ is a sequence of iid random variables distributed according to $p_g$.
       \end{lemma}
-
       The given lemma makes it possible to simulate scattering processes adhering to the probability density $p_g$ only by using uniformly distributed random numbers in the unit interval.
 
     % subsubsection volume_scattering (end)
