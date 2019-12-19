@@ -7,8 +7,8 @@
   The last section \ref{sec:testing_framework} described the implementation of tests and benchmarks to measure the performance of PRNGs concerning statistics and execution time.
   So to prove that the vectorization of PRNGs is indeed improving the performance without reducing statistical quality, we have to apply those benchmarks and analyze their output.
 
-  We have run the benchmarks on two different machines with similar architectures with varying raw computing powers.
-  The machines are modern Linux-based $64\appendUnit{bit}$ platforms providing the GCC C++ compiler version 9.2.0 \autocite{gcc}.
+  We have run the benchmarks on two different machines with similar architectures varying by their raw computing powers.
+  The machines are modern Linux-based 64-bit platforms providing the GCC C++ compiler version 9.2.0 \autocite{gcc}.
   The given C++ code used for including the library and running the tests and benchmarks was compiled with the optimization flags \code{-O3} and \code{-march=native} to guarantee the strongest optimization level.
   Because the generation of random numbers through PRNGs typically does not have to access main memory and can instead completely be run inside the caches of the CPU, specifying the CPU parameters of a target machine will be sufficient to draw conclusions.
   The first machine is a laptop and consists of the \citetitle{intel-kaby-lake-i5} \autocite{intel-kaby-lake-i5} whereas the second machine is a custom desktop computer with an installed \citetitle{intel-kaby-lake-i7} \autocite{intel-kaby-lake-i7}.
@@ -25,9 +25,11 @@
     Using multiple instances through SSE/AVX vector registers, the state of the vectorized PRNG becomes at least two times as big as the scalar variant.
     According to \textcite{oneill-blog-toobig}, creating a larger state will even make a weak generator stronger concerning its statistical performance.
     On the other hand, \textcite{fog2015} states that the use of multiple instances of the same generator with different seeds can lead to overlapping subsequences.
+    Such behavior possibly introduces bias and reduces the statistical quality because different streams of random numbers may be correlated.
+    % As a consequence, an accurate analysis by empirical test suites has to be done.
 
     For testing the statistical performance, we have used \citetitle{testu01-lib} version 1.2.3 and version 3.31.1 of \citetitle{dieharder}.
-    The computation time to run all the tests in the test batteries of TestU01 approximately ranged from $5\appendUnit{s}$ for SmallCrush over $20\appendUnit{min}$ for Crush to $150\appendUnit{min}$ for BigCrush.
+    The computation time to run all the tests in the test batteries of \citetitle{testu01-lib} approximately ranged from $5\appendUnit{s}$ for SmallCrush over $20\appendUnit{min}$ for Crush to $150\appendUnit{min}$ for BigCrush.
     While executing the BigCrush battery, 160 statistics were used to estimate the statistical performance of the generators.
     The execution of all 30 \citetitle{dieharder} tests with different parameters always took several minutes.
 
@@ -43,24 +45,10 @@
     Applying the designed benchmarks to the implementations of scalar and vectorized PRNGs enables us to evaluate the performance improvement introduced by using vectorization techniques.
     In tables \ref{tab:generation-data-i7} and \ref{tab:monte-carlo-pi-data-i7}, the results for running the generation benchmark and the Monte Carlo π benchmark respectively on the \citetitle{intel-kaby-lake-i7} are given for all the implemented PRNG versions and benchmark scenarios.
     For the MT19937, we have even inserted the data for the STL and Boost implementations to see if the code is indeed outperforming its state-of-art scalar counterparts \autocite{boost,gcc-libstdcpp}.
-    All measurements and plots for the \citetitle{intel-kaby-lake-i5} will not be shown in this section to not distract and can be found in the appendix \ref{sec:further_results}.
+    All measurements and plots for the \citetitle{intel-kaby-lake-i5} will not be shown in this section to not distract and can be found in appendix \ref{sec:further_results}.
     Figures \ref{fig:generation-performance-i7} and \ref{fig:generation-speedup-i7} show the respective performance and speedup resulted from running the generation benchmark on the \citetitle{intel-kaby-lake-i7}.
     For the many variants of the Monte Carlo π benchmark, we only show the speed-up in figure \ref{fig:monte-carlo-pi-speedup-i7}.
     The prefix \enquote{2 x} appearing in all figures states that two independent instances of the given generator were used.
-
-    \begin{table}[H]
-      \center
-      \caption[Generation Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
-        Results achieved by running the generation benchmark on the \citetitle{intel-kaby-lake-i7} at a frequency of $4.51\appendUnit{GHz}$ with all implemented variants of given PRNGs.
-        While running the benchmark, $16\appendUnit{GiB}$ of random numbers were generated and temporarily stored in a cache of size $16384\appendUnit{B}$ by iterating $2^{20}$ times over its content.
-        During the execution, there were no cache or branch misses.
-        The values for cycles, instructions, and IPCs were averaged over the calls to the advancing routine of the respective generator.
-      }
-      \label{tab:generation-data-i7}
-      \footnotesize
-      \renewcommand{\arraystretch}{1.2}
-      \subimport{tables/}{generation_desktop}
-    \end{table}
 
     \begin{figure}
       \center
@@ -73,6 +61,14 @@
       \label{fig:generation-performance-i7}
     \end{figure}
 
+    Both target machines consist of similar architectures.
+    Comparing the tables \ref{tab:generation-data-i7} and \ref{tab:monte-carlo-pi-data-i7} and the figures \ref{fig:generation-performance-i7}, \ref{fig:generation-speedup-i7}, and \ref{fig:monte-carlo-pi-speedup-i7} to the tables \ref{tab:generation-data-i5} and \ref{tab:monte-carlo-pi-data-i5} and the figures \ref{fig:generation-performance-i5}, \ref{fig:generation-speedup-i5}, and \ref{fig:monte-carlo-pi-speedup-i5} in appendix \ref{sec:further_results} respectively, we see that both architectures exhibit nearly the same speed-up, averaged cycles and averaged instructions.
+    Due to differing raw computing power, the execution time and the averaged IPC deviate from each other.
+    Therefore we recommend that quantizing the efficiency of a PRNG implementation should use the averaged cycles and instructions together with the machine-dependent IPC to draw conclusions for a given microarchitecture.
+
+    We are mostly interested in the speed-up concerning the execution time of a given benchmark to have a direct comparison between scalar and vectorized generators.
+    According to figure \ref{fig:generation-speedup-i7}, in the generation benchmark we were able to achieve a speed-up greater than one for all vectorized versions of PRNGs.
+
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{plots/generation_desktop_speedup.pdf}
@@ -83,14 +79,6 @@
       }
       \label{fig:generation-speedup-i7}
     \end{figure}
-
-    Both target machines consist of similar architectures.
-    Comparing the tables \ref{tab:generation-data-i7} and \ref{tab:monte-carlo-pi-data-i7} and the figures \ref{fig:generation-performance-i7}, \ref{fig:generation-speedup-i7}, and \ref{fig:monte-carlo-pi-speedup-i7} to the tables \ref{tab:generation-data-i5} and \ref{tab:monte-carlo-pi-data-i5} and the figures \ref{fig:generation-performance-i5}, \ref{fig:generation-speedup-i5}, and \ref{fig:monte-carlo-pi-speedup-i5} in appendix \ref{sec:further_results} respectively, we see that both architectures exhibit nearly the same speed-up, averaged cycles and averaged instructions.
-    Due to differing raw computing power, the execution time and the averaged IPC deviate from each other.
-    Therefore we recommend that quantizing the efficiency of a PRNG implementation should use the averaged cycles and instructions to draw conclusions for a given microarchitecture.
-
-    We are mostly interested in the speed-up concerning the execution time of a given benchmark to have a direct comparison between scalar and vectorized generators.
-    According to figure \ref{fig:generation-speedup-i7}, in the generation benchmark we were able to achieve a speed-up greater than one for all vectorized versions of PRNGs.
 
     Our scalar implementation of the MT19937 has already beaten the standard version of the STL but was not able to surpass the Boost implementation.
     However, looking at the speed-up introduced by the usage of SSE and AVX intrinsics, vectorized versions of the MT19937 are more than three times faster by using SSE and more than six times faster by using AVX than their scalar counterparts.
@@ -109,6 +97,19 @@
     Hence, the modern design of processors makes it difficult to theoretically analyze the implementations of PRNGs.
     It can even support generators that seem to be slow such that they show a much higher performance than their counterparts.
 
+    \begin{table}
+      \center
+      \caption[Generation Benchmark Data for \citetitle{intel-kaby-lake-i7}]{%
+        Results achieved by running the generation benchmark on the \citetitle{intel-kaby-lake-i7} at a frequency of $4.51\appendUnit{GHz}$ with all implemented variants of given PRNGs.
+        While running the benchmark, $16\appendUnit{GiB}$ of random numbers were generated and temporarily stored in a cache of size $16384\appendUnit{B}$ by iterating $2^{20}$ times over its content.
+        During the execution, there were no cache or branch misses.
+        The values for cycles, instructions, and IPCs were averaged over the calls to the advancing routine of the respective generator.
+      }
+      \label{tab:generation-data-i7}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.2}
+      \subimport{tables/}{generation_desktop}
+    \end{table}
 
     The Xoroshiro128+ indeed executes faster by using SSE/AVX intrinsics.
     The SSE variant realizes a speed-up of approximately $1.1$ and the AVX variant a speed-up of $2.2$.
@@ -198,9 +199,41 @@
     This means that even in scalar code the usage of vectorized PRNGs improves the overall performance.
     But to completely exploit the speed-up brought by vectorization of PRNGs, developers should consider the usage of SIMD intrinsics in performance-critical parts of their code which are using random numbers.
 
-    In the photon simulation, we have used $10^6$ photons and advanced the system $1000$ times by using a time step of $10^{-3}$.
-    We have measured the time taken to compute all steps for the scalar and the AVX version.
-    On the \citetitle{intel-kaby-lake-i5}, we got $(0.810\pm 0.015)\appendUnit{s}$ for the scalar version and $(0.525 \pm 0.020)\appendUnit{s}$ for the AVX version.
+    \newpage
+
+    \begin{table}[H]
+      \center
+      \caption[Photon Simulation Results]{
+        Results of the photon simulation run on the \citetitle{intel-kaby-lake-i7} for the different PRNGs.
+        The system used $10^6$ photons and was advanced $10^3$ times with a time step of $10^{-3}$.
+        The table gives the time taken to run the simulation for the different versions.
+        \enquote{Scalar} represents the scalar algorithm using a scalar PRNG.
+        \enquote{AVX Algorithm} stands for the vectorized algorithm using a scalar PRNG and \enquote{Full AVX} represents the AVX algorithm using a vectorized PRNG.
+        The Speed-Up of the \enquote{AVX Algorithm} version is given with respect to the \enquote{Scalar} version.
+      }
+      \label{tab:photon-results}
+      \begin{tabular}{lrrrr}
+        \hline
+        \textbf{PRNG} & \textbf{Scalar $[\mathrm{s}]$} & \textbf{AVX Algorithm $[\mathrm{s}]$} & \textbf{Full AVX $[\mathrm{s}]$} & \textbf{Speed-Up} \\
+        \hline
+        \hline
+        % \textit{i5-8250U} & $0.810\pm 0.015$ & $1.020\pm 0.050$ & $0.525\pm 0.020$ & $1.54\pm 0.09$ \\
+        MT19937 & 0.27 & 0.38 & 0.13 & 2.1 \\
+        Xoroshiro128+ & 0.22 & 0.22 & 0.09 & 2.4 \\
+        MSWS & 0.20 & 0.24 & 0.13 & 1.5 \\
+        \hline
+      \end{tabular}
+    \end{table}
+
+    The results of the photon simulation are given in table \ref{tab:photon-results}.
+    We have used $10^6$ photons and advanced the system $1000$ times by using a time step of $10^{-3}$.
+    We have measured the time taken to compute all steps for the scalar algorithm, the vectorized algorithm using a scalar PRNG, and the fully vectorized version which is using PRNGs implemented by AVX intrinsics.
+    The results show that vectorizing our randomized algorithm which does not use SIMD-aware PRNGs increases the time taken to advance the system.
+    Only the Xoroshiro128+ is capable of maintaining the same performance.
+    Therefore the vectorization technique could not speed up the application.
+    Only by interchanging scalar random number generation by their AVX counterparts, we were able to achieve a higher performance for every implemented PRNG.
+    Please note, due to the complexity of the photon simulation, the possible speed-up is bounded.
+    So even in a more realistic and physically-based application we see an improvement in performance by using vectorized PRNGs.
   % subsection performance_improvement (end)
 % section evaluation (end)
 \end{document}
