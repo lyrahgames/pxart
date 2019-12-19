@@ -214,6 +214,8 @@
     Due to the compiler's knowledge of the underlying hardware, automatic vectorization often generates code that is superior to other variants.
     But sometimes the complexity of problems exhibits several data and instruction dependencies by using non-trivial branches with different code paths or long chains of dependent calculations.
     In such cases, the compiler will not be able to vectorize the code and we as programmers have to fall back to a manual alternative.
+    The behavior of automatic vectorization can vary on different machine architectures.
+    As a consequence, the improvement in performance based on automatic vectorization is typically not portable.
     \autocite{fog2019a,fog2019b,fog2019c,fog2019d,fog2019e}
 
     To get the best of both techniques, Intel provides so-called SIMD intrinsics for the SSE and AVX instruction sets.
@@ -222,6 +224,7 @@
     With these utilities, it is possible to manually vectorize the code without the need to use inline assembly statements.
     Therefore, we are able to use high-level abstraction features of C++ to create a usable API and make the code maintainable while inserting low-level routines to improve its performance.
     Usually, this approach is easier to understand, less error-prone and results in less code than inline assembly statements.
+    Furthermore, the code will be compiled to the same instructions on different machine architectures which makes it performance-portable.
     Above all, taking care of alignment, latency and throughput of operations is made much simpler due to the abstraction of registers to variables.
     The latencies and throughputs of specific intrinsics for different microarchitectures is given by \textcite{intel-intrinsics-guide} and \textcite{fog2019d}.
     As a consequence, we rely on this variant to develop the vectorized implementations of PRNGs and algorithms.
