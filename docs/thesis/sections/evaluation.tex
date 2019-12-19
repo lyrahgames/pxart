@@ -197,6 +197,10 @@
     By Amdahl's law, the given speed-ups have to be a lot smaller than the theoretical bounds because a great percentage of the code was not vectorized.
     This means that even in scalar code the usage of vectorized PRNGs improves the overall performance.
     But to completely exploit the speed-up brought by vectorization of PRNGs, developers should consider the usage of SIMD intrinsics in performance-critical parts of their code which are using random numbers.
+
+    In the photon simulation, we have used $10^6$ photons and advanced the system $1000$ times by using a time step of $10^{-3}$.
+    We have measured the time taken to compute all steps for the scalar and the AVX version.
+    On the \citetitle{intel-kaby-lake-i5}, we got $(0.810\pm 0.015)\appendUnit{s}$ for the scalar version and $(0.525 \pm 0.020)\appendUnit{s}$ for the AVX version.
   % subsection performance_improvement (end)
 % section evaluation (end)
 \end{document}

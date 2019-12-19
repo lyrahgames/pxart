@@ -24,7 +24,6 @@ inline auto mt19937::operator()() noexcept -> simd_type {
       return result;
     };
 
-    // AVX Transition Loop
     const auto first = transition(0, shift_size);
     _mm256_store_si256(reinterpret_cast<simd_type*>(&state[0]), first);
     _mm256_store_si256(reinterpret_cast<simd_type*>(&state[state_size]), first);
@@ -42,17 +41,5 @@ inline auto mt19937::operator()() noexcept -> simd_type {
     state_index = 0;
   }
 
-  // Generator Function
-  auto x = _mm256_load_si256(
-      reinterpret_cast<const simd_type*>(&state[state_index]));
-  state_index += simd_size;
-  x = _mm256_xor_si256(x, _mm256_srli_epi32(x, tempering_u_shift));
-  x = _mm256_xor_si256(x,
-                       _mm256_and_si256(_mm256_slli_epi32(x, tempering_s_shift),
-                                        _mm256_set1_epi32(tempering_b_mask)));
-  x = _mm256_xor_si256(x,
-                       _mm256_and_si256(_mm256_slli_epi32(x, tempering_t_shift),
-                                        _mm256_set1_epi32(tempering_c_mask)));
-  x = _mm256_xor_si256(x, _mm256_srli_epi32(x, tempering_l_shift));
-  return x;
+  // ...
 }

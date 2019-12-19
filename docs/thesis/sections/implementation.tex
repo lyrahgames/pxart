@@ -25,7 +25,8 @@
     We want to make sure, that our implementation gives exactly the same output as the standard variant while keeping the advantages of our own API.
     As a consequence, we have to introduce a structure which can be interpreted as a PRNG and should serve as a default seeder for the MT19937.
 
-    Additionally, the types and parameters of the MT19937 will be defined as compile-time constants inside the functor to make sure the code stays maintainable by not inserting magic numbers in the implementation.
+    \inputCodeBlock[title = Scalar MT19937 Structure Types and Constants]{code/mt19937/sisd/struct_constants.hpp}
+    The types and parameters of the MT19937 will be defined as compile-time constants inside the functor to make sure the code stays maintainable by not inserting magic numbers in the implementation.
     To guarantee that there is no runtime overhead, we defined those variables as \code{static constexpr}.
 
     \inputCodeBlock[title = Scalar MT19937 Structure]{code/mt19937/sisd/struct.hpp}
@@ -37,9 +38,16 @@
     \inputCodeBlock[title = Scalar MT19937 Seeding]{code/mt19937/sisd/seeding.hpp}
     Advancing the state of the MT19937 by asking for a random number is a more complicated algorithm.
     The recurrence of the Mersenne Twister is linear and gives us an equation on how to get to the next element based on the $624$ current elements.
-    According to the mathematics, after the computation we would have to move every element of the state one step further.
+    According to the mathematics, after the computation we would have to move every element of the state one step further, as can be seen in figure \ref{fig:mersenne-twister-transition-generation}.
     But accessing each element in the state vector for every random number would greatly reduce the performance due to cache misses and the time to move every element.
-    Instead, \citeauthor{matsumoto1998} cache the index of the current element in the state.
+    Instead, \citeauthor{matsumoto1998} cache the index of the current element in the state and are precomputing 624 steps of the transition function.
+    This guarantees that newly generated elements do not have to be moved to the end of the state but instead can reside at their current positions.
+    Because we are transforming every state element by applying the transition function 624 times, the precomputation step has to loop over all elements.
+    To make sure the transformation is only accessing elements that lie inside the state, the loop has to be split into three distinct parts.
+    The transition of a single element depends on two other elements in the state.
+    Every dependency introduces a split because it could lie outside the state by shifting forward.
+    In figure \ref{fig:mt-loop-scheme}, this process is shown schematically.
+
     While the cached index is small enough, advancing the state only results in incrementing the index and returning the state value at this position by applying the generator function.
     Only if the index reaches the end of the state vector the complete state vector will be regenerated with respect to the recursive relation.
     In our code, the regeneration of the state vector uses a lambda expression to reduce code duplication and improve code transparency.
@@ -48,11 +56,11 @@
 
     \begin{figure}
       \center
-      \begin{subfigure}[b]{0.3\textwidth}
+      \begin{subfigure}[b]{0.25\textwidth}
         \center
         \includegraphics[width=0.95\textwidth]{figures/mt19937_transition_short.pdf}
       \end{subfigure}
-      \begin{subfigure}[b]{0.68\textwidth}
+      \begin{subfigure}[b]{0.73\textwidth}
         \center
         \includegraphics[width=0.95\textwidth]{figures/mt19937_loop_scheme.pdf}
       \end{subfigure}
@@ -62,19 +70,6 @@
         The right image visualizes the loop over all elements by using the simpler notation for a simplified version of the Mersenne Twister with a state size of eight and a shift size of five.
       }
       \label{fig:mt-loop-scheme}
-    \end{figure}
-
-    \begin{figure}
-      \center
-      \includegraphics[width=0.95\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
-      \caption[Mersenne Twister Vector Loop Scheme]{
-        Vectorization of the loop of Mersenne twister implementation by adding a buffer (gray) with the size of an SIMD vector at the end of the state.
-        Here, the same simplified version as in figure \ref{fig:mt-loop-scheme} is used.
-        It is assumed SIMD vectors are able to contain two elements of the state at once.
-        Vectorizable operations are shown in boxes.
-        By copying the first vector containing the new state elements into the buffer, no SIMD vector will overlap the first and the second loop.
-      }
-      \label{fig:mt-vector-loop-scheme}
     \end{figure}
 
     \inputCodeBlock[title = Scalar MT19937 Advancing]{code/mt19937/sisd/advance.hpp}
@@ -96,7 +91,7 @@
     The moment every package of eight or four elements in the state vector is read, the regeneration has to be triggered.
     The computation of the new state vector exhibits some data dependencies we have to take care of.
     In the scalar variant of the regeneration process the loop of all elements was split into three parts --- one for the first $227$ elements, one for the following $396$ elements and one for the last element.
-    The splitting followed from the dependencies given by the recurrence defining the Mersenne Twister algorithm.
+    The splitting followed from the dependencies given by the recurrence defining the Mersenne twister algorithm.
     All elements in the first loop have to access the elements at the same position, one position ahead and $397$ steps ahead.
     Reaching the $227$th~element will then forbid us to go $397$ steps further, because the position would not lie inside the state vector.
     But the requested element has already been produced at position zero.
@@ -104,7 +99,7 @@
     For the last element the successive element would again lie outside the state vector.
     Hence, the last elements uses the elements at the last position and positions zero and $396$.
 
-    Thus all newly generated elements in the first loop are independent of each other and can therefore be vectorized.
+    Thus, all newly generated elements in the first loop are independent of each other and can therefore be vectorized.
     This is also true for the second loop after the first loop has been executed.
     The problem lies in the fact that the number $397$, as well as $227$, is not divisible by eight or four without remainder.
     This leads to the appearance of a boundary vector term for the last element at the end of the state vector and one between the first and the second loop which needs to access successive and previous elements at the same time.
@@ -113,15 +108,31 @@
     Instead of saving only $624$ elements for the state vector, we append values at the end of the state vector to get a buffer that should reduce complexity.
     The number of values we append is given by the amount of elements that fit into a vector register.
     After the generation of the first vector unit in the first loop, we will copy these values to the end into the buffer.
-    In this case, the last value in the state vector will no longer be a boundary term because it can access the consecutive element through the buffer.
+    In this case, the last value in the state vector will no longer be a boundary term because it can access the consecutive elements through the buffer.
     The boundary term between the first and the second loop can now be completely handled by the vectorized first loop.
+    The vectorization of the loop is shown in figure \ref{fig:mt-vector-loop-scheme}.
     This method makes the code implementation easier by making the state bigger.
     But the number of elements we put into the buffer is small in comparison to the MT19937 state size and therefore an acceptable price to pay.
 
     \inputCodeBlock[title = AVX MT19937 Structure]{code/mt19937/simd256/struct.hpp}
     As explained, the structure of the vectorized version does not really change.
-    We should only make sure that the state vector will be at least $32\appendUnit{Byte}$ aligned.
+    We should only make sure that the state vector will be at least 32-byte aligned.
     To further optimize the structure, we could force 64-byte alignment to provide improved caching possibilities by starting with a cache line.
+
+    % \inputCodeBlock[title = AVX MT19937 Advancing]{code/mt19937/simd256/advance.hpp}
+
+    \begin{figure}
+      \center
+      \includegraphics[width=0.95\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
+      \caption[Mersenne Twister Vector Loop Scheme]{
+        Vectorization of the loop of Mersenne twister implementation by adding a buffer (gray) with the size of an SIMD vector at the end of the state.
+        Here, the same simplified version as in figure \ref{fig:mt-loop-scheme} is used.
+        It is assumed SIMD vectors are able to contain two elements of the state at once.
+        Vectorizable operations are shown in boxes.
+        By copying the first vector containing the new state elements into the buffer, no SIMD vector will overlap the first and the second loop.
+      }
+      \label{fig:mt-vector-loop-scheme}
+    \end{figure}
 
     \inputCodeBlock[title = AVX MT19937 Advancing]{code/mt19937/simd256/advance.hpp}
     Because the state vector is aligned, we can exploit this by using aligned load operations for elements that will be used without a shift.
@@ -153,22 +164,14 @@
     In comparison to the MT19937, the state of the Xoroshiro128+ can be easily described by two 64-bit unsigned integer values.
     For the advancing routine, the generator needs a utility which is rotating the bits of a 64-bit unsigned integer.
 
-    \inputCodeBlock[title = Scalar Xoroshiro128+ Structure]{code/xoroshiro128plus/sisd/struct.hpp}
+    % \inputCodeBlock[title = Scalar Xoroshiro128+ Structure]{code/xoroshiro128plus/sisd/struct.hpp}
     The Xoroshiro128+ offers a jump-ahead feature for discarding $2^{64}$ or $2^{96}$ elements of the output.
-    Here, we are only providing the implementation of the smaller jump.
+    In listing \ref{code:xoroshiro-scalar-jump}, we are only providing the implementation of the smaller jump.
     Both jumping routines differ only in their masking numbers.
     % The testing of the jump functions seems to be problematic because we have no possibility of generating $2^{64}$ random numbers in a short time to check if state of the PRNG is the same after a call to the jump function.
     % One workaround is to check each jump against each other by executing $2^{32}$ small jumps
 
     \inputCodeBlock[title = Scalar Xoroshiro128+ Advancing]{code/xoroshiro128plus/sisd/advance.hpp}
-
-    Due to the small state size of the Xoroshiro128+, the vectorization has to use multiple instances of the same generator to exploit the full capabilities of the SIMD intrinsics.
-    \citeauthor{vigna-xoroshiro} only gives one parameter set for the PRNG.
-    As a consequence, we have to use different seeds for all instances possibly causing overlapping subsequences or the jump-ahead feature to make sure the instances do not overlap for at least $2^{64}$ or $2^{96}$ values.
-    For the AVX implementation, we will use four instances of the Xoroshiro128+.
-    The underlying therefore does not really change and uses the SIMD types instead of the 64-bit unsigned integer values.
-
-    \inputCodeBlock[title = AVX Xoroshiro128+ Structure]{code/xoroshiro128plus/simd256/struct.hpp}
 
     \begin{figure}
       \center
@@ -180,14 +183,22 @@
       \label{fig:xoroshiro-vector-layout}
     \end{figure}
 
+    Due to the small state size of the Xoroshiro128+, the vectorization has to use multiple instances of the same generator to exploit the full capabilities of the SIMD intrinsics.
+    \citeauthor{vigna-xoroshiro} only gives one parameter set for the PRNG.
+    As a consequence, we have to use different seeds for all instances possibly causing overlapping subsequences or the jump-ahead feature to make sure the instances do not overlap for at least $2^{64}$ or $2^{96}$ values.
+    For the AVX implementation, we will use four instances of the Xoroshiro128+.
+    The underlying structure therefore does not really change and uses the SIMD types instead of the 64-bit unsigned integer values.
+    The layout of the data structure can be seen in figure \ref{fig:xoroshiro-vector-layout}.
+
+    \inputCodeBlock[title = AVX Xoroshiro128+ Structure]{code/xoroshiro128plus/simd256/struct.hpp}
     With this approach, every instance of the generator is completely independent of the other instances.
     This is again perfect for the application of SIMD intrinsics.
     Thus, the function for advancing the state is implemented by its corresponding vector intrinsics.
-    The jump function in the inner loop uses a branch to decide which code path to execute.
+    The jump function, given in listing \ref{code:xoroshiro-avx-jump}, in the inner loop uses a branch to decide which code path to execute.
     We do not want this branch to slow down the code by switching to scalar execution.
     Hence, we will map the branch to vector intrinsics by executing the inner computation in every case and masking the result based on the vectorized evaluation of the branch condition.
-    \inputCodeBlock[title = AVX Xoroshiro128+ Advancing]{code/xoroshiro128plus/simd256/advance.hpp}
 
+    \inputCodeBlock[title = AVX Xoroshiro128+ Advancing]{code/xoroshiro128plus/simd256/advance.hpp}
     Due to the latencies and throughputs of the AVX intrinsics used in this implementation, the advancing routine does not introduce a major bottleneck in the generation of random numbers.
     But to exploit the throughput of every operation, we would need to use multiple independent AVX vector registers at once.
 
@@ -212,34 +223,8 @@
     But because its output is only given by a 32-bit value, we have to generate eight random numbers at once.
     We can decide to call four instances of the same generator twice or instead use eight instances.
     While benchmarking the generators, the variant for calling each instance twice reduced the actual throughput of the vectorized PRNG and was therefore discarded from the implementation and measurement.
-    In our vectorized implementation, we use eight instances of the MSWS resulting in the following data structure.
-
-    \inputCodeBlock[title = AVX MSWS Structure]{code/msws/simd256/struct.hpp}
-    Advancing the state of the vectorized MSWS introduced difficulties because we have to compute the square of the first 64-bit value.
-    Either the AVX nor the SSE instruction set is providing a multiplication for 64-bit unsigned integer numbers.
-    Accordingly, we have to implement our own function for squaring the 64-bit values in a vector register based on given intrinsics.
-    Let $x\in\setNatural_0$ with $x < 2^{64}$ be a 64-bit unsigned integer and let $x_0,x_1\in\setNatural_0$ with $x_0,x_1 < 2^{32}$ be its 32-bit representation, such that $x = x_1 2^{32} + x_0$.
-    \[
-      x^2 = x_1^2 2^{64} + 2x_1x_0 2^{32} + x_0^2 \equiv 2x_1x_0 2^{32} + x_0^2 \mod 2^{64}
-    \]
-    This equation uses a 64-bit multiplication for 32-bit numbers to deal with the carry bits of the computation.
-    The SSE and AVX instruction sets provide this operation, such that the added complexity of the computation can be used to find an optimal implementation.
-
-    Afterwards, the first part of the vectorization is again straightforward because all the instances are independent so that every statement can directly be interchanged with its corresponding vector intrinsic.
-    At the end of the first part, two variables of SIMD type will provide 64-bit values as random numbers.
-    The MSWS algorithm forces us to use only the lower 32-bit of the given values resulting in only one vector type with the doubled amount of values as result.
-    To do that, both variables have to be convoluted by shuffle and permutation operations.
-    The squaring function and the permutation operations at the end will probably exhibit a high latency and therefore reduce the speed-up of the vectorization.
-
-    \inputCodeBlock[title = AVX MSWS Advancing]{code/msws/simd256/advance.hpp}
-
-    In the AVX implementation, we use \code{_mm256_mul_epu32} and \code{_mm256_mullo_epi32} to compute the square of the first element in the state.
-    They exhibit a latency of $5$ and $10$ and a throughput of $0.5$ and $1$ on the typical microarchitectures, respectively.
-    Thus, in comparison to the other intrinsics, they tremendously reduce the performance of the advancing routine.
-    To exploit their throughput, we would have to run ten of these instructions for independent AVX vectors consecutively.
-    One 256-bit SIMD vector contains four 64-bit MSWS generators.
-    Therefore at least 40 instances of the PRNG have to be called in parallel to remove the latency bottleneck of the multiplication operations.
-    Due to the risk of lowering the statistical quality, we have only used eight generators in parallel.
+    In our vectorized implementation, we use eight instances of the MSWS.
+    A visualization of the data structure layout is given in figure \ref{fig:msws-vector-layout}.
 
     \begin{figure}
       \center
@@ -251,16 +236,29 @@
       \label{fig:msws-vector-layout}
     \end{figure}
 
+    % \inputCodeBlock[title = AVX MSWS Structure]{code/msws/simd256/struct.hpp}
+    Advancing the state of the vectorized MSWS introduced difficulties because we have to compute the square of the first 64-bit value.
+    Either the AVX nor the SSE instruction set is providing a multiplication for 64-bit unsigned integer numbers.
+    Accordingly, we have to implement our own function for squaring the 64-bit values in a vector register based on given intrinsics.
+    Let $x\in\setNatural_0$ with $x < 2^{64}$ be a 64-bit unsigned integer and let $x_0,x_1\in\setNatural_0$ with $x_0,x_1 < 2^{32}$ be its 32-bit representation, such that $x = x_1 2^{32} + x_0$.
+    \[
+      x^2 = x_1^2 2^{64} + 2x_1x_0 2^{32} + x_0^2 \equiv 2x_1x_0 2^{32} + x_0^2 \mod 2^{64}
+    \]
+    This equation uses a 64-bit multiplication for 32-bit numbers to deal with the carry bits of the computation.
+    The SSE and AVX instruction sets provide this operation, such that the added complexity of the computation can be used to find an optimal implementation.
+
     \begin{figure}
       \center
       \begin{subfigure}[b]{\textwidth}
         \center
         \includegraphics[width=0.95\textwidth]{figures/msws_merge.pdf}
+        \caption{Sequential.}
       \end{subfigure}
 
       \begin{subfigure}[b]{\textwidth}
         \center
         \includegraphics[width=0.95\textwidth]{figures/msws_merge2.pdf}
+        \caption{Interleaved.}
       \end{subfigure}
       \caption[MSWS Vector Merge Scheme]{%
         Two variants of merging the two output vectors of the vectorized MSWS containing 64-bit integers into one SIMD vector containing 32-bit integers by means of AVX vector registers.
@@ -268,13 +266,25 @@
       \label{fig:msws-vector-merge-scheme}
     \end{figure}
 
+    Afterwards, the first part of the vectorization is again straightforward because all the instances are independent so that every statement can directly be interchanged with its corresponding vector intrinsic.
+    At the end of the first part, two variables of SIMD type will provide 64-bit values as random numbers.
+    The MSWS algorithm forces us to use only the lower 32-bit of the given values resulting in only one vector type with the doubled amount of values as result.
+    To do that, both variables have to be convoluted by shuffle or permutation operations.
+    Two variants are shown in figure \ref{fig:msws-vector-merge-scheme}.
+    % The squaring function and the permutation operations at the end will probably exhibit a high latency and therefore reduce the speed-up of the vectorization.
+
+    \inputCodeBlock[title = AVX MSWS Advancing]{code/msws/simd256/advance.hpp}
+    In the AVX implementation, we use \code{_mm256_mul_epu32} and \code{_mm256_mullo_epi32} to compute the square of the first element in the state.
+    They exhibit a latency of $5$ and $10$ and a throughput of $0.5$ and $1$ on the typical microarchitectures, respectively.
+    Thus, in comparison to the other intrinsics, they tremendously reduce the performance of the advancing routine.
+    To exploit their throughput, we would have to run ten of these instructions for independent AVX vectors consecutively.
+    One 256-bit SIMD vector contains four 64-bit MSWS generators.
+    Therefore at least 40 instances of the PRNG have to be called in parallel to remove the latency bottleneck of the multiplication operations.
+    Due to the risk of lowering the statistical quality, we have only used eight generators in parallel.
   % subsection middle_square_weyl_generator (end)
 
   \subsection{Uniform Distribution Functions for Reals} % (fold)
   \label{sub:uniform_real_distribution}
-    \inputCodeBlock[title = Scalar Uniform 32bit]{code/uniform/sisd/uint32.hpp}
-    \inputCodeBlock[title = AVX Uniform]{code/uniform/simd256/__m256i.hpp}
-
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/uniform_implementation_scheme.pdf}
@@ -284,11 +294,35 @@
       }
       \label{fig:real-uniform-implementation-scheme}
     \end{figure}
+
+    The uniformly distributed transformation of random 32- and 64-bit integers to single- and double-precision floating-point values is described in \textcite{vigna-xoroshiro} and \textcite{kneusel2018}.
+    Here, the IEEE 754 floating-point standard is used to ensure that bit manipulations will result in the same number on every machine supporting this standard.
+    Because we only want to deal with normalized numbers, a value in the interval $[1,2)$ should be generated firstly.
+    Such a value is positive and therefore the sign bit of the floating-point value is set to $0$.
+    The actual number representing the exponent of the floating-point encoding should be zero.
+    Due to the offset applied to the exponent value, the content of the exponent has to be equal to the offset.
+    Then the fraction can be filled with random bits to construct a uniformly distributed floating-point value in the interval $[1,2)$.
+    Low-order bits of a pseudorandom integer tend to provide weak randomness properties.
+    Hence, a shift is used to fill the fraction with the most significant bits of the random integer.
+    In figure \ref{fig:real-uniform-implementation-scheme}, this can be seen for a 32-bit integer and a single-precision floating-point value.
+    After this computation, the remaining part has to subtract $1$ from the floating-point value to guarantee the uniform distribution in the unit interval $[0,1)$.
+    The scalar implementation is given in the following code snippet.
+
+    \inputCodeBlock[title = Scalar Uniform Function]{code/uniform/sisd/uint32.hpp}
+    The vectorization of the uniform routine is straightforward.
+    Every operation can be replaced by its respective intrinsic.
+    Analyzing the function, \code{_mm256_sub_ps} and \code{_mm256_sub_pd} exhibit the highest latency with a value ranging from $3$ to $4$ on typical microarchitectures \autocite{intel-intrinsics-guide,fog2019d}.
+    On the other hand, their throughput ranges from $0.5$ to $1$.
+    So to further improve the performance of the uniform function, multiple independent values should be computed resulting in better exploitation of the processor pipeline.
+
+    \inputCodeBlock[title = AVX Uniform Function]{code/uniform/simd256/__m256i.hpp}
+    % \inputCodeBlock[title = AVX Uniform Function with Bounds]{code/uniform/simd256/bounds.hpp}
+
   % subsection uniform_real_distribution (end)
 
-  \subsection{Uniform Distribution Functions for Integers} % (fold)
-  \label{sub:uniform_distribution_functions_for_integers}
+  % \subsection{Uniform Distribution Functions for Integers} % (fold)
+  % \label{sub:uniform_distribution_functions_for_integers}
 
-  % subsection uniform_distribution_functions_for_integers (end)
+  % % subsection uniform_distribution_functions_for_integers (end)
 % section implementation (end)
 \end{document}

@@ -9,7 +9,7 @@
     Typically, this is done via unit and integration tests.
     We do not want to go into details of testing but instead want to show a few unit tests that were created and used during the development process.
     Besides consistency and correctness, this will additionally show how to apply the library in other code.
-    To append and create new tests easily, a unit testing framework called \enquote{doctest} was used \autocite{doctest}.
+    To append and create new tests easily, a unit testing framework called \citetitle{doctest} was used \autocite{doctest}.
     Because all PRNGs are in general tested the same way, we will only describe the testing facilities by means of the MT19937 and AVX intrinsics if not otherwise stated.
 
     \inputCodeBlock[title = Scalar MT19937 Advance Test]{code/mt19937/sisd/test.cpp}
@@ -25,10 +25,10 @@
     Testing the vectorized implementation of an advancing method can be done the same way by comparing each element of an SIMD vector with the output of the scalar version.
     The use of appropriate \code{using} declarations or even a wrapper class would makes the code more readable.
     \inputCodeBlock[title = AVX MT19937 Advance Test]{code/mt19937/simd256/test.cpp}
-    As a special case, the vectorization of the jump function of the Xoroshiro128+ can be tested by checking the equality of the internal state variables.
+    As a special case, the vectorization of the jump function of the Xoroshiro128+, given in listing \ref{code:xoroshiro-avx-jump-test}, can be tested by checking the equality of the internal state variables.
     Here, we have to take care when initializing the four scalar instances to test against.
     We first set their state directly to be able to run the comparison the same way after doing the jump.
-    \inputCodeBlock[title = AVX Xoroshiro128+ Jump Test]{code/xoroshiro128plus/simd256/test.cpp}
+
   % subsection unit_tests (end)
 
   \subsection{Randomness of Multiple Streams} % (fold)
@@ -37,7 +37,7 @@
     As a consequence, we will not test the statistical performance of the already known scalar PRNGs.
     Instead, we have to examine the randomness of the created multiple streams embodied by the SIMD vectors.
     As stated in \textcite[\ppno~160-162]{kneusel2018}, we will combine all streams of random numbers into a single one by interleaving the samples as shown in figure \ref{fig:combined-stream}.
-    The combined stream will then be used as an input to the common test suites \citetitle{testu01} and \citetitle{dieharder} \autocite{testu01,dieharder}.
+    The combined stream will then be used as an input to the common test suites \citetitle{testu01-lib} and \citetitle{dieharder} \autocite{testu01,dieharder}.
     \begin{figure}
       \center
       \includegraphics[width=0.95\textwidth]{figures/interleaving_multiple_streams.pdf}
@@ -113,8 +113,7 @@
     We used the \citetitle{perfevent} benchmarking wrapper to simplify the implementation of the measurement process.
     Additionally, it gives us further insights, such as the average instructions per cycle, average branch misses, average cache misses, and even more \autocite{perfevent}.
 
-    \inputCodeBlock[title = Generation Benchmark Structure]{code/generation_benchmark/struct.hpp}
-    To apply the benchmarking routine easily to any possible generator, we use an abstraction class which saves the context variables, such as the number of samples and the \citetitle{perfevent} parameters.
+    To apply the benchmarking routine easily to any possible generator, we use an abstraction class, given in listing \ref{code:generation-benchmark-structure}, which saves the context variables, such as the number of samples and the \citetitle{perfevent} parameters.
     The member function templates \code{run} are used to actually execute the benchmarking routine and write the results to the standard output.
     We overload the template to automatically deduce the type of a given RNG and the algorithm to use.
     Because on modern systems the \code{std::mt19937} of the C++ STL uses a $64\appendUnit{bit}$ variable to output a $32\appendUnit{bit}$ random number, we have to introduce the possibility of manually setting the type the return type will be casted to.
@@ -137,9 +136,9 @@
     Typically, the time for only one call to the advancing routine of a generator is unmeasurable because it is too fast.
     Hence, we accumulate the time needed for several thousand calls and calculate the average time needed for the generation of one number.
 
-    \inputCodeBlock[title = Generation Benchmark Application]{code/generation_benchmark/usage.cpp}
     To easily use the benchmarking structure for multiple runs with different RNGs, we always return a reference to itself.
     This allows us to chain the calls in the \code{main} function reducing the usage overhead.
+    The code is given in listing \ref{code:generation-benchmark-usage}.
     Inside the \code{main} function, the sample count is read from the command line and then put into the constructor of \code{benchmark}.
     Afterwards, a list of runs for different generators exploiting the single and double instance facilities is given with the help of the chaining mechanism.
     In addition, chaining allows those functions to be directly appended to an rvalue of type \code{benchmark} to further reduce code complexity.
@@ -209,6 +208,30 @@
 
   \subsection{Photon Benchmark} % (fold)
   \label{sub:photon_benchmark}
+
+    For the photon simulation, we first have to think about the underlying data structure.
+    To make vectorization possible without changing this structure, we have used a structure of arrays for each, the position coordinates and the velocity directions.
+    To simplify the simulation and enable visual output, the system is only computed for two dimensions.
+
+    \inputCodeBlock[title = Photon Simulation Structure]{code/photons/struct.hpp}
+    The basic algorithm has to execute the following parts when advancing the system of photons one time step.
+    First, the photons are moved according to the direction of their velocity.
+    Afterwards, we have to check if a scattering has occured by using a uniformly distributed random variable.
+    If a photon will be scattered, then the Henyey-Greenstein phase function will be sampled to get a value for the cosine of the angle used for the rotation.
+    Another random number will then give us the sign of the sine of the angle.
+    At the end, the matrix-vector product for the rotation will be applied to set the new direction of the velocity.
+    This process has to be repeated.
+
+    \inputCodeBlock[title = Photon Simulation Scalar Advancing]{code/photons/advance.hpp}
+    The vectorization of this algorithm mostly consists of the interchanging of standard instructions with their according SIMD intrinsics.
+    We have chosen to pack the positions and velocities of eight photons in AVX registers.
+    Care has to be taken when translating the control branches.
+    Using \code{_mm256_cmp_ps}, we can evaluate a condition for eight photons at the same time.
+    The results are given as a mask.
+    Thus, we execute the complete scattering transformation for all photons.
+    At the end, we use \code{_mm256_blendv_ps} together with the mask to decide which part of the vector indeed has to be changed due to scattering.
+
+    \inputCodeBlock[title = Photon Simulation AVX Advancing]{code/photons/advance_avx.hpp}
 
   % subsection photon_benchmark (end)
 % section testing_framework (end)

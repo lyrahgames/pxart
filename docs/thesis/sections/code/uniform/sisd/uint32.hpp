@@ -7,8 +7,11 @@ constexpr inline float uniform<float>(uint32_t x) noexcept {
   return (*reinterpret_cast<const float*>(&tmp)) - 1.0f;
 }
 
+template <typename Real>
+constexpr Real uniform(uint64_t) noexcept = delete;
+
 template <>
-constexpr inline double uniform<double>(uint32_t x) noexcept {
-  const auto tmp = ((static_cast<uint64_t>(x) << 20) | 0x3ff0000000000000ULL);
+constexpr inline double uniform<double>(uint64_t x) noexcept {
+  const auto tmp = ((x >> 12) | 0x3ff0000000000000ULL);
   return (*reinterpret_cast<const double*>(&tmp)) - 1.0;
 }
