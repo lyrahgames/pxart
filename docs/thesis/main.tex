@@ -41,8 +41,11 @@
   \listoftables
   \listofmath
   \addcontentsline{toc}{section}{\listofmathcall}
-  \listofcode
-  \addcontentsline{toc}{section}{\listofcodecall}
+  {
+    \small
+    \listofcode
+    \addcontentsline{toc}{section}{\listofcodecall}
+  }
   \import{sections/}{abbreviations.tex}
   \import{sections/}{symbol_table.tex}
 
