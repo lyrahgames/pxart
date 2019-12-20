@@ -14,13 +14,8 @@ struct mt19937 {
   static constexpr size_t tempering_l_shift = 18;
   static constexpr uint_type default_seed = 5489u;
   static constexpr uint_type init_multiplier = 1812433253u;
-
-  static constexpr uint_type mask =  //
-      (~uint_type{}) >> (sizeof(uint_type) * 8 - word_size);
-  static constexpr uint_type upper_mask =  //
-      ((~uint_type{}) << mask_bits) & mask;
-  static constexpr uint_type lower_mask =  //
-      (~upper_mask) & mask;
+  static constexpr uint_type upper_mask = (~uint_type{}) << mask_bits;
+  static constexpr uint_type lower_mask = ~upper_mask;
 
   // ...
 };

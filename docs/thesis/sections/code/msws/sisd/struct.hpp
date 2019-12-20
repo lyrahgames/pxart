@@ -4,11 +4,7 @@ struct msws {
 
   // ...
 
-  // Seeding constructor
-  template <typename RNG>
-  explicit msws(RNG&& rng)
-      : s{(static_cast<uint64_t>(rng()) << 32) | (rng() << 1) | 0x01} {}
-
+  // Advancing Routine
   constexpr result_type operator()() noexcept;
 
   // ...
