@@ -1,0 +1,6 @@
+$out_root/
+{
+  include pxart/
+}
+
+export $out_root/pxart/$import.target
