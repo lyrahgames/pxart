@@ -8,4 +8,4 @@ description-file: README.md
 email: markuspawellek@gmail.com
 depends: * build2 >= 0.12.0
 depends: * bpkg >= 0.12.0
-#depends: libhello ^1.0.0
+depends: doctest ^2.3.0

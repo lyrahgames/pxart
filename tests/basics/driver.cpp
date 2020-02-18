@@ -1,33 +1,27 @@
 #include <cassert>
-#include <sstream>
-#include <stdexcept>
-
+#include <iostream>
+#include <pxart/mt19937.hpp>
 #include <pxart/version.hpp>
-#include <pxart/pxart.hpp>
+#include <random>
 
-int main ()
-{
-  using namespace std;
-  using namespace pxart;
+int main(int argc, char** argv) {
+  std::cout << "PXART_VERSION = " << PXART_VERSION << "\n"
+            << "PXART_VERSION_STR = " << PXART_VERSION_STR << "\n"
+            << "PXART_VERSION_ID = " << PXART_VERSION_ID << "\n"
+            << "PXART_VERSION_MAJOR = " << PXART_VERSION_MAJOR << "\n"
+            << "PXART_VERSION_MINOR = " << PXART_VERSION_MINOR << "\n"
+            << "PXART_VERSION_PATCH = " << PXART_VERSION_PATCH << "\n"
+            << "PXART_PRE_RELEASE = " << PXART_PRE_RELEASE << "\n"
+            << "PXART_SNAPSHOT_SN = " << PXART_SNAPSHOT_SN << "\n"
+            << "PXART_SNAPSHOT_ID = " << PXART_SNAPSHOT_ID << "\n";
 
-  // Basics.
-  //
-  {
-    ostringstream o;
-    say_hello (o, "World");
-    assert (o.str () == "Hello, World!\n");
-  }
+  std::mt19937 rng{};
+  pxart::mt19937 myrng{};
 
-  // Empty name.
-  //
-  try
-  {
-    ostringstream o;
-    say_hello (o, "");
-    assert (false);
-  }
-  catch (const invalid_argument& e)
-  {
-    assert (e.what () == string ("empty name"));
+  const int n = 10'000'000;
+  for (int i = 0; i < n; ++i) {
+    const auto rnd = rng();
+    const auto myrnd = myrng();
+    assert(rnd == myrnd);
   }
 }

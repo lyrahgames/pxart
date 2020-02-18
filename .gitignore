@@ -10,6 +10,7 @@
 !bootstrap.build
 !export.build
 !root.build
+!repositories.manifest
 
 !README.md
 !LICENSE
