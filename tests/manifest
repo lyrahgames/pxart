@@ -1,11 +1,12 @@
 : 1
-name: pxart
+name: pxart-tests
 version: 0.1.0-a.0.z
-summary: Packed Extensions for Advanced Random Techniques: Library and Applications for Random Number Generators
+summary: Tests for pxart
 license: MIT ; MIT License.
-description-file: README.md
+# description-file: README.md
 # url: https://example.org/pxart
 email: markuspawellek@gmail.com
 depends: * build2 >= 0.12.0
 depends: * bpkg >= 0.12.0
+depends: pxart
 depends: doctest ^2.3.0

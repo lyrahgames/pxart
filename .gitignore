@@ -11,6 +11,7 @@
 !export.build
 !root.build
 !repositories.manifest
+!packages.manifest
 
 !README.md
 !LICENSE
