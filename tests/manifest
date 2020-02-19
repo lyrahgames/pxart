@@ -1,6 +1,7 @@
 : 1
 name: pxart-tests
 version: 0.1.0-a.0.z
+project: pxart
 summary: Tests for pxart
 license: MIT ; MIT License.
 # description-file: README.md

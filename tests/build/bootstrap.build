@@ -3,4 +3,5 @@ project = pxart-tests
 using version
 using config
 using test
+using install
 using dist

@@ -1,7 +1,7 @@
 #pragma once
-#include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <pxart/algorithm.hpp>
 
 namespace pxart {
 
@@ -70,7 +70,7 @@ constexpr mt19937::uint_type mt19937::default_seeder::operator()() noexcept {
 
 template <typename RNG>
 constexpr mt19937::mt19937(RNG&& rng) {
-  std::generate(state, state + state_size, std::ref(rng));
+  generate(std::forward<RNG>(rng), state, state + state_size);
 }
 
 constexpr mt19937::mt19937() : mt19937{default_seeder{}} {}
