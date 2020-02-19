@@ -24,4 +24,12 @@ int main(int argc, char** argv) {
     const auto myrnd = myrng();
     assert(rnd == myrnd);
   }
+
+#ifdef __AVX2__
+  std::cout << "Configuration supports __AVX2__.\n";
+#endif
+
+#ifdef __SSE4_1__
+  std::cout << "Configuration supports __SSE4_1__.\n";
+#endif
 }

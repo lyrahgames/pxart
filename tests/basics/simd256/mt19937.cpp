@@ -1,5 +1,7 @@
 #include <doctest/doctest.h>
 
+#ifdef __AVX2__
+
 #include <pxart/simd256/mt19937.hpp>
 #include <random>
 
@@ -33,3 +35,5 @@ TEST_CASE("pxart::simd256::mt19937 Random Initialization with Default Seeder") {
     }
   }
 }
+
+#endif

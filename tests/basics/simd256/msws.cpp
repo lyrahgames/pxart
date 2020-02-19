@@ -1,10 +1,12 @@
 #include <doctest/doctest.h>
 
-#include <pxart/msws.hpp>
-#include <pxart/simd256/msws.hpp>
+// #include <pxart/msws.hpp>
+// #include <pxart/simd256/msws.hpp>
+#include <pxart/pxart.hpp>
 #include <random>
 
 TEST_CASE("pxart::simd256::msws Vectorization") {
+#ifdef __AVX2__
   pxart::simd256::msws rng1{std::random_device{}};
   pxart::msws rng2[8]{};
   for (int i = 0; i < 8; ++i) {
@@ -26,4 +28,7 @@ TEST_CASE("pxart::simd256::msws Vectorization") {
       CHECK(rnd1 == rnd2);
     }
   }
+#else
+  MESSAGE("Test cannot be executed. No AVX2 support.");
+#endif
 }

@@ -1,3 +1,5 @@
+#ifdef __AVX2__
+
 #include <doctest/doctest.h>
 
 #include <pxart/simd256/xoroshiro128plus.hpp>
@@ -130,3 +132,5 @@ TEST_CASE("pxart::simd256::xrsr128p Long Jump Vectorization") {
     }
   }
 }
+
+#endif

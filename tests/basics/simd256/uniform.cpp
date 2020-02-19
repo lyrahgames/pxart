@@ -1,3 +1,5 @@
+#ifdef __AVX2__
+
 #include <doctest/doctest.h>
 
 #include <pxart/simd256/mt19937.hpp>
@@ -74,3 +76,5 @@ TEST_CASE("pxart::simd256::detail::uniform int Bounds") {
   //   }
   // }
 }
+
+#endif
