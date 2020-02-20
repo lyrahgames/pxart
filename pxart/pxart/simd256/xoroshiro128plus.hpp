@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __AVX2__
+#else
+#define PXART_SUPPORT_SIMD256_XOROSHIRO128PLUS
+
 #include <immintrin.h>
 
 #include <cstdint>
@@ -112,3 +116,5 @@ inline void xoroshiro128plus::long_jump() noexcept {
 using xrsr128p = pxart::simd256::xoroshiro128plus;
 
 }  // namespace pxart::simd256
+
+#endif

@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __AVX2__
+#else
+#define PXART_SUPPORT_SIMD256_MSWS
+
 #include <immintrin.h>
 
 namespace pxart::simd256 {
@@ -60,3 +64,5 @@ inline auto msws::operator()() noexcept -> simd_type {
 }
 
 }  // namespace pxart::simd256
+
+#endif

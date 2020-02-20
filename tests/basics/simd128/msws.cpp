@@ -4,6 +4,14 @@
 #include <pxart/simd128/msws.hpp>
 #include <random>
 
+#ifndef PXART_SUPPORT_SIMD128_MSWS
+
+TEST_CASE("pxart::simd128::msws") {
+  MESSAGE("Could not be tested. Not supported.");
+}
+
+#else  // PXART_SUPPORT_SIMD128_MSWS
+
 TEST_CASE("pxart::simd128::msws Vectorization") {
   pxart::simd128::msws rng1{std::random_device{}};
   pxart::msws rng2[4]{};
@@ -27,3 +35,5 @@ TEST_CASE("pxart::simd128::msws Vectorization") {
     }
   }
 }
+
+#endif  // PXART_SUPPORT_SIMD128_MSWS

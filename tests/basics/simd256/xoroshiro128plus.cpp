@@ -1,10 +1,16 @@
-#ifdef __AVX2__
-
 #include <doctest/doctest.h>
 
 #include <pxart/simd256/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <random>
+
+#ifndef PXART_SUPPORT_SIMD256_XOROSHIRO128PLUS
+
+TEST_CASE("pxart::simd256::xoroshiro128plus") {
+  MESSAGE("Could not be tested. Not supported.");
+}
+
+#else
 
 namespace {
 inline bool equal(__m256i x, __m256i y) noexcept {

@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __AVX2__
+#else
+#define PXART_SUPPORT_SIMD256_MT19937
+
 #include <immintrin.h>
 
 #include <pxart/algorithm.hpp>
@@ -168,3 +172,5 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
 }
 
 }  // namespace pxart::simd256
+
+#endif  // __AVX2__

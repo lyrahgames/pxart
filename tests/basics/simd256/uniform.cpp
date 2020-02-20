@@ -1,11 +1,18 @@
-#ifdef __AVX2__
-
 #include <doctest/doctest.h>
 
 #include <pxart/simd256/mt19937.hpp>
 #include <pxart/simd256/uniform.hpp>
 #include <pxart/uniform.hpp>
 #include <random>
+
+#if !defined PXART_SUPPORT_SIMD256_UNIFORM || \
+    !defined PXART_SUPPORT_SIMD256_MT19937
+
+TEST_CASE("pxart::simd256::uniform") {
+  MESSAGE("Could not be tested. Not supported.");
+}
+
+#else
 
 using namespace std;
 

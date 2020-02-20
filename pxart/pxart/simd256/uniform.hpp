@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __AVX2__
+#else
+#define PXART_SUPPORT_SIMD256_UNIFORM
+
 #include <immintrin.h>
 
 namespace pxart::simd256 {
@@ -102,3 +106,5 @@ constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept {
 }
 
 }  // namespace pxart::simd256
+
+#endif

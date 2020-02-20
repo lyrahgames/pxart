@@ -1,9 +1,15 @@
 #include <doctest/doctest.h>
 
-#ifdef __AVX2__
-
 #include <pxart/simd256/mt19937.hpp>
 #include <random>
+
+#ifndef PXART_SUPPORT_SIMD256_MT19937
+
+TEST_CASE("pxart::simd256::mt19937") {
+  MESSAGE("Could not be tested. Not supported.");
+}
+
+#else  // PXART_SUPPORT_SIMD256_MT19937
 
 TEST_CASE("pxart::simd256::mt19937 Default Initialization") {
   std::mt19937 rng{};
@@ -36,4 +42,4 @@ TEST_CASE("pxart::simd256::mt19937 Random Initialization with Default Seeder") {
   }
 }
 
-#endif
+#endif  // PXART_SUPPORT_SIMD256_MT19937

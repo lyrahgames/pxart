@@ -4,6 +4,14 @@
 #include <pxart/xoroshiro128plus.hpp>
 #include <random>
 
+#ifndef PXART_SUPPORT_SIMD128_XOROSHIRO128PLUS
+
+TEST_CASE("pxart::simd128::xoroshiro128plus") {
+  MESSAGE("Could not be tested. Not supported.");
+}
+
+#else  // PXART_SUPPORT_SIMD128_XOROSHIRO128PLUS
+
 namespace {
 inline bool equal(__m128i x, __m128i y) noexcept {
   // for (int i = 0; i < 2; ++i) {
@@ -120,3 +128,5 @@ TEST_CASE("pxart::simd128::xrsr128p Long Jump Vectorization") {
     }
   }
 }
+
+#endif  // PXART_SUPPORT_SIMD128_XOROSHIRO128PLUS

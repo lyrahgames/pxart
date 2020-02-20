@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __SSE4_1__
+#else
+#define PXART_SUPPORT_SIMD128_MSWS
+
 #include <smmintrin.h>
 
 namespace pxart::simd128 {
@@ -57,3 +61,5 @@ inline auto msws::operator()() noexcept -> simd_type {
 }
 
 }  // namespace pxart::simd128
+
+#endif

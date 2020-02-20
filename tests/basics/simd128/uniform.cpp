@@ -5,6 +5,15 @@
 #include <pxart/uniform.hpp>
 #include <random>
 
+#if !defined PXART_SUPPORT_SIMD128_MT19937 || \
+    !defined PXART_SUPPORT_SIMD128_UNIFORM
+
+TEST_CASE("pxart::simd128::uniform") {
+  MESSAGE("Could not be tested. Not supported.");
+}
+
+#else
+
 using namespace std;
 
 TEST_CASE("pxart::simd128::detail::uniform") {
@@ -50,3 +59,5 @@ TEST_CASE("pxart::simd128::detail::uniform Bounds") {
     }
   }
 }
+
+#endif

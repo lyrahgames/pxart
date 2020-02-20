@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __SSE2__
+#else
+#define PXART_SUPPORT_SIMD128_MT19937
+
 #include <emmintrin.h>
 
 #include <pxart/algorithm.hpp>
@@ -106,3 +110,5 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
 }
 
 }  // namespace pxart::simd128
+
+#endif

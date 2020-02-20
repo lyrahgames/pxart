@@ -1,4 +1,8 @@
 #pragma once
+#ifndef __SSE4_1__
+#else
+#define PXART_SUPPORT_SIMD128_UNIFORM
+
 #include <emmintrin.h>
 
 namespace pxart::simd128 {
@@ -69,3 +73,5 @@ constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept {
 }
 
 }  // namespace pxart::simd128
+
+#endif
