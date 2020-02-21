@@ -48,7 +48,7 @@ struct mt19937 {
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
   uint_type state[state_size + simd_size] __attribute__((aligned(32)));
-  int state_index = state_size;
+  size_t state_index = state_size;
 };
 
 template <typename RNG>
@@ -60,7 +60,7 @@ inline mt19937::mt19937() : mt19937{pxart::mt19937::default_seeder{}} {}
 
 inline mt19937::simd_type mt19937::operator()() noexcept {
   if (state_index >= state_size) {
-    const auto transition = [this](int k, int k_shift) {
+    const auto transition = [this](size_t k, size_t k_shift) {
       const auto simd_upper_mask = _mm256_set1_epi32(upper_mask);
       const auto simd_lower_mask = _mm256_set1_epi32(lower_mask);
       const auto simd_zero = _mm256_setzero_si256();
@@ -128,7 +128,7 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
     _mm256_store_si256(reinterpret_cast<simd_type*>(&state[0]), first);
     _mm256_store_si256(reinterpret_cast<simd_type*>(&state[state_size]), first);
 
-    int k = simd_size;
+    size_t k = simd_size;
     for (; k < state_size - shift_size; k += simd_size) {
       const auto result = transition(k, k + shift_size);
       // reinterpret_cast<simd_type&>(state[k]) = result;

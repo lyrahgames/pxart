@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <functional>
 #include <pxart/utilities/is_valid.hpp>
 
 namespace pxart {

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 // #include <pxart/simd128/uniform.hpp>
 // #include <pxart/simd256/uniform.hpp>
 #include <pxart/utilities/is_valid.hpp>
@@ -12,6 +13,16 @@ namespace pxart {
 
 namespace detail {
 
+// This cast allows to obey strict aliasing rules while reinterpreting between
+// floating-point numbers and integers.
+template <typename T, typename U>
+inline T pun_cast(U x) {
+  static_assert(sizeof(T) == sizeof(U));
+  T t{};
+  std::memcpy(&t, &x, sizeof(x));
+  return t;
+}
+
 template <typename Real>
 constexpr Real uniform(uint32_t) noexcept = delete;
 
@@ -20,13 +31,15 @@ constexpr Real uniform(uint32_t) noexcept = delete;
 template <>
 inline float uniform<float>(uint32_t x) noexcept {
   const auto tmp = ((x >> 9) | 0x3f800000);
-  return (*reinterpret_cast<const float*>(&tmp)) - 1.0f;
+  // return (*reinterpret_cast<const float*>(&tmp)) - 1.0f;
+  return pun_cast<float>(tmp) - 1.0f;
 }
 
 template <>
 inline double uniform<double>(uint32_t x) noexcept {
   const auto tmp = ((static_cast<uint64_t>(x) << 20) | 0x3ff0000000000000ULL);
-  return (*reinterpret_cast<const double*>(&tmp)) - 1.0;
+  // return (*reinterpret_cast<const double*>(&tmp)) - 1.0;
+  return pun_cast<double>(tmp) - 1.0;
 }
 
 template <typename Real,
@@ -52,13 +65,15 @@ constexpr Real uniform(uint64_t) noexcept = delete;
 template <>
 inline float uniform<float>(uint64_t x) noexcept {
   const auto tmp = (static_cast<uint32_t>(x >> 41) | 0x3f800000);
-  return (*reinterpret_cast<const float*>(&tmp)) - 1.0f;
+  // return (*reinterpret_cast<const float*>(&tmp)) - 1.0f;
+  return pun_cast<float>(tmp) - 1.0f;
 }
 
 template <>
 inline double uniform<double>(uint64_t x) noexcept {
   const auto tmp = ((x >> 12) | 0x3ff0000000000000ULL);
-  return (*reinterpret_cast<const double*>(&tmp)) - 1.0;
+  // return (*reinterpret_cast<const double*>(&tmp)) - 1.0;
+  return pun_cast<double>(tmp) - 1.0;
 }
 
 template <>

@@ -32,7 +32,7 @@ inline sse_t<float> uniform<float>(__m128i x) noexcept {
   const auto tmp = _mm_srli_epi32(x, 9);
   const auto tmp2 = _mm_or_si128(tmp, _mm_set1_epi32(0x3f800000));
   return _mm_sub_ps(_mm_castsi128_ps(tmp2), _mm_set1_ps(1.0f));
-};
+}
 
 template <>
 inline sse_t<double> uniform<double>(__m128i x) noexcept {

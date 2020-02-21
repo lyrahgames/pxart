@@ -33,7 +33,7 @@ inline avx_t<float> uniform<float>(__m256i x) noexcept {
   const auto tmp = _mm256_srli_epi32(x, 9);
   const auto tmp2 = _mm256_or_si256(tmp, _mm256_set1_epi32(0x3f800000));
   return _mm256_sub_ps(_mm256_castsi256_ps(tmp2), _mm256_set1_ps(1.0f));
-};
+}
 
 template <>
 inline avx_t<double> uniform<double>(__m256i x) noexcept {

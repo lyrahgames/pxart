@@ -14,7 +14,7 @@ TEST_CASE("pxart::simd128::mt19937") {
 TEST_CASE("pxart::simd128::mt19937 Default Initialization") {
   std::mt19937 rng{};
   pxart::simd128::mt19937 vrng{};
-  const auto step = pxart::simd128::mt19937::simd_size;
+  const int step = pxart::simd128::mt19937::simd_size;
 
   const int n = 10'000'000;
   for (int i = 0; i < n; i += step) {
@@ -31,7 +31,7 @@ TEST_CASE("pxart::simd128::mt19937 Random Initialization with Default Seeder") {
   const auto seed = std::random_device{}();
   std::mt19937 rng{seed};
   pxart::simd128::mt19937 vrng{pxart::mt19937::default_seeder{seed}};
-  const auto step = pxart::simd128::mt19937::simd_size;
+  const int step = pxart::simd128::mt19937::simd_size;
 
   const int n = 10'000'000;
   for (int i = 0; i < n; i += step) {

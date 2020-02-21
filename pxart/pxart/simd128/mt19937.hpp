@@ -47,8 +47,11 @@ struct mt19937 {
   constexpr result_type min() noexcept { return uint_type{}; }
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
+  // We may have to take care of 16-byte alignment for older systems.
   uint_type state[state_size + simd_size];
-  int state_index = state_size;
+  // simd_type state_data[1 + state_size / simd_size];
+  // uint_type* state = reinterpret_cast<uint_type*>(&state_data[0]);
+  size_t state_index = state_size;
 };
 
 template <typename RNG>
@@ -60,16 +63,19 @@ inline mt19937::mt19937() : mt19937{pxart::mt19937::default_seeder{}} {}
 
 inline mt19937::simd_type mt19937::operator()() noexcept {
   if (state_index >= state_size) {
-    const auto transition = [this](int k, int k_shift) {
+    const auto transition = [this](size_t k, size_t k_shift) {
       const auto simd_upper_mask = _mm_set1_epi32(upper_mask);
       const auto simd_lower_mask = _mm_set1_epi32(lower_mask);
       const auto simd_zero = _mm_setzero_si128();
       const auto simd_one = _mm_set1_epi32(1);
       const auto simd_xor_mask = _mm_set1_epi32(xor_mask);
 
-      const auto s0 = reinterpret_cast<const simd_type&>(state[k]);
-      const auto s1 = reinterpret_cast<const simd_type&>(state[k + 1]);
-      const auto ss = reinterpret_cast<const simd_type&>(state[k_shift]);
+      const auto s0 =
+          _mm_load_si128(reinterpret_cast<const simd_type*>(&state[k]));
+      const auto s1 =
+          _mm_loadu_si128(reinterpret_cast<const simd_type*>(&state[k + 1]));
+      const auto ss =
+          _mm_loadu_si128(reinterpret_cast<const simd_type*>(&state[k_shift]));
 
       const auto y = _mm_or_si128(_mm_and_si128(s0, simd_upper_mask),
                                   _mm_and_si128(s1, simd_lower_mask));
@@ -82,17 +88,17 @@ inline mt19937::simd_type mt19937::operator()() noexcept {
     };
 
     const auto first = transition(0, shift_size);
-    reinterpret_cast<simd_type&>(state[0]) = first;
-    reinterpret_cast<simd_type&>(state[state_size]) = first;
+    _mm_store_si128(reinterpret_cast<simd_type*>(&state[0]), first);
+    _mm_store_si128(reinterpret_cast<simd_type*>(&state[state_size]), first);
 
-    int k = simd_size;
+    size_t k = simd_size;
     for (; k < state_size - shift_size; k += simd_size) {
       const auto result = transition(k, k + shift_size);
-      reinterpret_cast<simd_type&>(state[k]) = result;
+      _mm_store_si128(reinterpret_cast<simd_type*>(&state[k]), result);
     }
     for (; k < state_size; k += simd_size) {
       const auto result = transition(k, k + shift_size - state_size);
-      reinterpret_cast<simd_type&>(state[k]) = result;
+      _mm_store_si128(reinterpret_cast<simd_type*>(&state[k]), result);
     }
 
     state_index = 0;
