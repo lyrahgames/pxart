@@ -48,9 +48,9 @@ struct mt19937 {
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
   // We may have to take care of 16-byte alignment for older systems.
-  uint_type state[state_size + simd_size];
-  // simd_type state_data[1 + state_size / simd_size];
-  // uint_type* state = reinterpret_cast<uint_type*>(&state_data[0]);
+  // uint_type state[state_size + simd_size];
+  simd_type state_data[1 + state_size / simd_size];
+  uint_type* state = reinterpret_cast<uint_type*>(&state_data[0]);
   size_t state_index = state_size;
 };
 
