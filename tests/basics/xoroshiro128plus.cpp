@@ -23,7 +23,7 @@ TEST_CASE("pxart::xrsr128p Jump" * doctest::skip(true)) {
   pxart::xrsr128p rng2 = rng1;
 
   rng2.long_jump();
-  for (uint64_t i = 0; i < (1ul << 32); ++i) rng1.jump();
+  for (uint64_t i = 0; i < (1ull << 32); ++i) rng1.jump();
 
   REQUIRE(rng1.s0 == rng2.s0);
   REQUIRE(rng1.s1 == rng2.s1);
