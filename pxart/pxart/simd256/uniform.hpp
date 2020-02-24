@@ -5,6 +5,8 @@
 
 #include <immintrin.h>
 
+#include <pxart/uniform.hpp>
+
 namespace pxart::simd256 {
 
 namespace detail {
@@ -106,5 +108,15 @@ constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept {
 }
 
 }  // namespace pxart::simd256
+
+namespace pxart {
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng) noexcept -> std::enable_if_t<
+    !decltype(has_uniform_01(rng))::value &&
+        std::is_same_v<decltype(rng()), __m256i>,
+    std::conditional_t<std::is_same_v<Real, float>, __m256, __m256d> > {
+  return pxart::simd256::uniform<Real>(std::forward<RNG>(rng));
+}
+}  // namespace pxart
 
 #endif

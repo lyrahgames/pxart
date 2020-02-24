@@ -16,4 +16,4 @@
 #include <pxart/simd256/uniform.hpp>
 #include <pxart/simd256/xoroshiro128plus.hpp>
 //
-// #include <pxart/gallery/monte_carlo_pi.hpp>
+#include <pxart/gallery/monte_carlo_pi.hpp>

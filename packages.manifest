@@ -2,3 +2,5 @@
 location: pxart/
 :
 location: tests/
+:
+location: benchmarks/

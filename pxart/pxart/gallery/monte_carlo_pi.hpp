@@ -1,5 +1,10 @@
 #pragma once
+#ifdef __AVX2__
 #include <immintrin.h>
+#endif
+#ifdef __SSE4_1__
+#include <smmintrin.h>
+#endif
 
 #include <pxart/simd128/uniform.hpp>
 #include <pxart/simd256/uniform.hpp>
@@ -90,6 +95,7 @@ inline Real monte_carlo_pi(RNG&& rng1, RNG&& rng2, Integer samples) noexcept {
 }
 }  // namespace cache
 
+#ifdef __AVX2__
 namespace simd256::sprng {
 
 template <typename Integer, typename RNG>
@@ -212,6 +218,10 @@ inline float monte_carlo_pi(RNG&& rng1, RNG&& rng2, Integer samples) noexcept {
 
 }  // namespace simd256::vprng
 
+#endif  // __AVX2__
+
+#ifdef __SSE4_1__
+
 namespace simd128::vprng {
 
 template <typename Integer, typename RNG>
@@ -221,8 +231,7 @@ inline float monte_carlo_pi(RNG&& rng, Integer samples) noexcept {
     const auto x = pxart::simd128::uniform<float>(rng);
     const auto y = pxart::simd128::uniform<float>(rng);
     const auto radius = _mm_add_ps(_mm_mul_ps(x, x), _mm_mul_ps(y, y));
-    const auto mask =
-        _mm_castps_si128(_mm_cmp_ps(radius, _mm_set1_ps(1.0f), _CMP_LE_OQ));
+    const auto mask = _mm_castps_si128(_mm_cmple_ps(radius, _mm_set1_ps(1.0f)));
     samples_in_circle = _mm_add_epi32(samples_in_circle,
                                       _mm_and_si128(_mm_set1_epi32(1), mask));
   }
@@ -238,8 +247,7 @@ inline float monte_carlo_pi(RNG&& rng1, RNG&& rng2, Integer samples) noexcept {
     const auto x = pxart::simd128::uniform<float>(rng1);
     const auto y = pxart::simd128::uniform<float>(rng2);
     const auto radius = _mm_add_ps(_mm_mul_ps(x, x), _mm_mul_ps(y, y));
-    const auto mask =
-        _mm_castps_si128(_mm_cmp_ps(radius, _mm_set1_ps(1.0f), _CMP_LE_OQ));
+    const auto mask = _mm_castps_si128(_mm_cmple_ps(radius, _mm_set1_ps(1.0f)));
     samples_in_circle = _mm_add_epi32(samples_in_circle,
                                       _mm_and_si128(_mm_set1_epi32(1), mask));
   }
@@ -249,5 +257,7 @@ inline float monte_carlo_pi(RNG&& rng1, RNG&& rng2, Integer samples) noexcept {
 }
 
 }  // namespace simd128::vprng
+
+#endif  // __SSE4_1__
 
 }  // namespace pxart::gallery

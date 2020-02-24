@@ -5,6 +5,8 @@
 
 #include <emmintrin.h>
 
+#include <pxart/uniform.hpp>
+
 namespace pxart::simd128 {
 
 namespace detail {
@@ -73,5 +75,15 @@ constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept {
 }
 
 }  // namespace pxart::simd128
+
+namespace pxart {
+template <typename Real, typename RNG>
+constexpr inline auto uniform(RNG&& rng) noexcept -> std::enable_if_t<
+    !decltype(has_uniform_01(rng))::value &&
+        std::is_same_v<decltype(rng()), __m128i>,
+    std::conditional_t<std::is_same_v<Real, float>, __m128, __m128d> > {
+  return pxart::simd128::uniform<Real>(std::forward<RNG>(rng));
+}
+}  // namespace pxart
 
 #endif

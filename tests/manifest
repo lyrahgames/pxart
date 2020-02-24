@@ -2,7 +2,7 @@
 name: pxart-tests
 version: 0.1.0-a.0.z
 project: pxart
-summary: Tests for pxart
+summary: Tests for pXart
 license: MIT ; MIT License.
 # description-file: README.md
 # url: https://example.org/pxart
