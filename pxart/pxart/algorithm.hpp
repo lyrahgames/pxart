@@ -10,24 +10,24 @@ constexpr auto has_generate =
 
 template <typename RNG, typename ForwardIt>
 constexpr auto generate(RNG&& rng, ForwardIt first, ForwardIt last)
-    -> std::enable_if_t<!decltype(has_generate(rng, first, last)){}()> {
+    -> std::enable_if_t<!decltype(has_generate(rng, first, last))::value> {
   std::generate(first, last, std::ref(rng));
 }
 
 // To support the MSVC on Windows, we have to use the same expression for the
-// evaluation of the boolean. We are not allowed to use both decltype(...){}()
-// and decltype(...)::value at once. Therefore, we have decided to use the first
-// version. We do not know why this happens.
+// evaluation of the boolean. We are not allowed to use decltype(...){}()
+// Therefore, we have to use decltype(...)::value. We do not know
+// why this happens.
 
-// template <typename RNG, typename ForwardIt>
-// constexpr auto generate(RNG&& rng, ForwardIt first, ForwardIt last)
-//     -> std::enable_if_t<decltype(has_generate(rng, first, last))::value> {
-//   std::forward<RNG>(rng).generate(first, last);
-// }
 template <typename RNG, typename ForwardIt>
 constexpr auto generate(RNG&& rng, ForwardIt first, ForwardIt last)
-    -> std::enable_if_t<decltype(has_generate(rng, first, last)){}()> {
+    -> std::enable_if_t<decltype(has_generate(rng, first, last))::value> {
   std::forward<RNG>(rng).generate(first, last);
 }
+// template <typename RNG, typename ForwardIt>
+// constexpr auto generate(RNG&& rng, ForwardIt first, ForwardIt last)
+//     -> std::enable_if_t<decltype(has_generate(rng, first, last)){}()> {
+//   std::forward<RNG>(rng).generate(first, last);
+// }
 
 }  // namespace pxart

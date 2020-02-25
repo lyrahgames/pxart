@@ -46,7 +46,7 @@ TEST_CASE("pxart::simd128::detail::uniform Bounds") {
     for (int j = 0; j < 4; ++j) {
       REQUIRE(pxart::detail::uniform(reinterpret_cast<const uint32_t*>(&rnd)[j],
                                      0.125f, 0.83f) ==
-              reinterpret_cast<const float*>(&v)[j]);
+              doctest::Approx(reinterpret_cast<const float*>(&v)[j]));
     }
   }
   for (int i = 0; i < n; i += 2) {
@@ -55,7 +55,7 @@ TEST_CASE("pxart::simd128::detail::uniform Bounds") {
     for (int j = 0; j < 2; ++j) {
       REQUIRE(pxart::detail::uniform(reinterpret_cast<const uint64_t*>(&rnd)[j],
                                      0.11, 0.76) ==
-              reinterpret_cast<const double*>(&v)[j]);
+              doctest::Approx(reinterpret_cast<const double*>(&v)[j]));
     }
   }
 }

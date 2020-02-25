@@ -10,12 +10,12 @@ constexpr auto has_test = pxart::is_valid(
 
 // default test function
 template <typename T>
-auto test(T&& t) -> std::enable_if_t<!decltype(has_test(t)){}(), int> {
+auto test(T&& t) -> std::enable_if_t<!decltype(has_test(t))::value, int> {
   return 0;
 }
 // Call member function 'test' if it exists.
 template <typename T>
-auto test(T&& t) -> std::enable_if_t<decltype(has_test(t)){}(), int> {
+auto test(T&& t) -> std::enable_if_t<decltype(has_test(t))::value, int> {
   return t.test();
 }
 

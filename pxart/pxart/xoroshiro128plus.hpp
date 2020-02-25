@@ -39,8 +39,8 @@ struct xoroshiro128plus {
   static constexpr auto min() noexcept { return uint_type{}; }
   static constexpr auto max() noexcept { return ~uint_type{}; }
 
-  uint_type s0{1314472907419283471ul};
-  uint_type s1{7870872464127966567ul};
+  uint_type s0{1314472907419283471ull};
+  uint_type s1{7870872464127966567ull};
 };
 
 constexpr auto xoroshiro128plus::operator()() noexcept {
@@ -54,7 +54,7 @@ constexpr auto xoroshiro128plus::operator()() noexcept {
 
 constexpr void xoroshiro128plus::jump() noexcept {
   // Magic numbers depend on rotation and shift arguments.
-  constexpr uint_type mask[] = {0xdf900294d8f554a5ul, 0x170865df4b3201fcul};
+  constexpr uint_type mask[] = {0xdf900294d8f554a5ull, 0x170865df4b3201fcull};
   uint_type result0 = 0;
   uint_type result1 = 0;
   for (int i = 0; i < 2; i++) {
@@ -63,7 +63,7 @@ constexpr void xoroshiro128plus::jump() noexcept {
       //   result0 ^= s0;
       //   result1 ^= s1;
       // }
-      const auto tmp = (mask[i] & (1ul << b)) ? (~uint_type{}) : (0);
+      const auto tmp = (mask[i] & (1ull << b)) ? (~uint_type{}) : (0);
       result0 ^= s0 & tmp;
       result1 ^= s1 & tmp;
       operator()();
@@ -75,12 +75,12 @@ constexpr void xoroshiro128plus::jump() noexcept {
 
 constexpr void xoroshiro128plus::long_jump() noexcept {
   // Magic numbers depend on rotation and shift arguments.
-  constexpr uint_type mask[] = {0xd2a98b26625eee7bul, 0xdddf9b1090aa7ac1ul};
+  constexpr uint_type mask[] = {0xd2a98b26625eee7bull, 0xdddf9b1090aa7ac1ull};
   uint_type result0 = 0;
   uint_type result1 = 0;
   for (int i = 0; i < 2; i++) {
     for (size_t b = 0; b < word_size; b++) {
-      if (mask[i] & (1ul << b)) {
+      if (mask[i] & (1ull << b)) {
         result0 ^= s0;
         result1 ^= s1;
       }

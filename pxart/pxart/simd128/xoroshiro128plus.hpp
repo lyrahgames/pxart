@@ -58,10 +58,10 @@ inline auto xoroshiro128plus::operator()() noexcept {
 
 inline void xoroshiro128plus::jump() noexcept {
   // Magic numbers depend on rotation and shift arguments.
-  const simd_type jump_mask[] = {_mm_set1_epi64x(0xdf900294d8f554a5ul),
-                                 _mm_set1_epi64x(0x170865df4b3201fcul)};
+  const simd_type jump_mask[] = {_mm_set1_epi64x(0xdf900294d8f554a5ull),
+                                 _mm_set1_epi64x(0x170865df4b3201fcull)};
   const auto zero = _mm_setzero_si128();
-  const auto one = _mm_set1_epi64x(1ul);
+  const auto one = _mm_set1_epi64x(1ull);
   auto result0 = zero;
   auto result1 = zero;
   for (int i = 0; i < 2; i++) {
@@ -85,8 +85,8 @@ inline void xoroshiro128plus::jump() noexcept {
 
 inline void xoroshiro128plus::long_jump() noexcept {
   // Magic numbers depend on rotation and shift arguments.
-  const simd_type jump_mask[] = {_mm_set1_epi64x(0xd2a98b26625eee7bul),
-                                 _mm_set1_epi64x(0xdddf9b1090aa7ac1ul)};
+  const simd_type jump_mask[] = {_mm_set1_epi64x(0xd2a98b26625eee7bull),
+                                 _mm_set1_epi64x(0xdddf9b1090aa7ac1ull)};
   const auto zero = _mm_setzero_si128();
   const auto one = _mm_set1_epi64x(1);
   auto result0 = zero;
