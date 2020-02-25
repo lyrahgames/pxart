@@ -1,5 +1,7 @@
 #include <doctest/doctest.h>
 
+#include <array>
+#include <cstring>
 #include <pxart/simd128/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <random>
@@ -19,16 +21,23 @@ inline bool equal(__m128i x, __m128i y) noexcept {
   //   const auto b = _mm_extract_epi64(y, i);
   //   if (a != b) return false;
   // }
-  {
-    const auto a = _mm_extract_epi64(x, 0);
-    const auto b = _mm_extract_epi64(y, 0);
-    if (a != b) return false;
-  }
-  {
-    const auto a = _mm_extract_epi64(x, 1);
-    const auto b = _mm_extract_epi64(y, 1);
-    if (a != b) return false;
-  }
+
+  // {
+  //   const auto a = _mm_extract_epi64(x, 0);
+  //   const auto b = _mm_extract_epi64(y, 0);
+  //   if (a != b) return false;
+  // }
+  // {
+  //   const auto a = _mm_extract_epi64(x, 1);
+  //   const auto b = _mm_extract_epi64(y, 1);
+  //   if (a != b) return false;
+  // }
+
+  std::array<uint64_t, 2> a, b;
+  std::memcpy(&a, &x, sizeof(x));
+  std::memcpy(&b, &y, sizeof(y));
+  for (int i = 0; i < 2; ++i)
+    if (a[i] != b[i]) return false;
   return true;
 }
 }  // namespace
@@ -52,7 +61,9 @@ TEST_CASE("pxart::simd128::xrsr128p Vectorization") {
   pxart::simd128::xrsr128p rng1{std::random_device{}};
   pxart::xrsr128p rng2[2];
   for (int i = 0; i < 2; ++i) {
-    rng2[i].s0 = reinterpret_cast<const uint64_t*>(&rng1.s0)[i];
+    // rng2[i].s0 = reinterpret_cast<const uint64_t*>(&rng1.s0)[i];
+    std::memcpy(&rng2[i].s0, reinterpret_cast<const uint64_t*>(&rng1.s0) + i,
+                sizeof(uint64_t));
     rng2[i].s1 = reinterpret_cast<const uint64_t*>(&rng1.s1)[i];
   }
 

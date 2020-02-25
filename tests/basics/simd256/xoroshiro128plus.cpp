@@ -1,5 +1,7 @@
 #include <doctest/doctest.h>
 
+#include <array>
+#include <cstring>
 #include <pxart/simd256/xoroshiro128plus.hpp>
 #include <pxart/xoroshiro128plus.hpp>
 #include <random>
@@ -19,25 +21,33 @@ inline bool equal(__m256i x, __m256i y) noexcept {
   //   const auto b = _mm256_extract_epi64(y, i);
   //   if (a != b) return false;
   // }
-  {
-    const auto a = _mm256_extract_epi64(x, 0);
-    const auto b = _mm256_extract_epi64(y, 0);
-    if (a != b) return false;
-  }
-  {
-    const auto a = _mm256_extract_epi64(x, 1);
-    const auto b = _mm256_extract_epi64(y, 1);
-    if (a != b) return false;
-  }
-  {
-    const auto a = _mm256_extract_epi64(x, 2);
-    const auto b = _mm256_extract_epi64(y, 2);
-    if (a != b) return false;
-  }
-  {
-    const auto a = _mm256_extract_epi64(x, 3);
-    const auto b = _mm256_extract_epi64(y, 3);
-    if (a != b) return false;
+
+  // {
+  //   const auto a = _mm256_extract_epi64(x, 0);
+  //   const auto b = _mm256_extract_epi64(y, 0);
+  //   if (a != b) return false;
+  // }
+  // {
+  //   const auto a = _mm256_extract_epi64(x, 1);
+  //   const auto b = _mm256_extract_epi64(y, 1);
+  //   if (a != b) return false;
+  // }
+  // {
+  //   const auto a = _mm256_extract_epi64(x, 2);
+  //   const auto b = _mm256_extract_epi64(y, 2);
+  //   if (a != b) return false;
+  // }
+  // {
+  //   const auto a = _mm256_extract_epi64(x, 3);
+  //   const auto b = _mm256_extract_epi64(y, 3);
+  //   if (a != b) return false;
+  // }
+
+  std::array<uint64_t, 4> a, b;
+  std::memcpy(&a, &x, sizeof(x));
+  std::memcpy(&b, &y, sizeof(y));
+  for (int i = 0; i < 4; ++i) {
+    if (a[i] != b[i]) return false;
   }
   return true;
 }

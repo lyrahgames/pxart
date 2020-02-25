@@ -47,20 +47,28 @@ struct mt19937 {
   constexpr result_type min() noexcept { return uint_type{}; }
   constexpr result_type max() noexcept { return (~uint_type{}) & mask; }
 
-  uint_type state[state_size + simd_size] __attribute__((aligned(32)));
+  // We may have to take care of 16-byte alignment for older systems.
+  // As a compiler-independent approach, we have chosen to define the state as
+  // an array of vector registers. Hence, the state data is automatically
+  // aligned by 16 byte.
+  simd_type state_data[1 + state_size / simd_size];
+  // uint_type state[state_size + simd_size] __attribute__((aligned(32)));
   size_t state_index = state_size;
 };
 
 template <typename RNG>
 inline mt19937::mt19937(RNG&& rng) {
+  auto state = reinterpret_cast<uint_type*>(&state_data[0]);
   generate(std::forward<RNG>(rng), state, state + state_size);
 }
 
 inline mt19937::mt19937() : mt19937{pxart::mt19937::default_seeder{}} {}
 
 inline mt19937::simd_type mt19937::operator()() noexcept {
+  auto state = reinterpret_cast<uint_type*>(&state_data[0]);
+
   if (state_index >= state_size) {
-    const auto transition = [this](size_t k, size_t k_shift) {
+    const auto transition = [state](size_t k, size_t k_shift) {
       const auto simd_upper_mask = _mm256_set1_epi32(upper_mask);
       const auto simd_lower_mask = _mm256_set1_epi32(lower_mask);
       const auto simd_zero = _mm256_setzero_si256();
