@@ -31,7 +31,8 @@ struct msws {
 constexpr auto msws::operator()() noexcept -> result_type {
   x *= x;
   x += (w += s);
-  return x = ((x >> 32) | (x << 32));
+  // We have to do an extra static_cast so that MSVC is not warning.
+  return static_cast<result_type>(x = ((x >> 32) | (x << 32)));
 }
 
 }  // namespace pxart
