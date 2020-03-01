@@ -1,0 +1,154 @@
+\documentclass[crop=false,10pt,ngerman]{standalone}
+\usepackage{standard}
+\usepackage{tabularx}
+
+\begin{document}
+  \section*{Symbol Table}
+  \phantomsection
+  \addcontentsline{toc}{section}{Symbol Table}
+  \markboth{SYMBOL TABLE}{}
+
+  \bigskip
+
+  % \setlength\extrarowheight{5pt}
+  \renewcommand{\arraystretch}{1.3}
+  % \begin{table}[h]
+  {
+    \scriptsize
+    \begin{tabularx}{\textwidth}{p{0.2\textwidth}p{0.79\textwidth}}
+      \hline
+      \textbf{Symbol} & \textbf{Definition} \\
+      \hline
+      \hline
+
+      \textbf{Logic} & \\
+      $\exists \ldots : \ldots$ & There exists $\ldots$, such that $\ldots$ \\
+      $a\define b$ & $a$ is defined by $b$. \\
+
+      \hline
+
+      \textbf{Set Theory} & \\
+      $\set{\ldots}{}$ & Set Definition \\
+      $\set{\ldots}{\ldots}$ & Set Definition with Condition \\
+      $x\in A$ & $x$ is an element of the set $A$. \\
+      $A\subset B$ & The set $A$ is a subset of the set $B$. \\
+      $A\cap B$ & Intersection --- $\set{x}{x\in A \text{ and } x\in B}$ for sets $A,B$ \\
+      $A\cup B$ & Union --- $\set{x}{x\in A \text{ or } x\in B}$ for sets $A,B$ \\
+      $A\setminus B$ & Relative Complement --- $\set{x\in A}{x\not\in B}$ for sets $A,B$ \\
+      $A\times B$ & Cartesian Product --- $\set{(x,y)}{x\in A,y\in B}$ for sets $A$ and $B$ \\
+      $A^n$ & $n$-fold Cartesian Product of Set $A$ \\
+      $\emptyset$ & Empty set --- $\set{}{}$. \\
+      $\# A$ & Number of Elements in the Set $A$ \\
+      $\mathscr{P}(A)$ & Power Set of Set $A$ \\
+
+      \hline
+
+      \textbf{Special Sets} & \\
+      $\setNatural$ & Set of Natural Numbers \\
+      $\setNatural_0$ & $\setNatural \cup \set{0}{}$ \\
+      $\mathds{P}$ & Set of Prime Numbers \\
+      $\setInteger$ & Set of Integers \\
+      $\setInteger_n$ & Set of Integers Modulo $n$ \\
+      $\mathds{F}_m$ & Finite Field with $m\in\mathds{P}$ Elements \\
+      $\mathds{F}^{p\times q}_m$ & Set of $p\times q$-Matrices over Finite Field $\mathds{F}_m$ \\
+      $\mathds{F}_2$ & Finite Field of Bits \\
+      $\mathds{F}_2^n$ & Set of $n$-bit Words \\
+      $\setReal$ & Set of Real Numbers \\
+      $\setReal^n$ & Set of $n$-dimensional Real Vectors \\
+      $\mathscr{S}^2$ & Set of Directions --- $\set{x\in\setReal^3}{\norm{x} = 1}$ \\
+
+      \hline
+
+      \textbf{Functions} & \\
+      $\function{f}{X}{Y}$ & $f$ is a function with domain $X$ and range $Y$. \\
+      $\identity_X$ & Identity Function over the Set $X$ \\
+      $f\circ g$ & Composition of Functions $f$ and $g$ \\
+      $f^{-1}$ & Inverse Image of Function $f$ \\
+      $f^n$ & $n$-fold Composition of Function $f$ \\
+
+
+      \hline
+
+      \textbf{Bit Arithmetic} & \\
+      $x_{n-1}\ldots x_{1}x_{0}$ & $n$-bit Word $x$ of Set $\mathds{F}_2^n$ \\
+      $x \leftarrow a$ & Left Shift of all Bits in $x$ by $a$ \\
+      $x \rightarrow a$ & Right Shift of all Bits in $x$ by $a$ \\
+      $x \circlearrowleft a$ & Circular Left Shift of all Bits in $x$ by $a$ \\
+      % $x \circleright a$ & Circular Right Shift of all Bits in $x$ by $a$ \\
+      $x \oplus y$ & Bit-Wise Addition of $x$ and $y$ \\
+      $x \odot y$ & Bit-Wise Multiplication of $x$ and $y$ \\
+      $x \ | \ y$ & Bit-Wise Or of $x$ and $y$ \\
+
+
+      \\
+      \hline
+    \end{tabularx}
+  % \end{table}
+
+  % \begin{table}[H]
+    % \scriptsize
+    \newpage
+    \noindent
+    \begin{tabularx}{\textwidth}{p{0.2\textwidth}p{0.79\textwidth}}
+      \hline
+      \textbf{Symbol} & \textbf{Definition} \\
+      \hline
+      \hline
+
+      \textbf{Probability Theory} & \\
+      $\mathscr{B}(\setReal)$ & Borel σ-Algebra over $\setReal$ \\
+      $\roundBrackets{\Sigma,\mathscr{A}}$ & Measurable Space over $\Sigma$ with σ-Algebra $\mathscr{A}$ \\
+      $λ$ & Lebesgue Measure \\
+      $\integral{U}{}{f}{λ}$ & Lebesgue Integral of $f$ over $U$ \\
+      $\setIntegrable^2(U,λ)$ & Set of Square-Integrable Functions over the Set $U$ with Respect to the Lebesgue Measure λ \\
+      $\roundBrackets{\Omega,\mathscr{F},P}$ & Probability Space over $\Omega$ with σ-Algebra $\mathscr{A}$ and Probability Measure $P$ \\
+      $\integral{\Omega}{}{X}{P}$ & Integral of Random Variable $X$ with respect to Probability Space $\roundBrackets{\Omega,\mathscr{A},P}$ \\
+      $\integral{\Omega}{}{X(ω)}{P(ω)}$ & $\integral{\Omega}{}{X}{P}$ \\
+      $P_X$ & Distribution of Random Variable $X$ \\
+      $\expect X$ & Expectation Value of Random Variable $X$ \\
+      $\var X$ & Variance of Random Variable $X$ \\
+      $\stddev(X)$ & Standard Deviation of Random Variable $X$ \\
+      $\mathds{1}_A$ & Characteristic Function of Set $A$ \\
+      $δ_ω$ & Dirac Delta Distribution over $\mathscr{S}^2$ with respect to $ω\in\mathscr{S}^2$ \\
+      $\bigotimes_{n\in I} P_n$ & Product Measure of Measures $P_n$ Indexed by the Set $I$ \\
+
+      \hline
+
+      \textbf{Miscellaneous} & \\
+      $(x_n)_{n\in I}$ & Sequence of Values $x_n$ with Index Set $I$ \\
+      $\absolute{x}$ & Absolute Value of $x$ \\
+      $\norm{x}$ & Norm of Vector $x$ \\
+      $x \mod y$ & $x$ Modulo $y$ \\
+      $\mathrm{gcd}(ρ,k)$ & Greatest Common Divisor of ρ and k \\
+      $\mathrm{max}(x,y)$ & Maximum of $x$ and $y$ \\
+      $\lim_{n\to\infty} x_n$ & Limit of Sequence $(x_n)_{n\in\setNatural}$ \\
+      $\sum_{k=1}^n x_k$ & Sum over Values $x_k$ for $k\in\setNatural$ with $k\leq n$ \\
+      $\dim X$ & Dimension of $X$ \\
+      $\ceilBrackets{x}$ & Ceiling Function \\
+      $\scalarProduct{x}{y}$ & Scalar Product \\
+      $[a,b]$ & $\set{x\in\setReal}{a\leq x \leq b}$ \\
+      $(a,b)$ & $\set{x\in\setReal}{a < x < b}$ \\
+      $[a,b)$ & $\set{x\in\setReal}{a\leq x < b}$ \\
+
+      \hline
+
+
+      \textbf{Constants} & \\
+      $\infty$ & Infinity \\
+      $π$ & $3.1415926535\ldots$ --- Pi \\
+
+      \hline
+
+      \textbf{Units} & \\
+      $1\appendUnit{B}$ & $1\appendUnit{Byte} = 8\appendUnit{bit}$ \\
+      $1\appendUnit{GiB}$ & $2^{30}\appendUnit{B}$ \\
+      $1\appendUnit{s}$ & $1\appendUnit{Seconds}$ \\
+      $1\appendUnit{min}$ & $1\appendUnit{Minutes} = 60\appendUnit{s}$ \\
+      $1\appendUnit{GHz}$ & $1\appendUnit{Gigahertz} = 10^9\appendUnit{Hertz}$ \\
+
+      \\
+      \hline
+    \end{tabularx}
+  }
+  % \end{table}
+\end{document}

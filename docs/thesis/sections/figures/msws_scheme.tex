@@ -1,0 +1,105 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 1.5cm and 2.0cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 1.4cm
+    },
+    box/.style = {
+      rectangle,
+      rounded corners,
+      % top color = white,
+      bottom color = processblue!4,
+      top color = processblue!4,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 1cm
+    },
+    operation/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9cm
+    },
+    connect/.style = {
+      circle,
+      top color = black,
+      bottom color = black,
+      draw,
+      black,
+      text=black,
+      inner sep = 1pt,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+\usepackage{amssymb}
+
+\begin{document}
+\begin{graph}
+  \node[state] (X) {$x$};
+  \node[state] (W) [below = of X] {$w$};
+  \node[state] (S) [below = of W] {$s$};
+
+  \node[operation] (square) [right = of X] {$\cdotp^2$};
+  \path[->] (X) edge node {} (square);
+
+  \node[operation] (add1) [right = of square] {$+$};
+  \path[->] (square) edge node {} (add1);
+
+  \node[operation] (rotate) [right = of add1] {\footnotesize$\circlearrowleft^{32}$};
+  \draw[->] (add1) -- (rotate);
+
+  \node[operation] (add2) [right = of W] {$+$};
+  \path[->] (W) edge node {} (add2);
+
+  \node[connect] (CS) [right = of S] {};
+  \draw[->] (CS) -- (add2);
+
+  \node[connect] (WS) [right = of add2] {};
+  \path[->] (WS) edge node {} (add1);
+
+  \node[state] (X2) [right = of rotate] {$x$};
+  \node[state] (W2) [below = of X2] {$w$};
+  \node[state] (S2) [below = of W2] {$s$};
+
+  \path[->] (rotate) edge node {} (X2);
+  \path[->] (add2) edge node {} (W2);
+  \path[->] (S) edge node {} (S2);
+
+  \node[state,label=Output] (output) [right = of X2,minimum height = 0.7cm] {$u$};
+  \draw[->] (X2) -- (output);
+
+  \begin{scope}[on background layer]
+    \node[box,fit=(X) (S),inner sep = 8pt, text = black, text opacity = 1,text height=0.0cm,label=State] (T) {};
+    \node[box,fit=(X2) (S2),inner sep = 8pt, text = black, text opacity = 1,text height=0.0cm,label=State] (T) {};
+    \node[fit=(square) (add1) (CS) (rotate), inner sep = 8pt,label=Transition] (T) {};
+  \end{scope}
+\end{graph}
+\end{document}

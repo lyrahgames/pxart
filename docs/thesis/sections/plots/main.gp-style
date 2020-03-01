@@ -1,0 +1,4 @@
+set object 1 rect from graph 0,graph 0 to graph 1,graph 1 fc rgb '#f6f6f6' fs solid 1.0 noborder behind
+set grid lt 1 lw 3 lc rgb '#fafafa'
+set key spacing 2 box opaque
+set style line 1 lt rgb "black" lw 3 pt 13

@@ -1,0 +1,77 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance =0.1\textwidth and 0.1\textwidth,
+    on grid, semithick,
+    state/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.7 cm,
+    },
+    visible/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5cm,
+    },
+    hidden/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!70,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.8cm,
+    },
+    layer/.style = {
+      rectangle,
+      rounded corners,
+      draw=processblue!80,
+      align=center,
+      % thick,
+      fill = white,
+      fill opacity =0.0,
+      text=black,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\begin{document}
+\begin{graph}
+  \node[visible] (X) {$0$};
+  \node[visible] (Y) [below=of X] {$1$};
+  \node[visible] (Z) [below=of Y] {$2$};
+  \node[visible] (W) [below=of Z] {$3$};
+
+  \node[visible] (A) [right=2cm of X] {$0$};
+  \node[visible] (B) [below=of A] {$1$};
+  \node[visible] (C) [below=of B] {$2$};
+  \node[visible] (D) [below=of C] {$3$};
+
+  \path[->] (X) edge node {} (B);
+  \path[->] (Y) edge node {} (C);
+  \path[->] (Z) edge node {} (D);
+  \path[->] (W) edge node {} (D);
+
+  \node[layer,fit=(X) (W),inner sep=8pt] (L1) {};
+  \node[layer,fit=(A) (D),inner sep=8pt] (L2) {};
+\end{graph}
+\end{document}

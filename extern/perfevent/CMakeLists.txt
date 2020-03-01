@@ -1,0 +1,5 @@
+add_library(perfevent INTERFACE)
+target_sources(perfevent INTERFACE PerfEvent.hpp)
+target_include_directories(perfevent INTERFACE .)
+target_compile_features(perfevent INTERFACE cxx_std_17)
+add_library(perfevent::perfevent ALIAS perfevent)
