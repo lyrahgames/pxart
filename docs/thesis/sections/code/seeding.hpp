@@ -1,6 +1,0 @@
-struct rng_type {
-  // ...
-  template <typename RNG>
-  explicit rng_type(RNG&& rng);
-  // ...
-};

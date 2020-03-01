@@ -1,3 +1,0 @@
-mkdocs
-mkdocs-cinder
-markdown-include

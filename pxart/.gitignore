@@ -1,9 +1,0 @@
-!gallery
-!utilities
-!simd256
-!simd128
-
-!*.cpp
-!*.hpp
-
-!Config.cmake.in

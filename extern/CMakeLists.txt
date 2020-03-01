@@ -1,2 +1,0 @@
-add_subdirectory(randutils)
-add_subdirectory(perfevent)
