@@ -1,0 +1,14 @@
+: 1
+name: pxart
+version: 0.1.0-a.0.z
+project: pxart
+summary: Packed Extensions for Advanced Random Techniques: Library and Applications for Random Number Generators
+license: MIT ; MIT License.
+description-file: ../README.md
+# url: https://example.org/pxart
+email: markuspawellek@gmail.com
+depends: * build2 >= 0.12.0
+depends: * bpkg >= 0.12.0
+requires: c++17
+tests: pxart-tests
+# benchmarks: pxart-benchmarks

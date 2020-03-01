@@ -1,0 +1,5 @@
+import libs = pxart%lib{pxart}
+import libs += doctest%lib{doctest}
+
+./: exe{driver}: {cxx}{driver} $libs
+./: exe{main_tests}: {cxx}{** -driver} $libs
