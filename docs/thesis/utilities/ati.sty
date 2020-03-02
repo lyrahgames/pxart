@@ -1,0 +1,276 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ati}[abstract task interface]
+
+\RequirePackage{pgfkeys}
+\RequirePackage{etoolbox}
+\RequirePackage{import}
+\RequirePackage{marginnote}
+\RequirePackage{enumitem}
+
+% create a table of contents for atiTasks: use \listofatitask
+\RequirePackage[titles]{tocloft}
+\providecommand{\atiListOfTasks}{Aufgabenverzeichnis}
+\newlistof{atitask}{atitasklist}{\atiListOfTasks}
+
+% construct ati state variables
+\newif\ifatiNumberTask
+\newcounter{atiTaskCounter}
+\newif\ifatiShowSolution
+\pgfkeys{%
+  /ati/.is family,
+  ati,
+  local/.is family,
+  global/.is family,
+  /ati/solution/call/.initial = Lösung,
+}
+
+% global ati setup (pgfkeys is not scoped)
+\newcommand{\atiSetup}[1]{%
+  \pgfkeys{%
+    ati/global,
+    nopoints/.style = {nopoints/.initial},
+    type/.style = {type/.initial = ##1},
+    nocounter/.style = {nocounter/.initial},
+    number/.is if = atiNumberTask,
+    show solution/.is if = atiShowSolution,
+    solution call/.style = {/ati/solution/call = ##1},
+    #1
+  }%
+}
+
+% define some good defaults for ati
+\atiSetup{show solution = false, number}
+
+% define important environments
+\newenvironment{atiTask}[1][]{
+  \newcommand\locallabel[1]{\label{ati:\theatiTaskCounter:##1}}
+  \newcommand\localref[1]{\ref{ati:\theatiTaskCounter:##1}}
+  \pgfkeys{%
+    ati,
+    type/.initial = Aufgabe,
+    title/.initial =,
+    points/.style = {points/.initial = ##1},%
+    #1%
+  }%
+  %
+  \setlength\parindent{0mm}%
+  \bigskip\par%
+  {
+    \large%
+    \textbf{%
+      % print exercise type
+      \pgfkeysifdefined{/ati/local/type}{%
+        \pgfkeysvalueof{/ati/local/type}%
+      }{%
+        \pgfkeysifdefined{/ati/global/type}{%
+          \pgfkeysvalueof{/ati/global/type}%
+        }{%
+          \pgfkeysvalueof{/ati/type}%
+        }%
+      }%
+      \ifatiNumberTask%
+        \refstepcounter{atiTaskCounter}%
+        ~\theatiTaskCounter%
+        % add exercise to the exercise list
+        \addcontentsline{atitasklist}{figure}{\protect{\pgfkeysvalueof{/ati/type}~\numberline{\theatiTaskCounter:}~\pgfkeysvalueof{/ati/title}}}
+      \else%
+        % add exercise to the exercise list
+        \addcontentsline{atitasklist}{figure}{\protect{\pgfkeysvalueof{/ati/type}~\numberline{:}~\pgfkeysvalueof{/ati/title}}}
+      \fi%
+    }%
+  }%
+  \qquad%
+  % print exercise title
+  \textit{%
+    \pgfkeysifdefined{/ati/local/title}{%
+      \pgfkeysvalueof{/ati/local/title}%
+    }{%
+      \pgfkeysvalueof{/ati/title}%
+    }%
+  }%
+  \hfill%
+  % print exercise points
+  \pgfkeysifdefined{/ati/local/nopoints}{}{%
+    \marginnote{%
+      \pgfkeysifdefined{/ati/local/points}{%
+        \pgfkeysvalueof{/ati/local/points}~P.
+      }{%
+        \pgfkeysifdefined{/ati/global/nopoints}{}{%
+          \pgfkeysifdefined{/ati/points}{%
+            \pgfkeysvalueof{/ati/points}~P.
+          }{}%
+        }%
+      }%
+    }%
+  }%
+  \par\medskip
+}{%
+  \bigskip\par
+}
+
+\newenvironment{atiSolution}{%
+  \newcommand\locallabel[1]{\label{ati:\theatiTaskCounter:##1}}%
+  \newcommand\localref[1]{\ref{ati:\theatiTaskCounter:##1}}%
+  %
+  \ifatiShowSolution%
+    \setlength\parindent{0mm}%
+    \bigskip\par%
+    \noindent%
+    {%
+      % \noindent%
+      \large%
+      \textsc{%
+        \pgfkeys{/ati/solution/call}:
+      }%
+    }%
+    \hfill
+    \medskip
+    \par
+  \else%
+    \comment
+  \fi%
+}{%
+  \ifatiShowSolution%
+    \bigskip
+    \par
+  \else%
+    \endcomment
+  \fi%
+}
+
+
+\newcommand{\atiImportTask}[3][]{%
+  % use the group to make pgfkey-changes temporary
+  \begingroup
+  \pgfkeys{%
+    ati/local,
+    type/.style = {type/.initial = ##1},
+    title/.style = {title/.initial = ##1},
+    points/.style = {points/.initial = ##1},
+    nopoints/.style = {nopoints/.initial= ##1},
+    counter/.style = {counter/.initial = ##1},
+    nocounter/.style = {nocounter/.initial},
+    number/.is if = atiNumberTask,
+    show solution/.is if = atiShowSolution,
+    #1
+  }%
+  \import{#2}{#3}%
+  \endgroup
+}
+
+\newenvironment{atiSubequations}{
+  \begin{enumerate}[label=\normalfont(\roman*)]
+  \let\olditem\item
+  \def\item##1{\olditem \ensuremath{ \qquad \begin{aligned}[t] ##1 \end{aligned} } }
+}{
+  \end{enumerate}
+}
+
+\newenvironment{atiSubtasks}{%
+  % \begin{enumerate}[label=\normalfont(\alph*), topsep=0pt]
+  \begin{enumerate}[label=\normalfont(\alph*)]
+}{%
+  \end{enumerate}
+}
+
+\newenvironment{atiSubsubtasks}{%
+  % \begin{enumerate}[label=\normalfont(\arabic*), topsep=0pt]
+  \begin{enumerate}[label=\normalfont(\arabic*)]
+}{%
+  \end{enumerate}
+}
+
+\newenvironment{atiNote}{%
+  \medskip\textbf{Hinweis:}
+}{%
+
+}
+
+\newenvironment{atiSubtaskSolutions}{
+  \begin{description}[style=multiline]
+}{
+  \end{description}
+}
+
+\newenvironment{atiItems}{
+  \begin{itemize}
+}{
+  \end{itemize}
+}
+
+\newcounter{atiPointsCounter}
+\newcommand{\atiPointsPrefix}{}
+\newcommand{\atiPointsSuffix}{~P.}
+\newcommand{\atiPoints}[1][1]{\marginnote{\atiPointsPrefix\ensuremath{#1}\atiPointsSuffix}\refstepcounter{atiPointsCounter}}
+
+\newcommand{\atiShowPoints}[1]{\atiPointsPrefix#1\atiPointsSuffix}
+
+\newcommand{\atiPointsCount}{\marginnote{\rule{1cm}{0.5pt}\\ \atiPointsPrefix\theatiPointsCounter\atiPointsSuffix}}
+
+
+\newcommand{\atiSheetHead}[1]{%
+  \pgfkeys{%
+    ati,
+    sheet/.is family,
+    sheet,
+    title/.initial = ,
+    type/.initial = Übungsserie,
+    number/.style = {number/.initial = ##1},
+    author/.style = {author/.initial = ##1},
+    mail/.style = {mail/.initial = ##1},
+    submission call/.initial = Abgabe:,
+    submission date/.style = {submission date/.initial = ##1},
+    last update call/.initial = Version:,
+    last update/.style = {last update/.initial = ##1},
+    extra info/.style = {extra info/.initial = ##1},
+    #1
+  }%
+  %
+  \thispagestyle{empty}%
+  %
+  \hrule
+  \section*{%
+    \centering%
+    \pgfkeysvalueof{/ati/sheet/title} \\%
+    \pgfkeysvalueof{/ati/sheet/type}%
+    \pgfkeysifdefined{/ati/sheet/number}{%
+      ~\pgfkeysvalueof{/ati/sheet/number}%
+    }{}%
+  }
+  \medskip
+  \footnotesize
+  \begin{minipage}[c]{0.49\textwidth}%
+    \pgfkeysifdefined{/ati/sheet/author}{%
+      \pgfkeysvalueof{/ati/sheet/author}%
+      \pgfkeysifdefined{/ati/sheet/mail}{%
+        \\%
+        \pgfkeysvalueof{/ati/sheet/mail}%
+      }{}%
+    }{}%
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[c]{0.49\textwidth}%
+    \raggedleft%
+    \pgfkeysifdefined{/ati/sheet/last update}{%
+      \pgfkeysvalueof{/ati/sheet/last update call}%
+      ~\pgfkeysvalueof{/ati/sheet/last update}%
+    }{}%
+
+    \pgfkeysifdefined{/ati/sheet/submission date}{%
+      \pgfkeysvalueof{/ati/sheet/submission call}%
+      ~\pgfkeysvalueof{/ati/sheet/submission date}%
+    }{}%
+
+    \pgfkeysifdefined{/ati/sheet/extra info}{%
+      \pgfkeysvalueof{/ati/sheet/extra info}%
+    }{}%
+  \end{minipage}
+  \bigskip
+  \hrule
+  \bigskip
+  \bigskip%
+  \normalsize
+}
+
+
+\endinput

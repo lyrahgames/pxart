@@ -1,0 +1,123 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{exercises}[2017/07/06 exercises and solutions v0.1]
+
+\RequirePackage{pgfkeys}
+\RequirePackage{etoolbox}
+\RequirePackage{import}
+\RequirePackage{marginnote}
+\RequirePackage{enumitem}
+
+\pgfkeys{%
+  /exercise/.style = /exercise/.cd,
+  /exercise/local/.style = /exercise/local/.cd,
+  /exercise/global/.style = /exercise/global/.cd
+}
+
+% exercise counter
+\newcounter{exerciseCounter}
+
+% exercise global setup
+\newcommand{\exerciseSetup}[1]{%
+  \pgfkeys{%
+    exercise/global,
+    nopoints/.style = {nopoints/.initial},
+    type/.style = {type/.initial = ##1},
+    nocounter/.style = {nocounter/.initial},
+    #1
+  }%
+}
+
+\newenvironment{exercise}[1][]{%
+  \pgfkeys{%
+    exercise,
+    type/.initial = Aufgabe,
+    title/.initial =,
+    points/.style = {points/.initial = ##1},%
+    #1%
+  }%
+  %
+  \setlength\parindent{0mm}
+  \bigskip\par%
+  {
+    \large%
+    \textbf{%
+      % print exercise type
+      \pgfkeysifdefined{/exercise/local/type}{%
+        \pgfkeysvalueof{/exercise/local/type}%
+      }{%
+        \pgfkeysifdefined{/exercise/global/type}{%
+          \pgfkeysvalueof{/exercise/global/type}%
+        }{%
+          \pgfkeysvalueof{/exercise/type}%
+        }%
+      }%
+      % print exercise counter
+      \pgfkeysifdefined{/exercise/global/nocounter}{%
+        \pgfkeysifdefined{/exercise/local/counter}{%
+          \refstepcounter{exerciseCounter}%
+          ~\theexerciseCounter%
+        }{}%
+      }{%
+        \pgfkeysifdefined{/exercise/local/nocounter}{}{%
+          \refstepcounter{exerciseCounter}%
+          ~\theexerciseCounter%
+        }%
+      }%
+    }%
+  }%
+  \qquad%
+  % print exercise title
+  \textit{%
+    \pgfkeysifdefined{/exercise/local/title}{%
+      \pgfkeysvalueof{/exercise/local/title}%
+    }{%
+      \pgfkeysvalueof{/exercise/title}%
+    }%
+  }%
+  \hfill%
+  % print exercise points
+  \pgfkeysifdefined{/exercise/local/nopoints}{}{%
+    \marginnote{%
+      \pgfkeysifdefined{/exercise/local/points}{%
+        \pgfkeysvalueof{/exercise/local/points}~P.
+      }{%
+        \pgfkeysifdefined{/exercise/global/nopoints}{}{%
+          \pgfkeysifdefined{/exercise/points}{%
+            \pgfkeysvalueof{/exercise/points}~P.
+          }{}%
+        }%
+      }%
+    }%
+  }%
+  \par\medskip
+}{%
+  \bigskip\par
+}
+
+
+\newcommand{\importExercise}[3][]{%
+  % use the group to make pgfkey-changes temporary
+  \begingroup
+  \pgfkeys{%
+    exercise/local,
+    type/.style = {type/.initial = ##1},
+    title/.style = {title/.initial = ##1},
+    points/.style = {points/.initial = ##1},
+    nopoints/.style = {nopoints/.initial= ##1},
+    counter/.style = {counter/.initial = ##1},
+    nocounter/.style = {nocounter/.initial},
+    #1
+  }%
+  \import{#2}{#3}%
+  \endgroup
+}
+
+\newenvironment{exerciseSubequations}{
+  \begin{enumerate}[label=\normalfont(\roman*)]
+  \let\olditem\item
+  \def\item##1{\olditem \ensuremath{ \qquad \begin{aligned}[t] ##1 \end{aligned} } }
+}{
+  \end{enumerate}
+}
+
+\endinput

@@ -1,0 +1,139 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{utilities}[2017/07/06 utility functions v0.1]
+
+
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage{mathtools}
+\RequirePackage{dsfont}
+\RequirePackage{etoolbox}
+\RequirePackage[mathscr]{euscript}
+
+
+\newcommand{\define}{\coloneqq}
+\newcommand{\reverseDefine}{\eqqcolon}
+\newcommand{\demand}{\stackrel{!}{=}}
+\newcommand{\function}[3]{#1\colon#2\to#3}
+\newcommand{\composition}{\circ}
+
+% \newcommand{\separate}{\ ,\qquad}
+\newcommand{\separate}{\qquad}
+
+% set commands
+\newcommand{\set}[2]{%
+  \ifstrempty{#2}{%
+    \left\{ #1 \right\}
+  }{%
+    \left\{#1\ \middle| \ #2\right\}%
+  }%
+}
+\newcommand{\setReal}{\mathds{R}}
+\newcommand{\setNatural}{\mathds{N}}
+\newcommand{\setInteger}{\mathds{Z}}
+\newcommand{\setRational}{\mathds{Q}}
+\newcommand{\setComplex}{\mathds{C}}
+\newcommand{\setPrime}{\mathds{P}}
+
+\newcommand{\setIntegrable}{\mathrm{L}}
+\newcommand{\setSobolev}{\mathrm{H}}
+\newcommand{\setDifferentiable}{\mathrm{C}}
+
+% brackets
+\newcommand{\curlyBrackets}[1]{\left\{ #1 \right\}}
+\newcommand{\boxBrackets}[1]{\left[ #1 \right]}
+\newcommand{\roundBrackets}[1]{\left( #1 \right)}
+\newcommand{\angleBrackets}[1]{\left\langle #1 \right\rangle}
+\newcommand{\floorBrackets}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceilBrackets}[1]{\left\lceil #1 \right\rceil}
+
+%
+\newcommand{\identity}{\mathrm{id}}
+
+% unary functions
+\newcommand{\absolute}[1]{\left| #1 \right|}
+\newcommand{\norm}[1]{\left\| #1 \right\|}
+\newcommand{\inverse}[1]{ {#1}^{-1} }
+
+% binary functions
+\newcommand{\dotProduct}[2]{\roundBrackets{#1\cdot #2}}
+\newcommand{\scalarProduct}[2]{\angleBrackets{#1,#2}}
+\newcommand{\crossProduct}[2]{#1 \times #2}
+
+\newcommand{\appendValue}[2]{\left. #1 \right|_{#2}}
+
+% derivative
+\newcommand{\timeDerivative}[1]{\dot{#1}}
+\newcommand{\timeSecondDerivative}[1]{\ddot{#1}}
+\newcommand{\timeThirdDerivative}[1]{\dddot{#1}}
+\newcommand{\infinitesimal}{\mathrm{d}}
+\newcommand{\leibnizDerivative}[3][]{%
+  \ifstrempty{#1}{%
+    \frac{\infinitesimal #2}{\infinitesimal #3}%
+  }{%
+    \frac{\infinitesimal^{#1}#2}{\infinitesimal {#3}^{#1}}%
+  }%
+}
+\newcommand{\leibnizPartialDerivative}[3][]{%
+  \ifstrempty{#1}{%
+    \frac{\partial #2}{\partial #3}%
+  }{%
+    \frac{\partial^{#1}#2}{\partial {#3}^{#1}}%
+  }%
+}
+\newcommand{\leibnizDerivativeOperator}[2]{%
+  \ifstrempty{#2}{%
+    \leibnizDerivative{}{#1}%
+  }{%
+    \leibnizDerivative{}{#1}\,#2%
+  }%
+}
+\newcommand{\leibnizPartialDerivativeOperator}[2]{%
+  \ifstrempty{#2}{%
+    \leibnizPartialDerivative{}{#1}%
+  }{%
+    \leibnizPartialDerivative{}{#1}\,#2%
+  }%
+}
+\newcommand{\leibnizDerivativeOperatorValue}[3]{%
+  \appendValue{\leibnizDerivativeOperator{#1}{#2}}{#3}%
+}
+\newcommand{\leibnizPartialDerivativeOperatorValue}[3]{%
+  \appendValue{\leibnizPartialDerivativeOperator{#1}{#2}}{#3}%
+}
+
+% integral commands
+\newcommand{\integral}[4]{\int_{#1}^{#2} #3\,\infinitesimal #4}
+\newcommand{\indefiniteIntegral}[2]{\int #1\,\infinitesimal #2}
+\newcommand{\indefiniteIntegralValue}[3]{\left. \indefiniteIntegral{#1}{#2} \right|_{#3}}
+
+% operators
+\DeclareMathOperator{\gradient}{grad}
+\DeclareMathOperator{\curl}{rot}
+\DeclareMathOperator{\divergence}{div}
+% \DeclareMathOperator{\laplacian}{\Delta}
+\newcommand{\laplacian}{\Delta}
+
+% \newcommand{\expect}{\mathds{E}}
+\DeclareMathOperator{\expect}{\mathds{E}}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\stddev}{\sigma}
+
+% vector commands
+\renewcommand{\vector}[1]{\vec{#1}}
+% cartesian basis vectors
+\newcommand{\vectorX}{\vector{\imath}}
+\newcommand{\vectorY}{\vector{\jmath}}
+\newcommand{\vectorZ}{\vector{k}}
+
+\newcommand{\diagonalMatrix}[1]{\mathrm{diag}\roundBrackets{#1}}
+\newcommand{\transpose}[1]{{#1}^{\mathrm{T}}}
+\newcommand{\jacobian}{\mathrm{D}}
+
+\newcommand{\appendUnit}[1]{\, \mathrm{#1}}
+
+\newcommand{\converges}[1][]{\ifx&#1& \longrightarrow \else \xrightarrow{#1} \fi}
+
+\DeclareMathOperator{\lb}{lb}
+\DeclareMathOperator{\rank}{rank}
+
+\endinput

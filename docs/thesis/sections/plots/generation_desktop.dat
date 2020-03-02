@@ -1,0 +1,35 @@
+# iteration = 1048576
+# cache size = 16384 B
+# samples = 4294967296
+
+# STL MT19937
+#     name, npc, time sec, cycles, instructions, L1-misses, LLC-misses, branch-misses, task-clock,      scale,  IPC, CPUs,  GHz 
+    scalar,   1,     9.29,   9.75,        28.34,      0.01,       0.00,          0.01,       2.16, 4294967296, 2.91, 1.00, 4.51 
+
+# Boost MT19937
+#     name, npc, time sec, cycles, instructions, L1-misses, LLC-misses, branch-misses, task-clock,      scale,  IPC, CPUs,  GHz 
+    scalar,   1,     5.79,   6.09,        24.86,      0.01,       0.00,          0.00,       1.35, 4294967296, 4.09, 1.00, 4.51 
+
+# MT19937
+#     name, npc, time sec, cycles, instructions, L1-misses, LLC-misses, branch-misses, task-clock,      scale,  IPC, CPUs,  GHz 
+    scalar,   1,     7.61,   7.99,        26.71,      0.00,       0.00,          0.00,       1.77, 4294967296, 3.34, 1.00, 4.51 
+       AVX,   8,     1.15,   9.68,        34.07,      0.00,       0.00,          0.00,       2.14, 536870912, 3.52, 1.00, 4.51 
+       SSE,   4,     2.11,   8.86,        34.04,      0.00,       0.00,          0.01,       1.96, 1073741824, 3.84, 1.00, 4.51 
+
+# Xoroshiro128+
+#     name, npc, time sec, cycles, instructions, L1-misses, LLC-misses, branch-misses, task-clock,      scale,  IPC, CPUs,  GHz 
+    scalar,   2,     1.66,   3.49,        12.00,      0.00,       0.00,          0.00,       0.77, 2147483648, 3.44, 1.00, 4.51 
+2 x scalar,   2,     1.80,   3.79,        12.00,      0.00,       0.00,          0.00,       0.84, 2147483648, 3.17, 1.00, 4.51 
+       AVX,   8,     0.74,   6.26,        17.02,      0.00,       0.00,          0.00,       1.39, 536870912, 2.72, 1.00, 4.51 
+   2 x AVX,   8,     0.69,   5.77,        14.01,      0.00,       0.00,          0.00,       1.28, 536870912, 2.43, 1.00, 4.51 
+       SSE,   4,     1.47,   6.19,        17.01,      0.00,       0.00,          0.00,       1.37, 1073741824, 2.75, 1.00, 4.51 
+   2 x SSE,   4,     1.31,   5.49,        14.01,      0.00,       0.00,          0.00,       1.22, 1073741824, 2.55, 1.00, 4.51 
+
+# MSWS
+#     name, npc, time sec, cycles, instructions, L1-misses, LLC-misses, branch-misses, task-clock,      scale,  IPC, CPUs,  GHz 
+    scalar,   1,     4.77,   5.01,         8.00,      0.00,       0.00,          0.00,       1.11, 4294967296, 1.60, 1.00, 4.51 
+2 x scalar,   1,     4.24,   4.45,         8.50,      0.00,       0.00,          0.00,       0.99, 4294967296, 1.91, 1.00, 4.51 
+       AVX,   8,     1.84,  15.45,        31.02,      0.00,       0.00,          0.00,       3.42, 536870912, 2.01, 1.00, 4.51 
+   2 x AVX,   8,     1.32,  11.13,        24.51,      0.00,       0.00,          0.00,       2.47, 536870912, 2.20, 1.00, 4.51 
+       SSE,   4,     3.71,  15.58,        29.01,      0.00,       0.00,          0.00,       3.45, 1073741824, 1.86, 1.00, 4.51 
+   2 x SSE,   4,     2.60,  10.93,        24.51,      0.00,       0.00,          0.00,       2.42, 1073741824, 2.24, 1.00, 4.51 

@@ -1,0 +1,81 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{standardslides}[2017/07/06 includes standard packages for slides v0.1]
+
+% include custom packages
+% (it seems that the order is important)
+% \RequirePackage{listingstyles}
+\RequirePackage{uniinput}
+\RequirePackage{utilities}
+% \RequirePackage{mathenvironments}
+% \RequirePackage{pagestyles}
+
+% \RequirePackage{extsizes}
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[subpreambles=true]{standalone}
+\RequirePackage{import}
+
+% \RequirePackage[a4paper]{geometry}
+
+\linespread{1.25}\selectfont
+
+% \RequirePackage{times}
+\RequirePackage[ngerman]{babel}
+
+% \RequirePackage{titlesec}
+% \titleformat*{\section}{\large\bfseries}
+% \titleformat*{\subsection}{\bfseries}
+% \titleformat*{\subsubsection}{\bfseries}
+% \titleformat*{\paragraph}{\bfseries}
+% \titleformat*{\subparagraph}{\bfseries}
+
+% \RequirePackage{emptypage}
+% \RequirePackage{multicol}
+
+% \RequirePackage{float}
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+\RequirePackage{mathtools}
+\allowdisplaybreaks
+\RequirePackage{exscale}
+\RequirePackage{tensor}
+% \RequirePackage{breqn}
+
+\RequirePackage{graphicx}
+% \RequirePackage[hang,footnotesize]{caption}
+% \RequirePackage[font=footnotesize]{subcaption}
+
+\RequirePackage[square,sort,comma,numbers]{natbib}
+\RequirePackage{url}
+\RequirePackage{babelbib}
+\RequirePackage[autostyle,german=guillemets]{csquotes}
+\bibliographystyle{babplain}
+
+\RequirePackage{multicol}
+
+\RequirePackage{lmodern}
+\RequirePackage{bookman}
+\usecolortheme{seahorse}
+\usefonttheme[onlymath]{serif}
+
+\newenvironment{mybox}{
+  \begin{beamercolorbox}[sep=0pt,center,shadow=true,rounded=true]{title}
+}{
+  \end{beamercolorbox}
+}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+      \usebeamerfont{title}\insertsectionhead\par%
+    \end{beamercolorbox}
+    \vfill
+  \end{frame}
+}
+
+\endinput

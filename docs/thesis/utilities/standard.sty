@@ -1,0 +1,80 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{standard}[2019/04/05 includes standard packages v0.1]
+
+% \RequirePackage{extsizes}
+
+\RequirePackage{microtype}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[subpreambles=true]{standalone}
+\RequirePackage{import}
+
+\RequirePackage{geometry}
+% \geometry{a4paper, lmargin=45mm, rmargin=35mm, tmargin=40mm, bmargin=35mm,includeheadfoot}
+\geometry{a4paper, lmargin=45mm, rmargin=35mm, tmargin=40mm, bmargin=35mm}
+
+\linespread{1.15}
+
+\RequirePackage{times}
+
+% in document: \selectlanguage{<your language>}
+\RequirePackage[ngerman,english]{babel}
+
+\RequirePackage{emptypage}
+\RequirePackage{multicol}
+
+\RequirePackage{enumitem}
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+\RequirePackage{mathtools}
+\allowdisplaybreaks
+\RequirePackage{exscale}
+\RequirePackage{tensor}
+% \RequirePackage{breqn}
+
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage[hang,footnotesize]{caption}
+\RequirePackage[font=footnotesize]{subcaption}
+
+\RequirePackage[autostyle,german=guillemets,english=american]{csquotes}
+% \RequirePackage[backend=bibtex,bibstyle=musuos,citestyle=authoryear]{biblatex}
+\RequirePackage[backend=bibtex,style=authoryear-comp,dateabbrev=false]{biblatex}
+\RequirePackage{tocbibind}
+\RequirePackage{url}
+\urlstyle{same}
+\RequirePackage[pdfusetitle]{hyperref}
+% \RequirePackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={blue!70!black},
+  citecolor={blue!70!black},
+  urlcolor={blue!70!black}
+}
+
+% \RequirePackage{titlesec}
+% \requirepackage{titletoc}
+% \titleformat*{\section}{\large\bfseries}
+% \titleformat*{\subsection}{\bfseries}
+% \titleformat*{\subsubsection}{\bfseries}
+% \titleformat*{\paragraph}{\bfseries}
+% \titleformat*{\subparagraph}{\bfseries}
+
+\ProcessOptions\relax
+
+% include custom packages
+% (it seems that the order is important)
+\RequirePackage{listingstyles}
+\RequirePackage{uniinput}
+\RequirePackage{utilities}
+\RequirePackage{mathenvironments}
+\RequirePackage{pagestyles}
+\pagestyle{mainstyle}
+
+% \RequirePackage{shellesc}
+% \usetikzlibrary{external}
+% \tikzexternalize[prefix=tikz/]
+
+\endinput

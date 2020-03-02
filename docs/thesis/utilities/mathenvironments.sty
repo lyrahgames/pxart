@@ -1,0 +1,143 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathenvironments}[2017/07/06 math environments v0.1]
+
+\RequirePackage{tcolorbox}
+\tcbuselibrary{many}
+\tcbset{fonttitle=\footnotesize}
+
+\RequirePackage[titles]{tocloft}
+
+% init list of math for definitions and theorems
+\providecommand{\listofmathcall}{List of Definitions and Theorems}
+\newlistof{math}{mathlist}{\listofmathcall}
+% add parentheses around argument
+\newcommand{\parent}[1]{ \ifx&#1&\else (#1) \fi }
+\definecolor{mathdefback}{rgb}{0.97,0.97,0.99}
+% \definecolor{mathdefback}{rgb}{1,1,1}
+% unnumerated mathematical definition environment definiton
+\newenvironment{mathdef*}[2]{
+  \par%
+  \medskip%
+  \begin{tcolorbox}[colback=mathdefback, boxrule=0.0pt, leftrule=1pt, colframe=black, boxsep=0pt, enhanced jigsaw, breakable, arc=0pt, nobeforeafter]
+  \noindent%
+  {\fontfamily{ppl}\selectfont\textbf{\textsc{#1:}}} ~ #2%
+  % \par%
+  \hfill\\[8pt]
+  \fontfamily{lmr}\selectfont \itshape
+}{
+  \end{tcolorbox}%
+  \medskip%
+}
+% definitions for numerated mathematical definition environment
+\newcounter{mathdefc}[section]
+\newcommand*{\mathdefnum}{\thesection.\arabic{mathdefc}}
+\renewcommand{\themathdefc}{\mathdefnum}
+\newenvironment{mathdef}[2]{
+  \refstepcounter{mathdefc}
+  \addcontentsline{mathlist}{figure}{\protect{\numberline{\mathdefnum}#1: ~ #2}}
+  \begin{mathdef*}{#1 \mathdefnum}{#2}
+}{
+  \end{mathdef*}
+}
+% standard mathdef calls
+\newcommand{\definitioncall}{Definition}
+\newenvironment{definition*}[1][]{ \begin{mathdef*}{\definitioncall}{#1} }{ \end{mathdef*} }
+\newenvironment{definition}[1][]{ \begin{mathdef}{\definitioncall}{#1} }{ \end{mathdef} }
+
+\definecolor{maththeoremframe}{rgb}{0.7,0.7,0.73}
+
+% unnumerated theorem environment definition
+\newenvironment{maththeorem*}[2]{
+  \par%
+  \medskip%
+  \begin{tcolorbox}[boxrule=0pt, leftrule=2pt, arc=0pt, colback=white, colframe=maththeoremframe, enhanced jigsaw, breakable, top=0mm, bottom=0mm, left=2mm, right=0mm, boxsep=1mm, nobeforeafter]
+  \noindent
+  {\fontfamily{ppl}\selectfont\textbf{\textsc{#1:}}} ~ #2%
+  %\par
+  \hfill\\[8pt]
+  \fontfamily{lmr}\fontshape{it}\selectfont%
+}{%
+  \end{tcolorbox}%
+  \medskip%
+  \par%
+  \ignorespaces%
+  \noindent%
+  \ignorespacesafterend%
+}
+% definitions for numerated theorem environment
+\newcounter{maththeoremc}[section]
+\newcommand*\maththeoremnum{\thesection.\arabic{maththeoremc}}
+\renewcommand{\themaththeoremc}{\maththeoremnum}
+\newenvironment{maththeorem}[2]{
+  \refstepcounter{maththeoremc}
+  \addcontentsline{mathlist}{figure}{\protect{\quad\numberline{\maththeoremnum}#1: ~ #2}}
+  \begin{maththeorem*}{#1 \maththeoremnum}{#2}
+}{
+  \end{maththeorem*}
+  \noindent%
+  \ignorespacesafterend%
+}
+% standard maththeorem calls
+\newcommand{\theoremcall}{Theorem}
+\newenvironment{theorem*}[1][]{ \begin{maththeorem*}{\theoremcall}{#1} }{ \end{maththeorem*} }
+\newenvironment{theorem}[1][]{\ignorespaces\begin{maththeorem}{\theoremcall}{#1} }{ \end{maththeorem}\ignorespacesafterend}
+\newcommand{\lemmacall}{Lemma}
+\newenvironment{lemma*}[1][]{ \begin{maththeorem*}{\lemmacall}{#1} }{ \end{maththeorem*} }
+\newenvironment{lemma}[1][]{\ignorespaces\begin{maththeorem}{\lemmacall}{#1} }{ \end{maththeorem}\ignorespacesafterend}
+\newcommand{\propositioncall}{Proposition}
+\newenvironment{proposition*}[1][]{ \begin{maththeorem*}{\propositioncall}{#1} }{ \end{maththeorem*} }
+\newenvironment{proposition}[1][]{\ignorespaces\begin{maththeorem}{\propositioncall}{#1} }{ \end{maththeorem}\ignorespacesafterend}
+\newcommand{\corollarycall}{Corollary}
+\newenvironment{corollary*}[1][]{\begin{maththeorem*}{\corollarycall}{#1}}{\end{maththeorem*}}
+\newenvironment{corollary}[1][]{\ignorespaces\begin{maththeorem}{\corollarycall}{#1}}{\end{maththeorem}\ignorespacesafterend}
+% q.e.d. definition
+\newcommand{\qed}{ \par \hfill \fontfamily{lmr} \fontshape{it} \selectfont \mbox{q.e.d.} \\}
+\newcommand{\qedbox}{\hfill $\Box$}
+% proof environment definition for theorems
+\newenvironment{mathproof}[2]{%
+  \par%\hfill\\
+  \medskip%
+  % \noindent
+  % \par
+  % { \fontfamily{ppl}\selectfont \small \textsc{#1:} } ~ \parent{#2} \smallskip\\
+  % \begin{adjustwidth}{1em}{}
+  \begin{tcolorbox}[title= { \fontfamily{ppl}\selectfont \small \textsc{#1:} } ~ \parent{#2}, boxrule=0pt, colback=white, colframe=white, coltitle=black, breakable, boxsep=0mm, top=2mm, bottom=0mm, right=0mm, left=0mm,%
+  % before upper={\parindent1em}
+  nobeforeafter]%
+  \normalfont%
+  \small%
+  % \noindent%
+}{%
+  \end{tcolorbox}%
+  % \end{adjustwidth}
+  % \qedbox
+  % \ignorespacesafterend%
+  \medskip%
+  \par%
+  \noindent%
+  \ignorespacesafterend%
+}
+% standard mathproof calls
+\newcommand{\proofcall}{Proof}
+\newenvironment{proof}[1][]{\ignorespaces\begin{mathproof}{\textbf{\proofcall}}{#1}}{\qedbox\end{mathproof}\par\noindent\ignorespacesafterend}
+\newcommand{\proofideacall}{Beweisidee}
+\newenvironment{proofidea}[1][]{ \begin{mathproof}{\proofideacall}{#1} }{ \end{mathproof} }
+
+% math environment for examples (not numerated)
+\newcommand{\examplecall}{Beispiel}
+% \newcommand{\examplebox}{\hfill $\blacksquare$}
+\newcommand{\examplebox}{\hfill $\rule{5pt}{5pt}$}
+% \newenvironment{example}[1][]{ \begin{mathproof}{\examplecall}{#1} }{ \end{mathproof} }
+\newenvironment{example}[1][]{
+  \medskip
+  \normalfont
+  \small
+  \textsc{\examplecall}: ~ \parent{#1} \\
+}{
+  % \par
+  \examplebox
+  \par
+  \medskip
+}
+
+\endinput

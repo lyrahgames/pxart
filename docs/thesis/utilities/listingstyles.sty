@@ -1,0 +1,100 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{listingstyles}[2018/06/20 provides some useful listing styles and commands]
+
+% \PassOptionsToPackage{usenames,dvipsnames}{xcolor}
+
+\RequirePackage{listings}
+\RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{tcolorbox}
+\RequirePackage{pgfkeys}
+\RequirePackage{changepage}
+\RequirePackage[titles]{tocloft}
+
+\ProcessOptions\relax
+
+\newlength{\listingframemargin}
+\setlength{\listingframemargin}{1em}
+\newlength{\listingmargin}
+\setlength{\listingmargin}{0.08\textwidth}
+
+\definecolor{codeDarkGray}{gray}{0.2}
+\definecolor{codeGray}{gray}{0.4}
+\definecolor{codeLightGray}{rgb}{0.94,0.94,0.91}
+\definecolor{codeBorder}{rgb}{0.34,0.24,0.21}
+
+\lstdefinestyle{standard}{%
+  belowcaptionskip=0.5\baselineskip,
+  breaklines=true,
+  frameround=tttt,
+  % frame=false,
+  xleftmargin=0em,
+  xrightmargin=0em,
+  showstringspaces=false,
+  showtabs=false,
+  % tab=\smash{\rule[-.2\baselineskip]{.4pt}{\baselineskip}\kern.5em},
+  basicstyle= \fontfamily{pcr}\selectfont\scriptsize\bfseries,
+  keywordstyle= \bfseries\color{MidnightBlue}, %\color{codeDarkGray},
+  commentstyle= \itshape\color{codeGray},
+  identifierstyle=\color{codeDarkGray},
+  stringstyle=\color{BurntOrange}, %\color{codeDarkGray},
+  numberstyle=\tiny\ttfamily,
+  % numbers=left,
+  numbersep = 1em,
+  % stepnumber = 1,
+  % captionpos=t,
+  tabsize=2,
+  % backgroundcolor=\color{codebLightGray},
+  rulecolor=\color{codeBorder},
+  framexleftmargin=\listingframemargin,
+  framexrightmargin=\listingframemargin
+}
+
+\providecommand{\listofcodecall}{List of Code}
+\newlistof{code}{codelist}{\listofcodecall}
+\newcounter{codecounter}[section]
+\newcommand*{\codenumber}{\thesection.\arabic{codecounter}}
+\renewcommand{\thecodecounter}{\codenumber}
+
+\newcommand{\inputCodeBlock}[2][]{%
+  \pgfkeys{%
+    listing/.is family,
+    listing,
+    type/.initial = Code,
+    title/.initial =,
+    % label/.initial =,
+    style/.initial = standard,
+    language/.initial = c++,
+    #1
+  }%
+  %
+  \refstepcounter{codecounter}%
+  \addcontentsline{codelist}{figure}{\protect{\numberline{\codenumber}\pgfkeysvalueof{/listing/title}}}%
+  % \pgfkeysvalueof{/listing/label}%
+  %
+  \begin{center}
+    \begin{tcolorbox}[%
+      colframe=black,
+      colbacktitle=white,
+      coltitle=black,
+      attach boxed title to top center={yshift=-2mm},
+      enhanced,
+      titlerule=0.1pt,
+      boxrule=0.5pt,
+      arc=5pt,
+      breakable,
+      width=\textwidth,
+      title=\pgfkeysvalueof{/listing/type}~\codenumber:\quad\pgfkeysvalueof{/listing/title}
+    ]
+      \lstinputlisting[%
+        style = \pgfkeysvalueof{/listing/style},
+        language = \pgfkeysvalueof{/listing/language},
+        morekeywords={constexpr,noexcept,decltype,size_t,uint32_t,uint64_t,__m256i,__m256,__m256d,__m128i,__m128,__m128d}
+      ]{#2}
+    \end{tcolorbox}
+  \end{center}
+}
+
+% \newcommand{\code}[1]{\textbf{\texttt{\color{codeDarkGray}\footnotesize #1}}}
+\newcommand{\code}[1]{\lstinline[style=standard,language=c++,morekeywords={constexpr,noexcept,decltype,size_t,uint32_t,uint64_t,__m256i,__m256,__m256d,__m128i,__m128,__m128d}]{#1}}
+
+\endinput

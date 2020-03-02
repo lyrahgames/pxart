@@ -1,0 +1,134 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 1.0cm and 2.0cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      % bottom color = white,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 1.2cm,
+      minimum height = 0.5cm
+    },
+    box/.style = {
+      rectangle,
+      rounded corners,
+      % top color = white,
+      bottom color = processblue!4,
+      top color = processblue!4,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 1cm
+    },
+    operation/.style = {
+      circle,
+      top color = white,
+      % bottom color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.8cm
+    },
+    connect/.style = {
+      circle,
+      top color = black,
+      bottom color = black,
+      draw,
+      black,
+      text=black,
+      inner sep = 1pt,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{uniinput}
+
+\begin{document}
+\begin{graph}
+  \node[state] (x0) {$x_0$};
+  \node (space) [below = of x0] {};
+  \node[state] (x1) [below = of space] {$x_1$};
+  \node (dots1) [below = of x1] {$\vdots$};
+  \node[state] (xm) [below = of dots1] {$x_m$};
+  \node (dots2) [below = of xm] {$\vdots$};
+  \node[state] (xn1) [below = of dots2] {$x_{n-1}$};
+
+  \node[operation] (upper) [right = of x0] {$υ$};
+  \node[operation] (lower) [right = 2 of space] {$λ$};
+
+  \node[operation] (or) [right = of upper] {$\vert$};
+
+  \node[operation] (A) [right = of or] {$A$};
+
+  \node[operation] (xor) [right = of A] {$\oplus$};
+
+  \node[state] (y0) [right = 4 of xor] {$x_0$};
+  \node (y1) [below = of y0] {};
+  \node (dots1) [below = of y0] {$\vdots$};
+  \node[state] (ym) [below = of dots1] {$x_{m-1}$};
+  \node (dots2) [below = of ym] {$\vdots$};
+  \node[state] (yn2) [below = of dots2] {$x_{n-2}$};
+  \node (space) [below = of yn2] {};
+  \node[state] (yn1) [below = of space] {$x_{n-1}$};
+
+  \node (swap0) [right = 1 of xor] {};
+  \node (swap01) [left = 1 of y0] {};
+  \node (swapn1) [right = 9 of xn1] {};
+  \node (swap1) [right = 9 of x1] {};
+  \node (swapm) [right = 9 of xm] {};
+  \node (swapn11) [right = 1 of swapn1] {};
+  \node (swapn21) [left = 1 of yn2] {};
+  \node (swapm11) [left = 1 of ym] {};
+
+  \draw[->] (x0) -- (upper);
+  \draw[->] (upper) -- (or);
+  \draw[->] (or) -- (A);
+  \draw[->] (A) -- (xor);
+  \draw[->,rounded corners] (xor) -- (swap0.center) -- (swapn11.center) -- (yn1);
+  \draw[->,rounded corners] (xm) -- (swapm.center) -- (swapm11.center) -- (ym);
+  \draw[->,rounded corners] (xn1) -- (swapn1.center) -- (swapn21.center) -- (yn2);
+  \draw[->,rounded corners] (x1) -- (swap1.center) -- (swap01.center) -- (y0);
+
+  \node[connect] (tmp) [right = 2 of x1] {};
+  \draw[->] (tmp) -- (lower);
+  \node (tmp) [right = 2 of lower] {};
+  \draw[->,rounded corners] (lower) -- (tmp.center) -- (or);
+  \node[connect] (tmp) [right = 8 of xm] {};
+  \draw[->] (tmp) -- (xor);
+
+  \node[operation,label=Generation] (F) [right = of yn1] {$F$};
+  \node[state,label=Output] (output) [right = of F] {$u$};
+  \draw[->] (yn1) -- (F);
+  \draw[->] (F) -- (output);
+
+  \begin{scope}[on background layer]
+    \node[box,fit=(x0) (xn1),inner sep = 8pt, text = black, text opacity = 1,text height=0.0cm,label=State] (T) {};
+    \node[box,fit=(y0) (yn1),inner sep = 8pt, text = black, text opacity = 1,text height=0.0cm,label=State] (T) {};
+    \node[fit=(upper) (swap01), inner sep = 8pt,label=Transition] (T) {};
+    \node[box,fit=(x1) (xn1),inner sep = 5pt,bottom color=white] (T) {};
+    \node[box,fit=(y0) (yn2),inner sep = 5pt,bottom color=white] (T) {};
+    % \node[fit=(add) (tmp3) (tmp4), inner sep = 8pt,label=Generation] (T) {};
+  \end{scope}
+\end{graph}
+\end{document}

@@ -1,0 +1,118 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance =0.1\textwidth and 0.1\textwidth,
+    on grid, semithick,
+    state/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.7 cm,
+    },
+    visible/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5cm,
+    },
+    hidden/.style = {
+      circle,
+      top color = white,
+      bottom color = processblue!50,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5cm,
+    },
+    layer/.style = {
+      rectangle,
+      rounded corners,
+      draw=processblue!80,
+      align=center,
+      % thick,
+      fill = processblue!30,
+      fill opacity =0.1,
+      text=black,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\begin{document}
+\begin{graph}
+  \node[visible] (A) {$u_1$};
+  \node[visible] (B) [right=2cm of A] {$u_2$};
+  \node[visible] (C) [right=2cm of B] {$u_3$};
+  \node[visible] (D) [right=2cm of C] {$u_4$};
+  \node[visible] (E) [right=2cm of D] {$u_5$};
+  \node[visible] (F) [right=2cm of E] {$u_6$};
+  \node[visible] (G) [right=2cm of F] {$u_7$};
+  \node[visible] (H) [right=2cm of G] {$u_8$};
+  \node (I) [right=2cm of H] {$\cdots$};
+
+  \path[->] (A) edge node {} (B);
+  \path[->] (B) edge node {} (C);
+  \path[->] (C) edge node {} (D);
+  \path[->] (D) edge node {} (E);
+  \path[->] (E) edge node {} (F);
+  \path[->] (F) edge node {} (G);
+  \path[->] (G) edge node {} (H);
+  \path[->] (H) edge node {} (I);
+
+  \node[hidden] (AV) [below=2cm of A] {$u_1$};
+  \node[hidden] (BV) [below=2cm of B] {$u_2$};
+  \node[visible] (CV) [below=2cm of C] {$u_3$};
+  \node[visible] (DV) [right=2cm of CV] {$u_4$};
+  \node[visible] (EV) [right=2cm of DV] {$u_5$};
+  \node[visible] (FV) [right=2cm of EV] {$u_6$};
+  \node[visible] (GV) [right=2cm of FV] {$u_7$};
+  \node[visible] (HV) [right=2cm of GV] {$u_8$};
+  \node (IV) [right=2cm of HV] {$\cdots$};
+
+  \node[layer,fit=(CV) (EV),inner sep=8pt,label={[label distance=0cm]90:$v_1$}] (V1) {};
+  \node[layer,fit=(FV) (HV),inner sep=8pt,label={[label distance=0cm]90:$v_2$}] (V2) {};
+
+  \path[->,dashed] (AV) edge node {} (BV);
+  \path[->,dashed] (BV) edge node {} (CV);
+  \path[->] (V1) edge node {} (V2);
+  \path[->] (V2) edge node {} (IV);
+
+  \path[->,bend left=-45] (AV) edge node {$t$} (CV);
+  \path[->,bend left=-45] (CV) edge node {$k$} (FV);
+  \path[->,bend left=-45] (FV) edge node {$k$} (IV);
+
+
+  % \node[visible] (A) [below=2cm of Y] {$u_1$};
+  % \node[visible] (B) [below=2cm of Z] {$u_2$};
+  % \node (K) [below=2cm of H] {$\cdots$};
+
+  % \path[->] (X) edge node {$T$} (Y);
+  % \path[->] (Y) edge node {$T$} (Z);
+  % \path[->] (Z) edge node {$T$} (H);
+  % \path[->] (Y) edge node {$G$} (A);
+  % \path[->] (Z) edge node {$G$} (B);
+
+  % \path[->,bend right=45,dashed] (X) edge node {} (A);
+  % \path[->,bend right=30,dashed] (A) edge node {} (B);
+  % \path[->,bend right=30,dashed] (B) edge node {} (K);
+
+  % \node[layer,fit=(X) (W),inner sep=8pt] (L1) {};
+  % \node[layer,fit=(A) (D),inner sep=8pt] (L2) {};
+\end{graph}
+\end{document}

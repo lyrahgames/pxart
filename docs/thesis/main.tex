@@ -1,0 +1,86 @@
+\documentclass[fleqn,10pt,twoside]{stdglobal}
+% \usepackage{standard}
+
+\let\oldsection\section
+\renewcommand*\section{\cleardoublepage\thispagestyle{sectionstyle}\oldsection}
+\let\oldpagenumbering\pagenumbering
+\renewcommand*\pagenumbering[1]{\cleardoublepage\oldpagenumbering{#1}}
+
+\title{Design and Implementation of Vectorized Pseudorandom Number Generators and their Application to Simulations of Photon Propagation}
+\author{Markus Pawellek}
+
+\hypersetup{
+  pdftex,
+  % pdfauthor={Your Name},
+  % pdftitle={The Title},
+  % pdfsubject={\@title},
+  pdfkeywords={RNG; Random Number Generator; PRNG; Pseudorandom Number Generator; C++; SIMD; SSE; AVX; AVX2; Monte Carlo},
+  % pdfproducer={Latex with hyperref},
+  % pdfcreator={pdflatex, or other tool}
+}
+
+% \hypersetup{
+%   colorlinks,
+%   linkcolor={black},
+%   citecolor={black},
+%   urlcolor={black}
+% }
+
+\bibliography{references}
+
+\renewcommand{\thefigure}{\thesection.\arabic{figure}}
+\renewcommand{\thetable}{\thesection.\arabic{table}}
+
+\begin{document}
+  \selectlanguage{english}
+
+  \import{sections/}{titlepage.tex}
+
+  \pagenumbering{arabic}
+  \import{sections/}{abstract.tex}
+  \cleardoublepage
+  \import{sections/}{abstract_german.tex}
+  \import{sections/}{acknowledgements.tex}
+
+  \pagenumbering{roman}
+  \tableofcontents
+  \listoffigures
+  \listoftables
+  \listofmath
+  \addcontentsline{toc}{section}{\listofmathcall}
+  {
+    \small
+    \listofcode
+    \addcontentsline{toc}{section}{\listofcodecall}
+  }
+  \import{sections/}{abbreviations.tex}
+  \import{sections/}{symbol_table.tex}
+
+  \pagenumbering{arabic}
+  \import{sections/}{introduction.tex}
+  \import{sections/}{preliminaries.tex}
+  \import{sections/}{processors.tex}
+  \import{sections/}{previous_work.tex}
+  \import{sections/}{simulations.tex}
+  \import{sections/}{pseudorandom_number_generators.tex}
+  \import{sections/}{api_design.tex}
+  \import{sections/}{implementation.tex}
+  \import{sections/}{testing_framework.tex}
+  \import{sections/}{evaluation.tex}
+  \import{sections/}{conclusion.tex}
+  % \nocite{*}
+  \printbibliography[heading=bibintoc]
+  % \printbibliography[heading=bibintoc,title=References]
+  % \printbibheading[heading=bibintoc]
+  % \printbibliography[notkeyword={c++},heading=subbibliography,title={General}]
+  % \printbibliography[keyword={c++},heading=subbibliography,title={Programming}]
+
+  \appendix
+  \pagenumbering{roman}
+  \import{sections/}{proofs.tex}
+  \import{sections/}{further_code.tex}
+  \import{sections/}{further_results.tex}
+
+  \pagenumbering{arabic}
+  \import{sections/}{statutory_declaration.tex}
+\end{document}
