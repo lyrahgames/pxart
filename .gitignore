@@ -13,6 +13,11 @@
 !repositories.manifest
 !packages.manifest
 
+!CMakeLists.txt
+!*.cmake
+
+!.circleci/config.yml
+
 !README.md
 !LICENSE
 

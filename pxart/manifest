@@ -2,7 +2,7 @@
 name: pxart
 version: 0.1.0-a.0.z
 project: pxart
-summary: Packed Extensions for Advanced Random Techniques: Library and Applications for Random Number Generators
+summary: Packed Extensions for Advanced Random Techniques: C++ Library and Applications for Random Number Generators
 license: MIT ; MIT License.
 description-file: ../README.md
 # url: https://example.org/pxart

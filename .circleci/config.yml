@@ -1,0 +1,127 @@
+version: 2
+
+workflows:
+  version: 2
+  build_test_install:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - export_test:
+          requires:
+            - build
+      - install:
+          requires:
+            - build
+      - install_test:
+          requires:
+            - install
+      - code_coverage
+
+jobs:
+  build:
+    docker:
+      - image: lyrahgames/pxart-test-tools:latest
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: |
+            mkdir cmake-build
+            cd cmake-build
+            cmake ..
+            cmake --build .
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cmake-build
+
+  test:
+    docker:
+      - image: lyrahgames/pxart-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: test
+          command: |
+            cd cmake-build
+            ctest --verbose
+
+  export_test:
+    docker:
+      - image: lyrahgames/pxart-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: export_test
+          command: |
+            cd cmake-build
+            cmake ..
+            cd ../tests
+            mkdir cmake-build
+            cd cmake-build
+            cmake ..
+            cmake --build .
+            ctest --verbose
+
+  install:
+    docker:
+      - image: lyrahgames/pxart-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: install
+          command: |
+            cd cmake-build
+            cmake --build . --target install
+      - persist_to_workspace:
+          root: /
+          paths:
+            - usr/local
+
+  install_test:
+    docker:
+      - image: lyrahgames/pxart-test-tools:latest
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /
+      - run:
+          name: install_test
+          command: |
+            cd tests
+            mkdir cmake-build
+            cd cmake-build
+            cmake ..
+            cmake --build .
+            ctest --verbose
+
+  code_coverage:
+    docker:
+      - image: lyrahgames/pxart-test-tools:latest
+    steps:
+      - checkout
+      - run:
+          name: code_coverage
+          command: |
+            mkdir cmake-build
+            cd cmake-build
+            # CXXFLAGS="-g" cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
+            # cmake --build .
+            # kcov --include-path=.. ./code_coverage tests/main_tests
+            # bash <(curl -s https://codecov.io/bash) -s code_coverage
+            CXXFLAGS="-g -O0 -fprofile-arcs -ftest-coverage -march=native" LDFLAGS="-fprofile-arcs -ftest-coverage" cmake -DCMAKE_BUILD_TYPE=Debug -G Ninja ..
+            cmake --build .
+            lcov -c -i -d . -o coverage_base.info
+            ctest --verbose
+            lcov -c -d . -o coverage_test.info
+            lcov -a coverage_base.info -a coverage_test.info -o coverage_total.info
+            genhtml coverage_total.info -o coverage
+            bash <(curl -s https://codecov.io/bash)
