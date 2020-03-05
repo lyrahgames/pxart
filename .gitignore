@@ -3,6 +3,7 @@
 
 !*.hpp
 !*.cpp
+!*.ipp
 !*.in
 
 !buildfile

@@ -1,0 +1,22 @@
+import libs = pxart%lib{pxart}
+
+./: exe{mt19937_bitstream}: cxx{mt19937_bitstream} ixx{bitstream} $libs
+./: exe{mt19937_simd128_bitstream}: cxx{mt19937_simd128_bitstream} ixx{bitstream} $libs
+./: exe{mt19937_simd256_bitstream}: cxx{mt19937_simd256_bitstream} ixx{bitstream} $libs
+
+./: exe{msws_bitstream}: cxx{msws_bitstream} ixx{bitstream} $libs
+./: exe{msws_simd128_bitstream}: cxx{msws_simd128_bitstream} ixx{bitstream} $libs
+./: exe{msws_simd256_bitstream}: cxx{msws_simd256_bitstream} ixx{bitstream} $libs
+
+./: exe{xrsr128p_bitstream}: cxx{xrsr128p_bitstream} ixx{bitstream} $libs
+./: exe{xrsr128p_simd128_bitstream}: cxx{xrsr128p_simd128_bitstream} ixx{bitstream} $libs
+./: exe{xrsr128p_simd256_bitstream}: cxx{xrsr128p_simd256_bitstream} ixx{bitstream} $libs
+
+./: exe{mt19937_testu01}: cxx{mt19937_testu01} ixx{testu01} $libs
+exe{mt19937_testu01}: cxx.loptions += -ltestu01 -lprobdist -lmylib
+./: exe{mt19937_simd256_testu01}: cxx{mt19937_simd256_testu01} ixx{testu01} $libs
+exe{mt19937_simd256_testu01}: cxx.loptions += -ltestu01 -lprobdist -lmylib
+./: exe{xrsr128p_simd256_testu01}: cxx{xrsr128p_simd256_testu01} ixx{testu01} $libs
+exe{xrsr128p_simd256_testu01}: cxx.loptions += -ltestu01 -lprobdist -lmylib
+./: exe{msws_simd256_testu01}: cxx{msws_simd256_testu01} ixx{testu01} $libs
+exe{msws_simd256_testu01}: cxx.loptions += -ltestu01 -lprobdist -lmylib
