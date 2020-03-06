@@ -4,3 +4,5 @@ location: pxart/
 location: tests/
 :
 location: benchmarks/
+:
+location: pxrun/

@@ -1,0 +1,6 @@
+import libs = pxart%lib{pxart}
+
+exe{pxrun}: {hxx cxx}{**} $libs
+exe{pxrun}: cxx.loptions += -lboost_program_options -ltestu01 -lprobdist -lmylib
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"

@@ -1,0 +1,12 @@
+: 1
+name: pxrun
+version: 0.1.0-a.0.z
+project: pxart
+summary: Application for Direct Usage of pXart RNGs
+license: MIT ; MIT License
+email: markuspawellek@gmail.com
+depends: * build2 >= 0.12.0
+depends: * bpkg >= 0.12.0
+requires: boost ; Boost Header Library
+requires: boost_program_options; program_options module of Boost
+requires: testu01 ; TestU01
