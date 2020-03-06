@@ -10,3 +10,6 @@ depends: * bpkg >= 0.12.0
 depends: perfevent
 depends: pxart
 requires: testu01 ; TestU01
+requires: boost-random ; Boost Random Module
+requires: AVX2
+requires: SSE4.1
