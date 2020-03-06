@@ -5,10 +5,10 @@ description: >
   Packed Extensions for Advanced Random Techniques: C++ Library and Applications for Random Number Generators
 lang: en-US
 
-baseurl: "/pxart-build2" # the subpath of your site, e.g. /blog/
+baseurl: "/pxart" # the subpath of your site, e.g. /blog/
 url: https://lyrahgames.github.io # the base hostname & protocol for your site
-git_address: https://github.com/lyrahgames/pxart-build2
-git_edit_address: https://github.com/lyrahgames/pxart-build2/tree/master/docs
+git_address: https://github.com/lyrahgames/pxart
+git_edit_address: https://github.com/lyrahgames/pxart/tree/master/docs/web
 
 # theme options from https://bootswatch.com/
 # comment out this to use default Bootstrap
