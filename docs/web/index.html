@@ -5,28 +5,58 @@ layout: default
 <div class="header-container jumbotron">
     <div class="container">
         <h1>pXart</h1>
-        <p>Packed Extensions for Advanced Random Techniques: <br> C++ Library and Applications for Random Number Generators</p>
+        <p>Packed Extensions for Advanced Random Techniques: <br> C++ Header-Only Library and Applications for Random Number Generators</p>
         <!-- <p><a class="btn btn-primary btn-lg" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a></p> -->
     </div>
 </div>
+
+<!-- ![](https://img.shields.io/github/languages/top/lyrahgames/pxart.svg?style=for-the-badge)
+![](https://img.shields.io/github/languages/code-size/lyrahgames/pxart.svg?style=for-the-badge)
+![](https://img.shields.io/github/repo-size/lyrahgames/pxart.svg?style=for-the-badge)
+![](https://img.shields.io/github/license/lyrahgames/pxart.svg?style=for-the-badge&color=blue)
+[![Website lyrahgames.github.io/pxart](https://img.shields.io/website/https/lyrahgames.github.io/pxart.svg?down_message=offline&label=Documentation&style=for-the-badge&up_color=blue&up_message=online)](https://lyrahgames.github.io/pxart) -->
 
 <div class="container">
     <div class="row">
         <div class="col-md-8">
             <h2 class="header-light regular-pad">What is pXart?</h2>
-              <p class="lead">
-                <blockquote>
-                  pXart is a C++17 library implementing vectorized pseudorandom number generators by using the SSE and AVX architecture of modern Intel processors.
-                  It is open-source and can be used on Linux, Windows, and MacOS.
-              </p>
+            <p class="lead">
+                pXart is a header-only library written in C++17 implementing vectorized pseudorandom number generators by using the SSE and AVX architecture of modern Intel processors.
+                It is open-source and can be used on Linux, Windows, and MacOS.
+            </p>
         </div>
         <div class="col-md-4 text-center">
             <center>
-            <img src="img/icon.png" alt="" class="img-responsive">
+                <img src="img/icon.png" alt="" class="img-responsive">
             </center>
         </div>
     </div>
     <hr>
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <a href="https://github.com/lyrahgames/pxart/raw/master/docs/thesis/main.pdf">
+                <center>
+                    <img src="img/thesis_icon.png" alt="" class="img-responsive">
+                </center>
+            </a>
+        </div>
+        <div class="col-md-8">
+            <h2 class="header-light regular-pad">Master's Thesis</h2>
+            <p class="lead">
+                <blockquote>
+                    Design and Implementation of Vectorized Pseudorandom Number Generators and their Application to Simulations of Photon Propagation
+                </blockquote>
+            </p>
+            <p class="justify">
+                pXart was developed as part of a thesis.
+                It makes it possible to improve the performance of physical simulations that need to use random numbers.
+                The library consists of pseudorandom number generators exploiting the SSE and AVX instruction set facilities of modern Intel processors.
+                For this, a new interface was created to simplify their initialization and usage.
+                Through the implementation of appropriate benchmarks and the simulation of photon propagation it was shown that the vectorized generators could indeed accelerate the execution of randomized algorithms.
+                Click the icon on the left to get a PDF version of the thesis.
+            </p>
+        </div>
+    </div>
     <!-- <div class="row">
         <div class="col-sm-4">
             <h1 class="text-center"><i class="fa fa-pencil" aria-hidden="true"></i></h1>
@@ -48,4 +78,69 @@ layout: default
               maintaining your documentation along with the source code; publish the page when you merge to the master branch.</p>
         </div>
     </div> -->
+    <hr>
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="header-light regular-pad">GitHub Repository Status</h2>
+            <table class="table table-striped table-hover ">
+                <thead>
+                <tr>
+                    <td>
+                        <a href="https://github.com/lyrahgames/pxart">
+                            <img src="https://img.shields.io/github/license/lyrahgames/pxart.svg?style=for-the-badge&color=blue">
+                        </a>
+                    </td>
+                    <td>
+                        <img src="https://img.shields.io/github/tag/lyrahgames/pxart.svg?style=for-the-badge">
+                    </td>
+                    <td>
+                        <a href="https://github.com/lyrahgames/pxart">
+                            <img src="https://img.shields.io/github/repo-size/lyrahgames/pxart.svg?style=for-the-badge">
+                        </a>
+                    </td>
+                    <!-- <td>
+                        <a href="https://github.com/lyrahgames/pxart">
+                            <img src="https://img.shields.io/github/commit-activity/y/lyrahgames/pxart.svg?style=for-the-badge">
+                        </a>
+                    </td> -->
+                </tr>
+            </thead>
+        </table>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Branch</th>
+                    <th>CI</th>
+                    <th>Code Coverage</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>master</td>
+                    <td>
+                        <a href="https://circleci.com/gh/lyrahgames/pxart/tree/master"><img src="https://circleci.com/gh/lyrahgames/pxart/tree/master.svg?style=svg"></a>
+                    </td>
+                    <td>
+                        <a href="https://codecov.io/gh/lyrahgames/pxart">
+                          <img src="https://codecov.io/gh/lyrahgames/pxart/branch/master/graph/badge.svg">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="https://github.com/lyrahgames/pxart">
+                            <img src="https://img.shields.io/github/last-commit/lyrahgames/pxart/master.svg?logo=github&logoColor=white">
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <a href="https://github.com/lyrahgames/pxart">
+                <center>
+                    <img src="img/github_icon.png" alt="" class="img-responsive" width="200" height="200">
+                </center>
+            </a>
+        </div>
+    </div>
 </div>

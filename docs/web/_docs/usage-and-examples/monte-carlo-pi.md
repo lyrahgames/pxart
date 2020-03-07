@@ -1,0 +1,3 @@
+---
+title: Monte Carlo π
+---
