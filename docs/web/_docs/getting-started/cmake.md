@@ -1,5 +1,5 @@
 ---
-title: CMake
+title: Installation by CMake
 ---
 
 **1. CMake Package Installation for CMake Projects and Projects without Build System**
