@@ -4,7 +4,7 @@ version: 0.1.0-a.0.z
 project: pxart
 summary: Packed Extensions for Advanced Random Techniques: C++ Library and Applications for Random Number Generators
 license: MIT ; MIT License.
-description-file: ../README.md
+description-file: README.md
 url: https://lyrahgames.github.io/pxart/
 doc-url: https://lyrahgames.github.io/pxart/docs/home/
 src-url: https://github.com/lyrahgames/pxart
