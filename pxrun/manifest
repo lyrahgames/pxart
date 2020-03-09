@@ -1,6 +1,6 @@
 : 1
 name: pxrun
-version: 0.1.0-a.1
+version: 0.1.0-a.1.z
 project: pxart
 summary: Application for Direct Usage of pXart RNGs
 license: MIT ; MIT License
