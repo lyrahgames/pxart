@@ -12,5 +12,5 @@ email: markuspawellek@gmail.com
 depends: * build2 >= 0.12.0
 depends: * bpkg >= 0.12.0
 requires: c++17
-tests: pxart-tests
+tests: pxart-tests == $
 # benchmarks: pxart-benchmarks
