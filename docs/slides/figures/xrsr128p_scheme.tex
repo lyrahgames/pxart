@@ -1,0 +1,123 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 1.25cm and 2.0cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      % bottom color = white,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 1.8cm
+    },
+    box/.style = {
+      rectangle,
+      rounded corners,
+      % top color = white,
+      bottom color = processblue!4,
+      top color = processblue!4,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 1cm
+    },
+    operation/.style = {
+      circle,
+      top color = white,
+      % bottom color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9cm
+    },
+    connect/.style = {
+      circle,
+      top color = black,
+      bottom color = black,
+      draw,
+      black,
+      text=black,
+      inner sep = 1pt,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+\usepackage{amssymb}
+
+\begin{document}
+\begin{graph}
+  \node[state] (X) {$x$};
+  \node (tmp) [below = of X] {};
+  \node[state] (Y) [below = of tmp] {$y$};
+
+  \node[connect] (X1) [right = of X] {};
+  \draw[-] (X) -- (X1);
+  \node[circle,top color = black,bottom color=black,outer sep = 0pt,inner sep = 0.5pt,fill opacity=0.0] (Y1) [right = of Y] {};
+  \node[operation] (xor1) [right = of tmp] {$\oplus$};
+  \draw[->] (X1) -- (xor1);
+  \draw[->,rounded corners] (Y) -- (Y1.center) -- (xor1);
+  % \draw[->] (Y1) -- (xor1);
+
+  \node[operation] (rotateA) [right = of X1] {\footnotesize $\circlearrowleft^a$};
+  \draw[->] (X1) -- (rotateA);
+  \node (xorC) [right = of xor1] {};
+  % \draw[-] (xor1) -- (xorC);
+
+  \node[operation] (xor2) [right = of rotateA] {$\oplus$};
+  \draw[->] (rotateA) -- (xor2);
+  \node[connect] (xorC2) [right = of xorC] {};
+  \draw[->] (xor1) -- (xorC2) -- (xor2);
+  % \node[operation] (square) [right = of X] {$\cdotp^2$};
+  % \path[->] (X) edge node {} (square);
+
+  \node[operation] (rotateC) [below = of xorC2] {\footnotesize $\circlearrowleft^c$};
+  \draw[->] (xorC2) -- (rotateC);
+
+  \node[operation] (shiftB) [right = of xorC2] {\footnotesize $\leftarrow^b$};
+  \node[operation] (xor3) [right = of xor2] {$\oplus$};
+  \draw[->] (xor2) -- (xor3);
+  \draw[->] (shiftB) -- (xor3);
+  \draw[->] (xorC2) -- (shiftB);
+
+  \node[state] (X2) [right = of xor3] {$x$};
+  \node (tmp2) [below = of X2] {};
+  \node[state] (Y2) [below = of tmp2] {$y$};
+
+  \draw[->] (xor3) -- (X2);
+  \draw[->] (rotateC) -- (Y2);
+
+  \node (tmp3) [right = of X2] {};
+  \node (tmp4) [right = of Y2] {};
+  \node[operation] (add) [right = of tmp2] {$+$};
+  \node[state,label=Output] (output) [right = of add] {$u$};
+  \draw[->,rounded corners] (X2) -- (tmp3.center) -- (add);
+  \draw[->,rounded corners] (Y2) -- (tmp4.center) -- (add);
+  \draw[->] (add) -- (output);
+
+  \begin{scope}[on background layer]
+    \node[box,fit=(X) (Y),inner sep = 8pt, text = black, text opacity = 1,text height=0.0cm,label=State] (T) {};
+    \node[box,fit=(X2) (Y2),inner sep = 8pt, text = black, text opacity = 1,text height=0.0cm,label=State] (T) {};
+    \node[fit=(xor1) (xor3) (rotateC), inner sep = 8pt,label=Transition] (T) {};
+    \node[fit=(add) (tmp3) (tmp4), inner sep = 8pt,label=Generation] (T) {};
+  \end{scope}
+\end{graph}
+\end{document}

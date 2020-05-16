@@ -1,0 +1,148 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc,patterns,decorations.pathreplacing}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows.meta}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\usepackage{times}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance =0.1\textwidth and 0.1\textwidth,
+    on grid, semithick,
+    bit/.style = {
+      rectangle,
+      % rounded corners,
+      % circle,
+      top color = white,
+      bottom color = processblue!20,
+      align=center,
+      draw,
+      % processblue,
+      very thin,
+      text=black,
+      minimum width = 0.5cm,
+      minimum height = 0.5cm
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\begin{document}
+\begin{graph}
+  \node[bit,bottom color = processblue!20, label = below:31] (B0) {0};
+
+  \node[bit,bottom color = processblue!20, label = below:30] (B1) [right=0.75cm of B0] {0};
+  \node[bit,bottom color = processblue!20] (B2) [right=0.5cm of B1] {1};
+  \node[bit,bottom color = processblue!20] (B3) [right=0.5cm of B2] {1};
+  \node[bit,bottom color = processblue!20] (B4) [right=0.5cm of B3] {1};
+  \node[bit,bottom color = processblue!20] (B5) [right=0.5cm of B4] {1};
+  \node[bit,bottom color = processblue!20] (B6) [right=0.5cm of B5] {1};
+  \node[bit,bottom color = processblue!20] (B7) [right=0.5cm of B6] {1};
+  \node[bit,bottom color = processblue!20, label = below:23] (B8) [right=0.5cm of B7] {1};
+
+  \node[bit, label = below:22] (B9) [right=0.75cm of B8] {};
+  \node[bit] (B10) [right=0.5cm of B9] {};
+  \node[bit] (B11) [right=0.5cm of B10] {};
+  \node[bit] (B12) [right=0.5cm of B11] {};
+  \node[bit] (B13) [right=0.5cm of B12] {};
+  \node[bit] (B14) [right=0.5cm of B13] {};
+  \node[bit] (B15) [right=0.5cm of B14] {};
+  \node[bit] (B16) [right=0.5cm of B15] {};
+  \node[bit] (B17) [right=0.5cm of B16] {};
+  \node[bit] (B18) [right=0.5cm of B17] {};
+  \node[bit] (B19) [right=0.5cm of B18] {};
+  \node[bit] (B20) [right=0.5cm of B19] {};
+  \node[bit] (B21) [right=0.5cm of B20] {};
+  \node[bit] (B22) [right=0.5cm of B21] {};
+  \node[bit] (B23) [right=0.5cm of B22] {};
+  \node[bit] (B24) [right=0.5cm of B23] {};
+  \node[bit] (B25) [right=0.5cm of B24] {};
+  \node[bit] (B26) [right=0.5cm of B25] {};
+  \node[bit] (B27) [right=0.5cm of B26] {};
+  \node[bit] (B28) [right=0.5cm of B27] {};
+  \node[bit] (B29) [right=0.5cm of B28] {};
+  \node[bit] (B30) [right=0.5cm of B29] {};
+  \node[bit, label = below:0] (B31) [right=0.5cm of B30] {};
+
+  \node[fit=(B0) (B31),label=right:Floating-Point Number] (T) {};
+
+  \node[bit,label=31] (C0) [above = 2.0cm of B0] {};
+  \node[bit] (C1) [right=0.5cm of C0] {};
+  \node[bit] (C2) [right=0.5cm of C1] {};
+  \node[bit] (C3) [right=0.5cm of C2] {};
+  \node[bit] (C4) [right=0.5cm of C3] {};
+  \node[bit] (C5) [right=0.5cm of C4] {};
+  \node[bit] (C6) [right=0.5cm of C5] {};
+  \node[bit] (C7) [right=0.5cm of C6] {};
+  \node[bit] (C8) [right=0.5cm of C7] {};
+  \node[bit] (C9) [right=0.5cm of C8] {};
+  \node[bit] (C10) [right=0.5cm of C9] {};
+  \node[bit] (C11) [right=0.5cm of C10] {};
+  \node[bit] (C12) [right=0.5cm of C11] {};
+  \node[bit] (C13) [right=0.5cm of C12] {};
+  \node[bit] (C14) [right=0.5cm of C13] {};
+  \node[bit] (C15) [right=0.5cm of C14] {};
+  \node[bit] (C16) [right=0.5cm of C15] {};
+  \node[bit] (C17) [right=0.5cm of C16] {};
+  \node[bit] (C18) [right=0.5cm of C17] {};
+  \node[bit] (C19) [right=0.5cm of C18] {};
+  \node[bit] (C20) [right=0.5cm of C19] {};
+  \node[bit] (C21) [right=0.5cm of C20] {};
+  \node[bit,label=9] (C22) [right=0.5cm of C21] {};
+  \node[bit,bottom color = processblue!80,label=8] (C23) [right=1.0cm of C22] {};
+  \node[bit,bottom color = processblue!80] (C24) [right=0.5cm of C23] {};
+  \node[bit,bottom color = processblue!80] (C25) [right=0.5cm of C24] {};
+  \node[bit,bottom color = processblue!80] (C26) [right=0.5cm of C25] {};
+  \node[bit,bottom color = processblue!80] (C27) [right=0.5cm of C26] {};
+  \node[bit,bottom color = processblue!80] (C28) [right=0.5cm of C27] {};
+  \node[bit,bottom color = processblue!80] (C29) [right=0.5cm of C28] {};
+  \node[bit,bottom color = processblue!80] (C30) [right=0.5cm of C29] {};
+  \node[bit,bottom color = processblue!80,label=0] (C31) [right=0.5cm of C30] {};
+
+  \node[fit=(C0) (C31),label=right:Random Bit Integer] (T) {};
+
+  \draw[->] (C0.south) -- (B9.north);
+  \draw[->] (C22.south) -- (B31.north);
+  \draw[->] (C11.south) -- (B20.north);
+
+  \draw [
+      -,thick,
+      decoration={
+          brace,
+          mirror,
+          raise=0.8cm
+      },
+      decorate
+  ] (B1.west) -- (B8.east)
+  node [pos=0.5,anchor=north,yshift=-1.0cm] {exponent};
+
+  \draw [
+      -,thick,
+      decoration={
+          brace,
+          mirror,
+          raise=0.8cm
+      },
+      decorate
+  ] (B9.west) -- (B31.east)
+  node [pos=0.5,anchor=north,yshift=-1.0cm] {fraction};
+
+  \draw [
+      -,thick,
+      decoration={
+          brace,
+          mirror,
+          raise=0.8cm
+      },
+      decorate
+  ] (B0.west) -- (B0.east)
+  node [pos=0.5,anchor=north,yshift=-1.0cm] {sign};
+\end{graph}
+\end{document}
