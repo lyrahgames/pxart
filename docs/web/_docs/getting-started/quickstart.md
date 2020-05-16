@@ -2,6 +2,13 @@
 title: Quickstart
 ---
 
+To use pXart, you have to make two decisions.
+1. Which build system will be used to make pXart available to your current project?
+2. Which build system will be used for your own project?
+
+We explicitly support the installation of pXart by using build2 or CMake.
+But because it is a header-only library, other build systems should work as well.
+
 ### pXart's Hello-World Example: Monte Carlo π
 
 ```c++

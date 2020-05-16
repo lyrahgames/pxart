@@ -6,6 +6,6 @@ hxx{*}: extension = hpp
 ixx{*}: extension = ipp
 cxx{*}: extension = cpp
 
-exe{*}: test = true
+# exe{*}: test = true
 
 test.target = $cxx.target

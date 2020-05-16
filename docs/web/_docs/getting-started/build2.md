@@ -1,5 +1,5 @@
 ---
-title: build2
+title: Installation by build2
 ---
 
 **1. build2 Package Dependency for build2 Projects**
@@ -17,7 +17,7 @@ depends: pxart
 ```
 Import the library in the according `buildfile` and link it to your target by putting it in the prerequisites.
 ```
-import perfevent_lib = pxart%lib{pxart}
+import pxart_lib = pxart%lib{pxart}
 ```
 
 ---

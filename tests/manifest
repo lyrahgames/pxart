@@ -1,6 +1,6 @@
 : 1
 name: pxart-tests
-version: 0.1.0-a.0.z
+version: 0.1.0-a.1.z
 project: pxart
 summary: Tests for pXart
 license: MIT ; MIT License.
