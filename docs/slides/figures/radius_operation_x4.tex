@@ -1,0 +1,159 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 0.8cm and 2.0cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      % bottom color = white,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9 cm,
+      minimum height = 0.9 cm
+    },
+    box/.style = {
+      rectangle,
+      rounded corners,
+      % top color = white,
+      bottom color = processblue!4,
+      top color = processblue!4,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 0.5 cm
+    },
+    operation/.style = {
+      circle,
+      top color = white,
+      % bottom color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9cm
+    },
+    connect/.style = {
+      circle,
+      top color = black,
+      bottom color = black,
+      draw,
+      black,
+      text=black,
+      inner sep = 1pt,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+\usepackage{amssymb}
+
+\begin{document}
+\begin{graph}
+  \node[state] (X) [] {$x_1$};
+  \node (Xtmp) [below = of X] {};
+  \node[state] (Y) [below right = of Xtmp] {$y_1$};
+  \node (Ytmp) [above = of Y] {};
+
+  \node[operation] (squareX) [above right = of Ytmp] {$\cdot^2$};
+  \node (squareXtmp) [below = of squareX] {};
+  \node[operation] (squareY) [below right = of squareXtmp] {$\cdot^2$};
+  \node (squareYtmp) [above = of squareY] {};
+
+  \draw[->] (X) -- (squareX);
+  \draw[->] (Y) -- (squareY);
+
+  \node[operation] (add) [right = of squareYtmp] {$+$};
+  \node (addtmp) [above = of add] {};
+  \node (addtmp2) [below = of add] {};
+  \node[state] (output) [right = of add] {$r_1^2$};
+
+  \draw[->,rounded corners] (squareX) -- (addtmp.center) -- (add);
+  \draw[->,rounded corners] (squareY) -- (addtmp2.center) -- (add);
+  \draw[->] (add) -- (output);
+
+
+  \node[state] (X2) [below = 3 of X] {$x_2$};
+  \node (Xtmp) [below = of X2] {};
+  \node[state] (Y2) [below right = of Xtmp] {$y_2$};
+  \node (Ytmp) [above = of Y2] {};
+
+  \node[operation] (squareX2) [above right = of Ytmp] {$\cdot^2$};
+  \node (squareXtmp) [below = of squareX2] {};
+  \node[operation] (squareY2) [below right = of squareXtmp] {$\cdot^2$};
+  \node (squareYtmp) [above = of squareY2] {};
+
+  \draw[->] (X2) -- (squareX2);
+  \draw[->] (Y2) -- (squareY2);
+
+  \node[operation] (add2) [right = of squareYtmp] {$+$};
+  \node (addtmp) [above = of add2] {};
+  \node (addtmp2) [below = of add2] {};
+  \node[state] (output2) [right = of add2] {$r_2^2$};
+
+  \draw[->,rounded corners] (squareX2) -- (addtmp.center) -- (add2);
+  \draw[->,rounded corners] (squareY2) -- (addtmp2.center) -- (add2);
+  \draw[->] (add2) -- (output2);
+
+
+  \node[state] (X3) [below = 3 of X2] {$x_3$};
+  \node (Xtmp) [below = of X3] {};
+  \node[state] (Y3) [below right = of Xtmp] {$y_3$};
+  \node (Ytmp) [above = of Y3] {};
+
+  \node[operation] (squareX3) [above right = of Ytmp] {$\cdot^2$};
+  \node (squareXtmp) [below = of squareX3] {};
+  \node[operation] (squareY3) [below right = of squareXtmp] {$\cdot^2$};
+  \node (squareYtmp) [above = of squareY3] {};
+
+  \draw[->] (X3) -- (squareX3);
+  \draw[->] (Y3) -- (squareY3);
+
+  \node[operation] (add3) [right = of squareYtmp] {$+$};
+  \node (addtmp) [above = of add3] {};
+  \node (addtmp2) [below = of add3] {};
+  \node[state] (output3) [right = of add3] {$r_3^2$};
+
+  \draw[->,rounded corners] (squareX3) -- (addtmp.center) -- (add3);
+  \draw[->,rounded corners] (squareY3) -- (addtmp2.center) -- (add3);
+  \draw[->] (add3) -- (output3);
+
+
+  \node[state] (X4) [below = 3 of X3] {$x_4$};
+  \node (Xtmp) [below = of X4] {};
+  \node[state] (Y4) [below right = of Xtmp] {$y_4$};
+  \node (Ytmp) [above = of Y4] {};
+
+  \node[operation] (squareX4) [above right = of Ytmp] {$\cdot^2$};
+  \node (squareXtmp) [below = of squareX4] {};
+  \node[operation] (squareY4) [below right = of squareXtmp] {$\cdot^2$};
+  \node (squareYtmp) [above = of squareY4] {};
+
+  \draw[->] (X4) -- (squareX4);
+  \draw[->] (Y4) -- (squareY4);
+
+  \node[operation] (add4) [right = of squareYtmp] {$+$};
+  \node (addtmp) [above = of add4] {};
+  \node (addtmp2) [below = of add4] {};
+  \node[state] (output4) [right = of add4] {$r_4^2$};
+
+  \draw[->,rounded corners] (squareX4) -- (addtmp.center) -- (add4);
+  \draw[->,rounded corners] (squareY4) -- (addtmp2.center) -- (add4);
+  \draw[->] (add4) -- (output4);
+\end{graph}
+\end{document}

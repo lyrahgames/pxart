@@ -28,6 +28,16 @@
       minimum width = 2.0cm,
       minimum height = 0.5cm
     },
+    operation/.style = {
+      circle,
+      top color = white,
+      % bottom color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9cm
+    },
     >=Stealth
   ]
 }{
@@ -44,22 +54,22 @@
   \node[bit] (B5) [right=2.0cm of B4] {$x_2$};
   \node[bit] (B6) [right=2.0cm of B5] {$x_1$};
   \node[bit] (B7) [right=2.0cm of B6] {$x_0$};
-  \node[label=\footnotesize 0,minimum height = 0.5cm] (X) [right=0.70cm of B7] {};
-  \node[label=\footnotesize 31,minimum height = 0.5cm] (X) [left=0.70cm of B7] {};
-  \node[label=\footnotesize 32,minimum height = 0.5cm] (X) [right=0.70cm of B6] {};
-  \node[label=\footnotesize 63,minimum height = 0.5cm] (X) [left=0.70cm of B6] {};
-  \node[label=\footnotesize 64,minimum height = 0.5cm] (X) [right=0.70cm of B5] {};
-  \node[label=\footnotesize 95,minimum height = 0.5cm] (X) [left=0.70cm of B5] {};
-  \node[label=\footnotesize 96,minimum height = 0.5cm] (X) [right=0.70cm of B4] {};
-  \node[label=\footnotesize 127,minimum height = 0.5cm] (X) [left=0.70cm of B4] {};
-  \node[label=\footnotesize 128,minimum height = 0.5cm] (X) [right=0.70cm of B3] {};
-  \node[label=\footnotesize 159,minimum height = 0.5cm] (X) [left=0.70cm of B3] {};
-  \node[label=\footnotesize 160,minimum height = 0.5cm] (X) [right=0.70cm of B2] {};
-  \node[label=\footnotesize 191,minimum height = 0.5cm] (X) [left=0.70cm of B2] {};
-  \node[label=\footnotesize 192,minimum height = 0.5cm] (X) [right=0.70cm of B1] {};
-  \node[label=\footnotesize 223,minimum height = 0.5cm] (X) [left=0.70cm of B1] {};
-  \node[label=\footnotesize 224,minimum height = 0.5cm] (X) [right=0.70cm of B0] {};
-  \node[label=\footnotesize 255,minimum height = 0.5cm] (X) [left=0.70cm of B0] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B7] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B7] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B6] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B6] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B5] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B5] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B4] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B4] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B3] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B3] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B2] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B2] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B1] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B1] {};
+  \node[minimum height = 0.5cm] (X) [right=0.70cm of B0] {};
+  \node[minimum height = 0.5cm] (X) [left=0.70cm of B0] {};
 
   \node[bit] (C0) [below=2.0cm of B0]{$y_7$};
   \node[bit] (C1) [right=2.0cm of C0] {$y_6$};
@@ -111,11 +121,11 @@
   % \node[label=224,minimum height = 0.5cm] (X) [right=0.60cm of D0] {};
   % \node[label=255,minimum height = 0.5cm] (X) [left=0.60cm of D0] {};
 
-  \node (operation) [below = 1cm of B0] {\Large{$+$}};
-  \node (operation2) [below = 1cm of B7] {};
-  \path[-,dashed] (operation) edge node {} (operation2);
-  \node (equality) [below = 1cm of C0] {\Large{$=$}};
+  \node[operation] (operation) [below right = 1.41cm of B3] {\Large{$+$}};
+  \node (operation2) [below = 1.41cm of B7] {};
+  % \path[-,dashed] (operation) edge node {} (operation2);
+  \node[operation] (equality) [below right = 1.41cm of C3] {\Large{$=$}};
   \node (equality2) [below = 1cm of C7] {};
-  \path[-,dashed] (equality) edge node {} (equality2);
+  % \path[-,dashed] (equality) edge node {} (equality2);
 \end{graph}
 \end{document}

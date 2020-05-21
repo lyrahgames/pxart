@@ -1,0 +1,90 @@
+\documentclass{standalone}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,shapes,calc}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{backgrounds}
+\definecolor{processblue}{cmyk}{1,1,1,0}
+
+\newenvironment{graph}{
+  \begin{tikzpicture}
+  [
+    -latex, auto,
+    node distance = 1.0cm and 1.5cm,
+    on grid, semithick,
+    state/.style = {
+      rectangle,
+      top color = white,
+      bottom color = processblue!10,
+      % bottom color = white,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9 cm,
+      minimum height = 0.9 cm
+    },
+    box/.style = {
+      rectangle,
+      rounded corners,
+      % top color = white,
+      bottom color = processblue!4,
+      top color = processblue!4,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.5 cm,
+      minimum height = 0.5 cm
+    },
+    operation/.style = {
+      circle,
+      top color = white,
+      % bottom color = white,
+      bottom color = processblue!10,
+      draw,
+      processblue,
+      text=black,
+      minimum width = 0.9cm
+    },
+    connect/.style = {
+      circle,
+      top color = black,
+      bottom color = black,
+      draw,
+      black,
+      text=black,
+      inner sep = 1pt,
+    },
+    >=Stealth
+  ]
+}{
+  \end{tikzpicture}
+}
+
+\usepackage{times}
+\usepackage{amssymb}
+
+\begin{document}
+\begin{graph}
+  \node[state] (X) [] {$x$};
+  \node (Xtmp) [below = of X] {};
+  \node[state] (Y) [below right = of Xtmp] {$y$};
+  \node (Ytmp) [above = of Y] {};
+
+  \node[operation] (squareX) [above right = of Ytmp] {$\cdot^2$};
+  \node (squareXtmp) [below = of squareX] {};
+  \node[operation] (squareY) [below right = of squareXtmp] {$\cdot^2$};
+  \node (squareYtmp) [above = of squareY] {};
+
+  \draw[->] (X) -- (squareX);
+  \draw[->] (Y) -- (squareY);
+
+  \node[operation] (add) [right = of squareYtmp] {$+$};
+  \node (addtmp) [above = of add] {};
+  \node (addtmp2) [below = of add] {};
+  \node[state] (output) [right = of add] {$r^2$};
+
+  \draw[->,rounded corners] (squareX) -- (addtmp.center) -- (add);
+  \draw[->,rounded corners] (squareY) -- (addtmp2.center) -- (add);
+  \draw[->] (add) -- (output);
+\end{graph}
+\end{document}
