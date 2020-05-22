@@ -347,19 +347,27 @@
   \section{Implementation} % (fold)
   \label{sec:implementation}
     \subsection{Xoroshiro128+}
-    \begin{frame}{Xoroshiro128+}
+    \begin{frame}{Xoroshiro128+ Scheme}
       \begin{figure}
         \includegraphics[width=0.8\textwidth]{figures/xrsr128p_scheme.pdf}
       \end{figure}
-      \begin{itemize}
-        \item scrambled linear PRNG
-        \item 128-bit state, 64-bit output
-        \item period: $2^{128}-1$
-        \item jump operations
-      \end{itemize}
+      \bigskip
+      \begin{minipage}{0.5\textwidth}
+        \begin{itemize}
+          \item scrambled linear PRNG
+          \item 128-bit state, 64-bit output
+        \end{itemize}
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.49\textwidth}
+        \begin{itemize}
+          \item period: $2^{128}-1$
+          \item jump operations
+        \end{itemize}
+      \end{minipage}
     \end{frame}
 
-    \begin{frame}{Xoroshiro128+ Scalar and Vectorized}
+    \begin{frame}{Xoroshiro128+ SIMD Scheme}
       \begin{figure}
         \includegraphics[width=0.9\textwidth]{figures/xrsr128p_vector_layout.pdf}
       \end{figure}
@@ -371,28 +379,38 @@
     \end{frame}
 
     \subsection{MT19937}
-    \begin{frame}{Mersenne Twister MT19937}
+    \begin{frame}{MT19937}
       \begin{figure}
         \includegraphics[width=0.25\textwidth]{figures/mt19937_transition_short.pdf}
         \hfill
         \includegraphics[width=0.637\textwidth]{figures/mt19937_scheme.pdf}
       \end{figure}
-      \begin{itemize}
-        \item de-facto standard
-        \item linear PRNG
-        \item 19937-bit / 19968-bit $\approx 2.4\appendUnit{KiB}$ state, 32-bit output
-        \item period: $2^{19937}-1$
-        \item 623-dimensional equidistributed
-      \end{itemize}
+      \begin{minipage}{0.49\textwidth}
+        \begin{itemize}
+          \item de-facto standard
+          \item linear PRNG
+          \item 19937-bit / 19968-bit state, 32-bit output
+        \end{itemize}
+      \end{minipage}
+      \hfill
+      \begin{minipage}{0.4\textwidth}
+        \begin{itemize}
+          \item period: $2^{19937}-1$
+          \item 623-dimensional equidistributed
+        \end{itemize}
+      \end{minipage}
     \end{frame}
 
-    \begin{frame}{MT19937 Scalar}
+    \begin{frame}{MT19937 Scalar Loop Scheme}
       \begin{figure}
         \includegraphics[width=0.7\textwidth]{figures/mt19937_loop_scheme.pdf}
       \end{figure}
+      \begin{itemize}
+        \item implementation could be tested for the same output as the standard
+      \end{itemize}
     \end{frame}
 
-    \begin{frame}{MT19937 SIMD}
+    \begin{frame}{MT19937 SIMD Leap Frogging}
       \begin{figure}
         \includegraphics[width=0.9\textwidth]{figures/leapfrogging_multiple_streams.pdf}
       \end{figure}
@@ -401,13 +419,10 @@
       \end{itemize}
     \end{frame}
 
-    \begin{frame}{MT19937 SIMD}
+    \begin{frame}{MT19937 SIMD Loop Scheme}
       \begin{figure}
         \includegraphics[width=0.9\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
       \end{figure}
-      \begin{itemize}
-        \item implementation could be tested for the same output as the standard
-      \end{itemize}
     \end{frame}
 
     \subsection{Uniform Distribution Functions}
@@ -455,7 +470,7 @@
 
   \section{Evaluation and Results} % (fold)
   \label{sec:evaluation_and_results}
-    \begin{frame}{Evaluation and Results}
+    \begin{frame}{Tests and Performance}
       \begin{figure}
         \includegraphics[width=0.6\textwidth]{figures/generation_desktop.pdf}
       \end{figure}
@@ -465,9 +480,14 @@
       \end{itemize}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}{MT19937 Speed-Up}
       \begin{figure}
         \includegraphics[width=0.6\textwidth]{figures/monte_carlo_pi_desktop_mt19937.pdf}\\
+      \end{figure}
+    \end{frame}
+
+    \begin{frame}{Xoroshiro128+ Speed-Up}
+      \begin{figure}
         \includegraphics[width=0.6\textwidth]{figures/monte_carlo_pi_desktop_xrsr128p.pdf}
       \end{figure}
     \end{frame}
@@ -488,10 +508,12 @@
           User-Friendly API & \checkmark & \crossmark & \crossmark \\
           Header-Only & \checkmark & \crossmark & \crossmark \\
           Open Source & \checkmark & \checkmark & \crossmark \\
-          Documentation & \checkmark & \crossmark & \checkmark \\
+          Documentation & \checkmark & \crossmark & $\sim$ \\
           Distributions & \crossmark & \checkmark & \checkmark \\
           CMake and build2 Support & \checkmark & \crossmark & \crossmark \\
-          Dependency-Free & \checkmark & ? & ? \\
+          Dependency-Free & \checkmark & \checkmark & $\sim$ \\
+          Easy-to-get & \checkmark & $\sim$ & $\sim$ \\
+          AVX512 & \crossmark & $\sim$ & \checkmark \\
           \hline
         \end{tabular}
       \end{table}
