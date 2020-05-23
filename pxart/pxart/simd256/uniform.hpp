@@ -66,34 +66,76 @@ inline avx_t<double> uniform<double>(__m256i x, double a, double b) noexcept {
 }
 
 template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer>, int> = 0>
+inline auto uniform(__m256i x) noexcept {
+  return x;
+}
+
+template <typename Integer,
           std::enable_if_t<std::is_integral_v<Integer> &&
-                               (sizeof(Integer) <= sizeof(uint32_t)),
+                               (sizeof(Integer) == sizeof(uint8_t)),
                            int> = 0>
 inline auto uniform(__m256i x, Integer a, Integer b) noexcept {
-  const auto sv = _mm256_set1_epi32(b - a);
-  const auto x1 = _mm256_srli_epi32(x, 16);
-  const auto x0 = _mm256_and_si256(x, _mm256_set1_epi32(0x0000ffff));
-  const auto s1 = _mm256_srli_epi32(sv, 16);
-  const auto s0 = _mm256_and_si256(sv, _mm256_set1_epi32(0x0000ffff));
-
-  const auto x1s1 = _mm256_mullo_epi32(x1, s1);
-  const auto x1s0 = _mm256_mullo_epi32(x1, s0);
-  const auto x0s1 = _mm256_mullo_epi32(x0, s1);
-  const auto x0s0 = _mm256_mullo_epi32(x0, s0);
-  const auto x1s0_0 = _mm256_and_si256(x1s0, _mm256_set1_epi32(0x0000ffff));
-  const auto x1s0_1 = _mm256_srli_epi32(x1s0, 16);
-  const auto x0s1_0 = _mm256_and_si256(x0s1, _mm256_set1_epi32(0x0000ffff));
-  const auto x0s1_1 = _mm256_srli_epi32(x0s1, 16);
-  return _mm256_add_epi32(
-      _mm256_set1_epi32(a),
-      _mm256_add_epi32(
-          x1s1, _mm256_add_epi32(
-                    _mm256_add_epi32(x1s0_1, x0s1_1),
-                    _mm256_srli_epi32(
-                        _mm256_add_epi32(_mm256_add_epi32(x1s0_0, x0s1_0),
-                                         _mm256_srli_epi32(x0s0, 16)),
-                        16))));
+  const auto bound = _mm256_set1_epi16(b - a + 1);
+  const auto even = _mm256_srli_epi16(
+      _mm256_mullo_epi16(_mm256_and_si256(x, _mm256_set1_epi16(0x00ff)), bound),
+      8);
+  const auto odd = _mm256_mullo_epi16(_mm256_srli_epi16(x, 8), bound);
+  const auto scale = _mm256_blendv_epi8(odd, even, _mm256_set1_epi16(0x00ff));
+  return _mm256_add_epi8(scale, _mm256_set1_epi8(a));
 }
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) == sizeof(uint16_t)),
+                           int> = 0>
+inline auto uniform(__m256i x, Integer a, Integer b) noexcept {
+  const auto bound = _mm256_set1_epi16(b - a + 1);
+  const auto scale = _mm256_mulhi_epu16(x, bound);
+  return _mm256_add_epi16(scale, _mm256_set1_epi16(a));
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) == sizeof(uint32_t)),
+                           int> = 0>
+inline auto uniform(__m256i x, Integer a, Integer b) noexcept {
+  const auto bound = _mm256_set1_epi32(b - a + 1);
+  const auto even = _mm256_srli_epi64(_mm256_mul_epu32(x, bound), 32);
+  const auto odd = _mm256_mul_epu32(_mm256_srli_epi64(x, 32), bound);
+  const auto scale = _mm256_blend_epi32(odd, even, 0b01010101);
+  return _mm256_add_epi32(scale, _mm256_set1_epi32(a));
+}
+
+// template <typename Integer,
+//           std::enable_if_t<std::is_integral_v<Integer> &&
+//                                (sizeof(Integer) <= sizeof(uint32_t)),
+//                            int> = 0>
+// inline auto uniform(__m256i x, Integer a, Integer b) noexcept {
+//   const auto sv = _mm256_set1_epi32(b - a);
+//   const auto x1 = _mm256_srli_epi32(x, 16);
+//   const auto x0 = _mm256_and_si256(x, _mm256_set1_epi32(0x0000ffff));
+//   const auto s1 = _mm256_srli_epi32(sv, 16);
+//   const auto s0 = _mm256_and_si256(sv, _mm256_set1_epi32(0x0000ffff));
+
+//   const auto x1s1 = _mm256_mullo_epi32(x1, s1);
+//   const auto x1s0 = _mm256_mullo_epi32(x1, s0);
+//   const auto x0s1 = _mm256_mullo_epi32(x0, s1);
+//   const auto x0s0 = _mm256_mullo_epi32(x0, s0);
+//   const auto x1s0_0 = _mm256_and_si256(x1s0, _mm256_set1_epi32(0x0000ffff));
+//   const auto x1s0_1 = _mm256_srli_epi32(x1s0, 16);
+//   const auto x0s1_0 = _mm256_and_si256(x0s1, _mm256_set1_epi32(0x0000ffff));
+//   const auto x0s1_1 = _mm256_srli_epi32(x0s1, 16);
+//   return _mm256_add_epi32(
+//       _mm256_set1_epi32(a),
+//       _mm256_add_epi32(
+//           x1s1, _mm256_add_epi32(
+//                     _mm256_add_epi32(x1s0_1, x0s1_1),
+//                     _mm256_srli_epi32(
+//                         _mm256_add_epi32(_mm256_add_epi32(x1s0_0, x0s1_0),
+//                                          _mm256_srli_epi32(x0s0, 16)),
+//                         16))));
+// }
 
 }  // namespace detail
 

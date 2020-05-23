@@ -21,7 +21,14 @@ inline T pun_cast(U x) {
   return t;
 }
 
-template <typename Real>
+// We need a deleted base template to call floating-point specializations as
+// template functions and therefore to provide a consistent interface. But
+// deleted functions will be used to resolve overload resolutions and
+// instantiate template specializations. Therefore the deleted template
+// functions should only be taken into account when used with floating-point
+// numbers.
+template <typename Real,
+          std::enable_if_t<std::numeric_limits<Real>::is_iec559, int> = 0>
 constexpr Real uniform(uint32_t) noexcept = delete;
 
 // reinterpret_cast is not allowed in constexpr!
@@ -48,15 +55,52 @@ constexpr inline Real uniform(uint32_t x, Real a, Real b) noexcept {
 
 template <typename Integer,
           std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) == sizeof(uint32_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint32_t x) noexcept {
+  return static_cast<Integer>(x);
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) < sizeof(uint32_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint32_t x) noexcept {
+  return static_cast<Integer>(x >> 8 * (sizeof(uint32_t) - sizeof(Integer)));
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
                                (sizeof(Integer) <= sizeof(uint32_t)),
                            int> = 0>
 constexpr inline Integer uniform(uint32_t x, Integer a, Integer b) noexcept {
-  return a +
-         static_cast<Integer>(
-             (static_cast<uint64_t>(x) * static_cast<uint64_t>(b - a)) >> 32);
+  return a + static_cast<Integer>((static_cast<uint64_t>(x) *
+                                   (static_cast<uint64_t>(b - a) + 1ull)) >>
+                                  32);
 }
 
-template <typename Real>
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) <= sizeof(uint16_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint16_t x, Integer a, Integer b) noexcept {
+  return a + static_cast<Integer>((static_cast<uint32_t>(x) *
+                                   (static_cast<uint32_t>(b - a) + 1u)) >>
+                                  16);
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) <= sizeof(uint8_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint8_t x, Integer a, Integer b) noexcept {
+  return a + static_cast<Integer>((static_cast<uint32_t>(x) *
+                                   (static_cast<uint32_t>(b - a) + 1u)) >>
+                                  8);
+}
+
+template <typename Real,
+          std::enable_if_t<std::numeric_limits<Real>::is_iec559, int> = 0>
 constexpr Real uniform(uint64_t) noexcept = delete;
 
 // For similar reasons no constexpr is used.
@@ -74,12 +118,12 @@ inline double uniform<double>(uint64_t x) noexcept {
   return pun_cast<double>(tmp) - 1.0;
 }
 
-template <>
-inline std::pair<float, float> uniform<std::pair<float, float>>(
-    uint64_t x) noexcept {
-  return {uniform<float>(static_cast<uint32_t>(x)),
-          uniform<float>(static_cast<uint32_t>(x >> 32))};
-}
+// template <>
+// inline std::pair<float, float> uniform<std::pair<float, float>>(
+//     uint64_t x) noexcept {
+//   return {uniform<float>(static_cast<uint32_t>(x)),
+//           uniform<float>(static_cast<uint32_t>(x >> 32))};
+// }
 
 template <typename Real,
           std::enable_if_t<std::numeric_limits<Real>::is_iec559, int> = 0>
@@ -89,12 +133,41 @@ constexpr inline Real uniform(uint64_t x, Real a, Real b) noexcept {
 
 template <typename Integer,
           std::enable_if_t<std::is_integral_v<Integer> &&
-                               (sizeof(Integer) <= sizeof(uint64_t)),
+                               (sizeof(Integer) == sizeof(uint64_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint64_t x) noexcept {
+  return static_cast<Integer>(x);
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) < sizeof(uint64_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint64_t x) noexcept {
+  return static_cast<Integer>(x >> 8 * (sizeof(uint64_t) - sizeof(Integer)));
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) <= sizeof(uint32_t)),
                            int> = 0>
 constexpr inline Integer uniform(uint64_t x, Integer a, Integer b) noexcept {
-  const auto m = static_cast<uint64_t>(b - a);
+  // Here, we are ignoring the lower 32 bits of x. This is the same
+  // approximation as in the 32-bit case. The analog algorithm for the 64-bit
+  // case with respect to the 32-bit case would be more costly without any
+  // benefit because the original 32-bit algorithm was already an approximation.
+  const auto m = static_cast<uint64_t>(b - a) + 1ull;
+  return a + static_cast<Integer>(((x >> 32) * m) >> 32);
+}
+
+template <typename Integer,
+          std::enable_if_t<std::is_integral_v<Integer> &&
+                               (sizeof(Integer) == sizeof(uint64_t)),
+                           int> = 0>
+constexpr inline Integer uniform(uint64_t x, Integer a, Integer b) noexcept {
+  const auto m = static_cast<uint64_t>(b - a) + 1ull;
   const auto n = static_cast<uint64_t>(x);
-  constexpr auto lower_mask = 0x00000000fffffffful;
+  constexpr auto lower_mask = 0x00000000ffffffffull;
   const auto m0 = m & lower_mask;
   const auto m1 = m >> 32;
   const auto n0 = n & lower_mask;

@@ -84,4 +84,42 @@ TEST_CASE("pxart::simd256::detail::uniform int Bounds") {
   // }
 }
 
+TEST_CASE("pxart::simd256::detail::uniform short Bounds") {
+  pxart::simd256::mt19937 rng{random_device{}};
+  const int n = 1'000'000;
+  for (int i = 0; i < n; i += 16) {
+    const auto rnd = rng();
+    const auto v = pxart::simd256::detail::uniform<short>(rnd, -10, 123);
+    for (int j = 0; j < 16; ++j) {
+      REQUIRE(pxart::detail::uniform<short>(
+                  reinterpret_cast<const uint16_t*>(&rnd)[j], -10, 123) ==
+              reinterpret_cast<const short*>(&v)[j]);
+    }
+  }
+}
+
+TEST_CASE("pxart::simd256::detail::uniform short Bounds") {
+  pxart::simd256::mt19937 rng{random_device{}};
+  const int n = 1'000'000;
+  for (int i = 0; i < n; i += 32) {
+    const auto rnd = rng();
+    const auto v = pxart::simd256::detail::uniform<char>(rnd, 'A', 'Z');
+    for (int j = 0; j < 32; ++j) {
+      REQUIRE(pxart::detail::uniform<char>(
+                  reinterpret_cast<const uint8_t*>(&rnd)[j], 'A', 'Z') ==
+              reinterpret_cast<const char*>(&v)[j]);
+    }
+  }
+
+  for (int i = 0; i < n; i += 32) {
+    const auto rnd = rng();
+    const auto v = pxart::simd256::detail::uniform<char>(rnd, 'a', 'z');
+    for (int j = 0; j < 32; ++j) {
+      REQUIRE(pxart::detail::uniform<char>(
+                  reinterpret_cast<const uint8_t*>(&rnd)[j], 'a', 'z') ==
+              reinterpret_cast<const char*>(&v)[j]);
+    }
+  }
+}
+
 #endif

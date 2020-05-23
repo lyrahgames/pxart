@@ -1,0 +1,15 @@
+: 1
+name: pxart-examples-basics
+version: 0.1.0-a.1.z
+project: pxart
+summary: Basic pXart Examples
+license: MIT ; MIT license
+url: https://lyrahgames.github.io/pxart/
+doc-url: https://lyrahgames.github.io/pxart/docs/home/
+src-url: https://github.com/lyrahgames/pxart
+email: markuspawellek@gmail.com
+depends: * build2 >= 0.12.0
+depends: * bpkg >= 0.12.0
+depends: pxart
+requires: AVX2
+requires: SSE4.1

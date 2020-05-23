@@ -83,12 +83,12 @@ TEST_CASE("pxart::detail::uniform<int>(uint32_t, int, int)") {
   const int n = 100'000;
   for (int i = 0; i < n; ++i) {
     const auto tmp = pxart::detail::uniform<int>(rd(), -23, 1023);
-    REQUIRE(tmp < 1023);
+    REQUIRE(tmp <= 1023);
     REQUIRE(tmp >= -23);
   }
   for (int i = 0; i < n; ++i) {
     const auto tmp = pxart::detail::uniform(rd(), -42, -1);
-    REQUIRE(tmp < -1);
+    REQUIRE(tmp <= -1);
     REQUIRE(tmp >= -42);
   }
 }
@@ -99,13 +99,13 @@ TEST_CASE("pxart::detail::uniform<long>(uint64_t, long, long)") {
   for (int i = 0; i < n; ++i) {
     const auto tmp = pxart::detail::uniform<long>(
         static_cast<uint64_t>(rng()) << 32 | rng(), -23l, 1023l);
-    REQUIRE(tmp < 1023);
+    REQUIRE(tmp <= 1023);
     REQUIRE(tmp >= -23);
   }
   for (int i = 0; i < n; ++i) {
     const auto tmp = pxart::detail::uniform(
         static_cast<uint64_t>(rng()) << 32 | rng(), -42l, -1l);
-    REQUIRE(tmp < -1);
+    REQUIRE(tmp <= -1);
     REQUIRE(tmp >= -42);
   }
 }
@@ -178,5 +178,27 @@ TEST_CASE("pxart::uniform<float>(RNG, float, float)") {
     const auto tmp = pxart::uniform(rd, 1.0f, 1.55f);
     REQUIRE(tmp <= 1.55f);
     REQUIRE(tmp >= 1.0f);
+  }
+}
+
+TEST_CASE("pxart::uniform<float>(RNG)") {
+  random_device rd{};
+  const int n = 100'000;
+  for (int i = 0; i < n; ++i) {
+    const auto tmp = pxart::uniform<float>(rd);
+    static_assert(std::is_same_v<decltype(tmp), const float>);
+    REQUIRE(tmp <= 1.0f);
+    REQUIRE(tmp >= 0.0f);
+  }
+}
+
+TEST_CASE("pxart::uniform<double>(RNG)") {
+  random_device rd{};
+  const int n = 100'000;
+  for (int i = 0; i < n; ++i) {
+    const auto tmp = pxart::uniform<double>(rd);
+    static_assert(std::is_same_v<decltype(tmp), const double>);
+    REQUIRE(tmp <= 1.0);
+    REQUIRE(tmp >= 0.0);
   }
 }

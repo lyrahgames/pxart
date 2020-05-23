@@ -1,0 +1,25 @@
+import libs = pxart%lib{pxart}
+
+./: exe{uniform_float}: cxx{uniform_float} $libs
+./: exe{uniform_float_bounds}: cxx{uniform_float_bounds} $libs
+
+./: exe{uniform_double}: cxx{uniform_double} $libs
+./: exe{uniform_double_bounds}: cxx{uniform_double_bounds} $libs
+
+./: exe{uniform_int}: cxx{uniform_int} $libs
+./: exe{uniform_int_bounds}: cxx{uniform_int_bounds} $libs
+
+./: exe{uniform_unsigned_int}: cxx{uniform_unsigned_int} $libs
+
+./: exe{uniform_short}: cxx{uniform_short} $libs
+
+./: exe{uniform_char_bounds}: cxx{uniform_char_bounds} $libs
+
+
+./: exe{uniform_64_float}: cxx{uniform_64_float} $libs
+
+./: exe{uniform_64_double}: cxx{uniform_64_double} $libs
+
+./: exe{uniform_64_int_bounds}: cxx{uniform_64_int_bounds} $libs
+
+./: exe{histogram_64_int}: cxx{histogram_64_int} $libs
