@@ -84,6 +84,20 @@ TEST_CASE("pxart::simd256::detail::uniform int Bounds") {
   // }
 }
 
+TEST_CASE("pxart::simd256::detail::uniform long long Bounds") {
+  pxart::simd256::mt19937 rng{random_device{}};
+  const int n = 1'000'000;
+  for (int i = 0; i < n; i += 4) {
+    const auto rnd = rng();
+    const auto v = pxart::simd256::detail::uniform<long long>(rnd, -10, 123);
+    for (int j = 0; j < 4; ++j) {
+      REQUIRE(pxart::detail::uniform<long long>(
+                  reinterpret_cast<const uint64_t*>(&rnd)[j], -10, 123) ==
+              reinterpret_cast<const long long*>(&v)[j]);
+    }
+  }
+}
+
 TEST_CASE("pxart::simd256::detail::uniform short Bounds") {
   pxart::simd256::mt19937 rng{random_device{}};
   const int n = 1'000'000;
@@ -98,7 +112,7 @@ TEST_CASE("pxart::simd256::detail::uniform short Bounds") {
   }
 }
 
-TEST_CASE("pxart::simd256::detail::uniform short Bounds") {
+TEST_CASE("pxart::simd256::detail::uniform char Bounds") {
   pxart::simd256::mt19937 rng{random_device{}};
   const int n = 1'000'000;
   for (int i = 0; i < n; i += 32) {
