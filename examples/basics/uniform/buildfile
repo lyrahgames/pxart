@@ -22,4 +22,9 @@ import libs = pxart%lib{pxart}
 
 ./: exe{uniform_64_int_bounds}: cxx{uniform_64_int_bounds} $libs
 
+
 ./: exe{histogram_64_int}: cxx{histogram_64_int} $libs
+./: exe{histogram_simd256_int}: cxx{histogram_simd256_int} $libs
+
+
+./: exe{uniform_simd256_int_bounds}: cxx{uniform_simd256_int_bounds} $libs

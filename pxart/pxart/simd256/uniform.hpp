@@ -13,7 +13,7 @@ namespace detail {
 
 // We introduce this layer of indirection because the Intel compiler is not able
 // to deduce the full specialization with automatically deduced return types.
-template <typename T>
+template <typename T, typename U = void>
 struct avx_type {};
 template <>
 struct avx_type<float> {
@@ -22,6 +22,10 @@ struct avx_type<float> {
 template <>
 struct avx_type<double> {
   using type = __m256d;
+};
+template <typename T>
+struct avx_type<T, std::enable_if_t<std::is_integral_v<T> > > {
+  using type = __m256i;
 };
 template <typename T>
 using avx_t = typename avx_type<T>::type;
@@ -163,13 +167,31 @@ constexpr inline auto uniform(RNG&& rng, Real a, Real b) noexcept {
 }  // namespace pxart::simd256
 
 namespace pxart {
-template <typename Real, typename RNG>
-constexpr inline auto uniform(RNG&& rng) noexcept -> std::enable_if_t<
-    !decltype(has_uniform_01(rng))::value &&
-        std::is_same_v<decltype(rng()), __m256i>,
-    std::conditional_t<std::is_same_v<Real, float>, __m256, __m256d> > {
-  return pxart::simd256::uniform<Real>(std::forward<RNG>(rng));
+
+// template <typename Real, typename RNG>
+// constexpr inline auto uniform(RNG&& rng) noexcept -> std::enable_if_t<
+//     !decltype(has_uniform_01(rng))::value &&
+//         std::is_same_v<decltype(rng()), __m256i>,
+//     std::conditional_t<std::is_same_v<Real, float>, __m256, __m256d> > {
+//   return pxart::simd256::uniform<Real>(std::forward<RNG>(rng));
+// }
+
+template <typename T, typename RNG>
+constexpr inline auto uniform(RNG&& rng) noexcept
+    -> std::enable_if_t<!decltype(has_uniform_01(rng))::value &&
+                            std::is_same_v<decltype(rng()), __m256i>,
+                        pxart::simd256::detail::avx_t<T> > {
+  return pxart::simd256::uniform<T>(std::forward<RNG>(rng));
 }
+
+template <typename T, typename RNG>
+constexpr inline auto uniform(RNG&& rng, T a, T b) noexcept
+    -> std::enable_if_t<!decltype(has_uniform(rng, a, b))::value &&
+                            std::is_same_v<decltype(rng()), __m256i>,
+                        pxart::simd256::detail::avx_t<T> > {
+  return pxart::simd256::uniform<T>(std::forward<RNG>(rng), a, b);
+}
+
 }  // namespace pxart
 
 #endif

@@ -1,4 +1,13 @@
 import libs = perfevent%lib{perfevent}
 import libs += pxart%lib{pxart}
-./: exe{monte_carlo_pi}: cxx{monte_carlo_pi} $libs
-./: exe{generate_cache}: cxx{generate_cache} $libs
+
+./: exe{monte_carlo_pi} exe{generate_cache}
+
+exe{monte_carlo_pi}: cxx{monte_carlo_pi} $libs
+{
+  test = true
+}
+exe{generate_cache}: cxx{generate_cache} $libs
+{
+  test = true
+}
