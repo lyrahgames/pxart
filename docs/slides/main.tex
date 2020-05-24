@@ -2,6 +2,7 @@
 \PassOptionsToPackage{english}{babel}
 \usepackage{standardslides}
 
+\usepackage{tikz}
 \usepackage{pifont}
 \usepackage{listings}
 \newlength{\listingframemargin}
@@ -69,6 +70,19 @@
   \selectlanguage{english}
   % \urlstyle{sf}
 
+  { % all template changes are local to this group.
+      \setbeamertemplate{navigation symbols}{}
+      \begin{frame}<article:0>[plain]
+          \begin{tikzpicture}[remember picture,overlay]
+              \node[at=(current page.center)] {
+                  \includegraphics[keepaspectratio,
+                                   width=1.2\paperwidth,
+                                   height=\paperheight]{images/audi_r8_path_tracing_2.png}
+              };
+          \end{tikzpicture}
+       \end{frame}
+  }
+
   \frame{\titlepage}
   \begin{frame}{Outline}
     \footnotesize
@@ -83,10 +97,21 @@
       \begin{itemize}
         \item Physical Simulations, based on Monte-Carlo Methods
       \end{itemize}
+      \bigskip
       \pause
-      \begin{figure}
-        \includegraphics[width=0.6\textwidth]{images/audi_r8_path_tracing.png}
-      \end{figure}
+      Goals:
+      \begin{itemize}
+        \pause
+        \item implement RNGs and according algorithms
+        \pause
+        \item vectorize those implementations
+        \pause
+        \item create a software library with powerful API
+        \pause
+        \item compare performance to others implementations
+        \pause
+        \item apply library to physical problems
+      \end{itemize}
     \end{frame}
 
     % \begin{frame}{Preliminaries}
@@ -128,17 +153,24 @@
     \end{frame}
 
     \begin{frame}{Pseudorandom Number Generator Definition}
-      \begin{figure}
-        \includegraphics[width=0.5\textwidth]{figures/sequence_generation_scheme.pdf}
-      \end{figure}
+      \begin{minipage}[c]{0.49\textwidth}
+        \begin{figure}
+          \includegraphics[width=\textwidth]{figures/sequence_generation_scheme.pdf}
+        \end{figure}
+      \end{minipage}
+      \begin{minipage}[c]{0.49\textwidth}
+        \begin{align*}
+          &S\ldots\text{Set of States}\\
+          &T\ldots\text{Transition Function} \\
+          &U\ldots\text{Set of Possible Outputs} \\
+          &G\ldots\text{Generator Function}
+        \end{align*}
+      \end{minipage}
       \vfill
       \begin{mybox}
         \[
           \mathscr{G} \define (S,T,U,G),\qquad \function{T}{S}{S}, \qquad \function{G}{S}{U}
         \]
-        % \[
-        %   \text{Transition Function: }\function{T}{S}{S}
-        % \]
         \[
           s_0\in S, \qquad s_{n+1} \define T(s_n), \qquad u_n \define G(s_n)
         \]
@@ -162,7 +194,7 @@
 
     \begin{frame}{Pseudorandom Number Generator Example}
       \begin{figure}
-        \includegraphics[width=0.5\textwidth]{figures/prng_example.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/prng_example.pdf}
       \end{figure}
       \begin{mybox}
         \[
@@ -171,6 +203,17 @@
           (u_n) = \overline{0110}
         \]
       \end{mybox}
+    \end{frame}
+
+    \begin{frame}{Pseudorandom Number Generator Example}
+      \begin{figure}
+        \includegraphics[width=0.45\textwidth]{figures/prng_example.pdf}
+      \end{figure}
+      \begin{itemize}
+        \item construction of \enquote{good} PRNG is difficult
+        \pause
+        \item pseudorandom number sequences will be periodic
+      \end{itemize}
     \end{frame}
   % section pseudorandom_number_generators (end)
 
@@ -183,7 +226,10 @@
     \end{frame}
 
     \begin{frame}{Usage in C++}
-      \inputCodeBlock{code/api.cpp}
+      \hspace{5em}
+      \begin{minipage}[c]{0.8\textwidth}
+        \inputCodeBlock{code/api.cpp}
+      \end{minipage}
     \end{frame}
 
     \begin{frame}{Computation of π}
@@ -231,7 +277,10 @@
     \end{frame}
 
     \begin{frame}{Example Usage}
-      \inputCodeBlock{code/monte_carlo_pi.cpp}
+      \hspace{8em}
+      \begin{minipage}[c]{0.7\textwidth}
+        \inputCodeBlock{code/monte_carlo_pi.cpp}
+      \end{minipage}
     \end{frame}
   % section design (end)
 
@@ -241,21 +290,26 @@
         \includegraphics[width=0.8\textwidth]{figures/simd_vector_operations.pdf}
       \end{figure}
       \begin{itemize}
-        \item exploits data-level parallelism
+        \pause
+        \item exploits data-level parallelism on a low level
+        \pause
         \item Intel CPUs use fixed-length vector registers
-        % \item vector registers contain packages of 8-bit, 16-bit, 32-bit, or 64-bit values
-        \item vector operations are performed independently on all contained values at once
+        \pause
+        \item vector operations are performed on all values at once
       \end{itemize}
     \end{frame}
 
     \begin{frame}{SIMD Features in C++}
       \begin{minipage}[c]{0.49\textwidth}
         \begin{itemize}
-          \item SSE (128-bit registers) and AVX (256-bit registers) instruction set features
-          \item Assembler vs. \\ Automatic Vectorization vs. \\ Manual Vectorization by Intrinsics
+          \pause
+          \item SSE, AVX and AVX512 \\ instruction set features
+          \pause
+          \item Assembler Instructions vs. \\ Automatic Vectorization vs. \\ SIMD Intrinsics
         \end{itemize}
       \end{minipage}
       \hfill
+      \pause
       \begin{minipage}{0.49\textwidth}
         \inputCodeBlock{code/intel_simd.cpp}
       \end{minipage}
@@ -264,10 +318,15 @@
     \begin{frame}{SIMD Architecture}
       Why should we vectorize PRNGs manually?
       \begin{itemize}
+        \pause
         \item exploit full functionality of today's processors
+        \pause
         \item no automatic vectorization possible
+        \pause
         \item other vectorized code needs vectorized random numbers
+        \pause
         \item faster generation of numbers
+        \pause
         \item PRNGs are low-level, SIMD is low-level
       \end{itemize}
     \end{frame}
@@ -275,9 +334,14 @@
     \begin{frame}{SIMD Architecture}
       What are conditions for good vectorization?
       \begin{itemize}
-        \item no data dependency
+        \pause
+        \item nearly no data dependencies
+        \pause
         \item same processing pipeline
+        \pause
         \item branchless execution
+        \pause
+        \item CPU-bound algorithms
       \end{itemize}
     \end{frame}
 
@@ -287,11 +351,13 @@
           x,y\in\setReal, \qquad r^2 = x^2 + y^2
         \]
       \end{mybox}
+      \pause
       \begin{minipage}{0.49\textwidth}
         \begin{figure}
           \includegraphics[width=0.9\textwidth]{figures/radius_operation.pdf}
         \end{figure}
       \end{minipage}
+      \pause
       \begin{minipage}{0.49\textwidth}
         \inputCodeBlock{code/simd_example_scalar.cpp}
       \end{minipage}
@@ -344,9 +410,9 @@
     % \end{frame}
   % section fundamentals_of_computer_architecture (end)
 
-  \section{Implementation} % (fold)
+  \section{Implementation of the Xoroshiro128+} % (fold)
   \label{sec:implementation}
-    \subsection{Xoroshiro128+}
+    % \subsection{Xoroshiro128+}
     \begin{frame}{Xoroshiro128+ Scheme}
       \begin{figure}
         \includegraphics[width=0.8\textwidth]{figures/xrsr128p_scheme.pdf}
@@ -354,14 +420,18 @@
       \bigskip
       \begin{minipage}{0.5\textwidth}
         \begin{itemize}
+          \pause
           \item scrambled linear PRNG
+          \pause
           \item 128-bit state, 64-bit output
         \end{itemize}
       \end{minipage}
       \hfill
       \begin{minipage}{0.49\textwidth}
         \begin{itemize}
+          \pause
           \item period: $2^{128}-1$
+          \pause
           \item jump operations
         \end{itemize}
       \end{minipage}
@@ -372,41 +442,67 @@
         \includegraphics[width=0.9\textwidth]{figures/xrsr128p_vector_layout.pdf}
       \end{figure}
       \begin{itemize}
-        \item several parallelization techniques
-        \item multiple instances of the same generator
-        \item seeding variations
+        \pause
+        \item several parallelization techniques for multiple streams
+        \pause
+        \item here: multiple instances of the same generator
+        \pause
+        \item seeding and parameter variations for multiple streams
       \end{itemize}
     \end{frame}
 
-    \subsection{MT19937}
+    % \subsection{MT19937}
+    \section{Implementation of the MT19937}
     \begin{frame}{MT19937}
       \begin{figure}
-        \includegraphics[width=0.25\textwidth]{figures/mt19937_transition_short.pdf}
-        \hfill
-        \includegraphics[width=0.637\textwidth]{figures/mt19937_scheme.pdf}
+        % \includegraphics[width=0.25\textwidth]{figures/mt19937_transition_short.pdf}
+        % \hfill
+        % \includegraphics[width=0.637\textwidth]{figures/mt19937_scheme.pdf}
+        \includegraphics[width=0.72\textwidth]{figures/mt19937_scheme.pdf}
       \end{figure}
+      \bigskip
       \begin{minipage}{0.49\textwidth}
         \begin{itemize}
+          \pause
           \item de-facto standard
+          \pause
           \item linear PRNG
-          \item 19937-bit / 19968-bit state, 32-bit output
+          \pause
+          \item 19937-bit state, 32-bit output
         \end{itemize}
       \end{minipage}
       \hfill
       \begin{minipage}{0.4\textwidth}
         \begin{itemize}
+          \pause
           \item period: $2^{19937}-1$
+          \pause
           \item 623-dimensional equidistributed
         \end{itemize}
       \end{minipage}
     \end{frame}
 
+    \begin{frame}{MT19937 Abbreviation}
+      \begin{figure}
+        \includegraphics[width=0.25\textwidth]{figures/mt19937_transition_short.pdf}
+        \hfill
+        \includegraphics[width=0.637\textwidth]{figures/mt19937_scheme.pdf}
+      \end{figure}
+    \end{frame}
+
     \begin{frame}{MT19937 Scalar Loop Scheme}
       \begin{figure}
+        \includegraphics[width=0.25\textwidth]{figures/mt19937_transition_short.pdf}
+        \hfill
         \includegraphics[width=0.7\textwidth]{figures/mt19937_loop_scheme.pdf}
       \end{figure}
       \begin{itemize}
-        \item implementation could be tested for the same output as the standard
+        \pause
+        \item moving all elements with one transition is inefficient
+        \pause
+        \item instead do $n$ transitions at once
+        \pause
+        \item example with $n=8$ and $m=5$; reality with $n=624$ and $m=397$
       \end{itemize}
     \end{frame}
 
@@ -421,11 +517,19 @@
 
     \begin{frame}{MT19937 SIMD Loop Scheme}
       \begin{figure}
-        \includegraphics[width=0.9\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/mt19937_vector_loop_scheme.pdf}
       \end{figure}
+      \begin{itemize}
+        \pause
+        \item example: two-element-vector; reality: up to eight-element-vector
+        \pause
+        \item add vector-register-sized buffer at the end
+        \pause
+        \item copy generated head to the end and do the vectorized loop
+      \end{itemize}
     \end{frame}
 
-    \subsection{Uniform Distribution Functions}
+    \section{Implementation of Uniform Distribution Functions}
     \begin{frame}{Real Uniform Distribution: Floating-Point Encoding}
       \begin{figure}
         \includegraphics[width=0.95\textwidth]{figures/floating-point_encoding_single.pdf}
@@ -446,24 +550,36 @@
         \includegraphics[width=0.95\textwidth]{figures/uniform_implementation_scheme.pdf}
       \end{figure}
       \begin{itemize}
+        \pause
         \item get random integer
+        \pause
         \item shift bits with highest entropy into fraction part
-        \item set sign and exponent to generate random floating-point value in $[1,2)$
-        \item subtract one
-        \item due independent operations easily vectorizable
+        \pause
+        \item set sign and exponent to put floating-point value in range $[1,2)$
+        \pause
+        \item subtract one from result
       \end{itemize}
     \end{frame}
 
     \begin{frame}{Integer Uniform Distribution}
+      \begin{itemize}
+        \pause
+        \item unbiased uniform integer algorithms should not be vectorized
+        \pause
+        \item use simple multiplication-based approximation
+      \end{itemize}
+      \bigskip
       \begin{mybox}
         \[
-          x\in\setNatural_0, x < 2^{32},\qquad y = \floorBrackets{\frac{(b-a)\cdot x}{2^{32}}} + a
+          x\in\setNatural_0,\ x < 2^{32},\qquad y = \floorBrackets{\frac{(b-a)\cdot x}{2^{32}}} + a
         \]
       \end{mybox}
+      \bigskip
       \begin{itemize}
-        \item only approximation possible with vectorization
-        \item first use bound by next more accurate multiplication
-        \item then add offset
+        \pause
+        \item use 64-bit multiplication for 32-bit integers
+        \pause
+        \item bias can be neglected for typical simulations
       \end{itemize}
     \end{frame}
   % section implementation (end)
@@ -471,25 +587,52 @@
   \section{Evaluation and Results} % (fold)
   \label{sec:evaluation_and_results}
     \begin{frame}{Tests and Performance}
+      \begin{itemize}
+        \pause
+        \item Consistency and Correctness: Unit Tests, API Tests, Examples
+        \pause
+        \item Statistical Performance: TestU01, dieharder
+        \pause
+        \item Performance: Filling a Cache, Monte Carlo π
+      \end{itemize}
       \begin{figure}
         \includegraphics[width=0.6\textwidth]{figures/generation_desktop.pdf}
       \end{figure}
-      \begin{itemize}
-        \item Tests: TestU01, dieharder, Unit Tests, API Tests
-        \item Performance: Benchmarks
-      \end{itemize}
     \end{frame}
 
-    \begin{frame}{MT19937 Speed-Up}
+    \begin{frame}{MT19937 Speed-Up Monte Carlo π}
       \begin{figure}
         \includegraphics[width=0.6\textwidth]{figures/monte_carlo_pi_desktop_mt19937.pdf}\\
       \end{figure}
     \end{frame}
 
-    \begin{frame}{Xoroshiro128+ Speed-Up}
+    \begin{frame}{Xoroshiro128+ Speed-Up Monte Carlo π}
       \begin{figure}
         \includegraphics[width=0.6\textwidth]{figures/monte_carlo_pi_desktop_xrsr128p.pdf}
       \end{figure}
+    \end{frame}
+
+    \begin{frame}{Comparison to Intel MKL VSL and RNGAVXLIB}
+      \begin{table}
+        \begin{tabular}{rrrr}
+          \hline
+          RNGAVXLIB & Intel MKL VSL & Cached AVX & Pure AVX \\
+          \hline
+          \hline
+          $0.38\appendUnit{s}$ & $0.10\appendUnit{s}$ & $0.09\appendUnit{s}$ & $0.08\appendUnit{s}$ \\
+          \hline
+        \end{tabular}
+      \end{table}
+      \begin{itemize}
+        \pause
+        \item pXart is faster when applied in Monte Carlo π benchmark
+        \pause
+        \item scalar interface reduces performance
+        \pause
+        \item Intel MKL VSL always fills vector of data
+        \pause
+        \item benchmarks are biased
+      \end{itemize}
     \end{frame}
   % section evaluation_and_results (end)
 
