@@ -4,3 +4,5 @@
 !*.bib
 !*.pdf
 !makefile
+
+!images/*.png
