@@ -175,18 +175,19 @@
     \end{frame}
   % section pseudorandom_number_generators (end)
 
-  \section{Design of the Library} % (fold)
+  \section{Design of pXart} % (fold)
   \label{sec:design}
-    \begin{frame}{Design Components}
-      \begin{figure}
-        \includegraphics[width=\textwidth]{figures/api_parts.pdf}
-      \end{figure}
-      \begin{itemize}
-        \pause\item pXart: header-only library written in C++
-        \pause\item support for CMake and build2
-        \pause\item providing online documentation
-      \end{itemize}
-    \end{frame}
+    % \begin{frame}{Design Components}
+    %   \begin{figure}
+    %     \includegraphics[width=\textwidth]{figures/api_parts.pdf}
+    %   \end{figure}
+    %   \begin{itemize}
+    %     \pause\item pXart: header-only library written in C++
+    %     \pause\item support for CMake and build2
+    %     \pause\item providing online documentation
+    %   \end{itemize}
+    % \end{frame}
+
     \begin{frame}{Design Components}
       \begin{figure}
         \includegraphics[width=\textwidth]{figures/api_parts.pdf}
@@ -224,16 +225,17 @@
       \end{itemize}
       \bigskip
       \pause
-      Why should we vectorize PRNGs manually?
+      Why should we (manually) vectorize PRNGs?
       \begin{itemize}
         \pause
         \item performance and speed
         \pause
-        \item use full functionality of today's processors
-        \pause
         \item no automatic vectorization possible
         \pause
         \item external vectorized code needs random numbers
+        \pause
+        \item performance portability
+        % \pause\item use full functionality of today's processors
         % \pause\item faster generation of numbers
         % \pause\item PRNGs are low-level, SIMD is low-level
       \end{itemize}
@@ -319,23 +321,14 @@
         \includegraphics[width=0.8\textwidth]{figures/xrsr128p_scheme.pdf}
       \end{figure}
       \bigskip
-      \begin{minipage}{0.5\textwidth}
-        \begin{itemize}
-          \pause
-          \item scrambled linear PRNG
-          \pause
-          \item 128-bit state, 64-bit output
-        \end{itemize}
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.49\textwidth}
-        \begin{itemize}
-          \pause
-          \item period: $2^{128}-1$
-          \pause
-          \item jump operations
-        \end{itemize}
-      \end{minipage}
+      \begin{itemize}
+        \pause
+        \item scrambled linear PRNG
+        \pause
+        \item 128-bit state, 64-bit output
+        \pause
+        \item period: $2^{128}-1$
+      \end{itemize}
     \end{frame}
 
     \begin{frame}{Xoroshiro128+ SIMD Scheme}
@@ -344,11 +337,11 @@
       \end{figure}
       \begin{itemize}
         \pause
-        \item several parallelization techniques for multiple streams
-        \pause
-        \item here: multiple instances of the same generator
+        \item multiple instances of the same generator
         \pause
         \item seeding and parameter variations for multiple streams
+        \pause
+        \item four times more memory needed
       \end{itemize}
     \end{frame}
 
@@ -361,26 +354,27 @@
         % \includegraphics[width=0.637\textwidth]{figures/mt19937_scheme.pdf}
         \includegraphics[width=0.72\textwidth]{figures/mt19937_scheme.pdf}
       \end{figure}
-      \bigskip
-      \begin{minipage}{0.49\textwidth}
-        \begin{itemize}
-          \pause
-          \item de-facto standard
-          \pause
-          \item linear PRNG
-          \pause
-          \item 19937-bit state, 32-bit output
-        \end{itemize}
-      \end{minipage}
-      \hfill
-      \begin{minipage}{0.4\textwidth}
-        \begin{itemize}
-          \pause
-          \item period: $2^{19937}-1$
-          \pause
-          \item 623-dimensional equidistributed
-        \end{itemize}
-      \end{minipage}
+      \begin{itemize}
+        \pause
+        \item de-facto standard
+        \pause
+        \item linear PRNG
+        \pause
+        \item 19937-bit state, 32-bit output, $n=624$, $m=397$
+      \end{itemize}
+    \end{frame}
+
+    \begin{frame}{MT19937}
+      \begin{figure}
+        \includegraphics[width=0.72\textwidth]{figures/mt19937_scheme.pdf}
+      \end{figure}
+      \begin{itemize}
+        \item period: $2^{19937}-1$
+        \pause
+        \item 623-dimensional equidistributed
+        \pause
+        \item vectorization of generation function analog to example
+      \end{itemize}
     \end{frame}
 
     \begin{frame}{MT19937 Abbreviation}
@@ -403,7 +397,7 @@
         \pause
         \item instead do $n$ transitions at once
         \pause
-        \item example with $n=8$ and $m=5$; reality with $n=624$ and $m=397$
+        \item example with $n=8$ and $m=5$
       \end{itemize}
     \end{frame}
 
@@ -447,7 +441,7 @@
         \pause
         \item shift bits with highest entropy into fraction part
         \pause
-        \item set sign and exponent to put floating-point value in range $[1,2)$
+        \item set sign and exponent to generate value in $[1,2)$
         \pause
         \item subtract one from result
       \end{itemize}
@@ -530,7 +524,7 @@
           \hline
           \hline
           \rowcolor{bgc}
-          Portable & \checkmark & \crossmark & \crossmark \\
+          Portable & \checkmark & \crossmark & \checkmark \\
           Good API & \checkmark & \crossmark & \crossmark \\
           \rowcolor{bgc}
           Open Source & \checkmark & \checkmark & \crossmark \\
