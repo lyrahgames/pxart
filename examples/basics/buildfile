@@ -1,1 +1,3 @@
+import libs = pxart%lib{pxart}
+
 ./: {*/ -build/} manifest
