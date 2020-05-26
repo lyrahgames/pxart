@@ -72,16 +72,6 @@ TEST_CASE("pxart::simd256::detail::uniform int Bounds") {
               reinterpret_cast<const int*>(&v)[j]);
     }
   }
-  // for (int i = 0; i < n; i += 4) {
-  //   const auto rnd = rng();
-  //   const auto v = pxart::simd256::detail::uniform(rnd, 0.11, 0.76);
-  //   for (int j = 0; j < 4; ++j) {
-  //     REQUIRE(pxart::detail::uniform(reinterpret_cast<const
-  //     uint64_t*>(&rnd)[j],
-  //                                    0.11, 0.76) ==
-  //             reinterpret_cast<const double*>(&v)[j]);
-  //   }
-  // }
 }
 
 TEST_CASE("pxart::simd256::detail::uniform long long Bounds") {
