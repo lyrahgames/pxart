@@ -1,0 +1,8 @@
+libs =
+import libs += sfml-graphics%lib{sfml-graphics}
+import libs += pxart%lib{pxart}
+
+exe{photons}: {hxx cxx}{**} $libs
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+cxx.loptions += -lpthread

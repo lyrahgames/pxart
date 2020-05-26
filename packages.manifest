@@ -8,3 +8,5 @@ location: benchmarks/
 location: pxrun/
 :
 location: examples/basics/
+:
+location: examples/photon_propagation/
