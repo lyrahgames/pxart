@@ -35,7 +35,6 @@ struct seed_seq {
   constexpr result_type operator()() noexcept;
 
   std::array<uint_type, state_size> data{};
-  uint_type hash_const = init_b;
   hasher<mult_b> hash{init_b};
   size_t index{};
 };
