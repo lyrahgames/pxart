@@ -1,6 +1,6 @@
 #include <doctest/doctest.h>
 
-#include <pxart/utilities/is_valid.hpp>
+#include <pxart/utility/is_valid.hpp>
 
 namespace {
 
