@@ -21,7 +21,7 @@ int main() {
 
   for (int i = 0; i < samples; i += size) {
     const auto vrnd = pxart::uniform<type>(rng, offset, offset + buckets - 1);
-    const auto srnd = pxart::detail::pun_cast<array<type, size>>(vrnd);
+    const auto srnd = pxart::pun_cast<array<type, size>>(vrnd);
     for (int j = 0; j < size; ++j) ++histogram[srnd[j] - offset];
   }
 

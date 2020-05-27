@@ -1,5 +1,6 @@
 #pragma once
-
+//
+#include <pxart/utility/pun_cast.hpp>
 //
 #include <pxart/msws.hpp>
 #include <pxart/mt19937.hpp>

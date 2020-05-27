@@ -3,7 +3,7 @@
 #include <pxart/pxart.hpp>
 #include <pxart/seed_seq.hpp>
 #include <pxart/simd256/seed_seq.hpp>
-#include <pxart/utilities/pun_cast.hpp>
+#include <pxart/utility/pun_cast.hpp>
 
 int main() {
   using namespace std;

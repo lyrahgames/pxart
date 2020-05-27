@@ -14,7 +14,7 @@ int main() {
     // const auto vrnd = pxart::simd128::uniform<type>(rng, -9, 9);
     const auto vrnd = pxart::uniform<type>(rng, '0', '9');
     const auto size = sizeof(vrnd) / sizeof(type);
-    const auto srnd = pxart::detail::pun_cast<array<type, size>>(vrnd);
+    const auto srnd = pxart::pun_cast<array<type, size>>(vrnd);
     for (int j = 0; j < size; ++j) {
       cout << fixed << setprecision(6) << setw(4) << srnd[j];
     }

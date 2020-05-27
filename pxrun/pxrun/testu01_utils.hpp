@@ -5,7 +5,7 @@
 #include <boost/type_index.hpp>
 #include <cstdint>
 #include <optional>
-#include <pxart/utilities/bit_reversal.hpp>
+#include <pxart/utility/bit_reversal.hpp>
 #include <string>
 
 // TestU01 allows only one instance of an external random number generator.

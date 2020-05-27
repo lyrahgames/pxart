@@ -7,7 +7,7 @@
 
 #include <array>
 #include <pxart/seed_seq.hpp>
-#include <pxart/utilities/pun_cast.hpp>
+#include <pxart/utility/pun_cast.hpp>
 
 namespace pxart::simd256 {
 
