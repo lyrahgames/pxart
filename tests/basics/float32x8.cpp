@@ -145,6 +145,20 @@ TEST_CASE("pxart::simd256::float32x8 operations") {
     CHECK(sz[7] == 88.0f);
   }
 
+  SUBCASE("positive") {
+    auto z = +x;
+    static_assert(is_same_v<float32x8, decltype(z)>);
+    auto sz = pxart::pun_cast<array<float, 8>>(z);
+    CHECK(sz[0] == 1.0f);
+    CHECK(sz[1] == 2.0f);
+    CHECK(sz[2] == 3.0f);
+    CHECK(sz[3] == 4.0f);
+    CHECK(sz[4] == 5.0f);
+    CHECK(sz[5] == 6.0f);
+    CHECK(sz[6] == 7.0f);
+    CHECK(sz[7] == 8.0f);
+  }
+
   SUBCASE("subtraction") {
     auto z = x - y;
     static_assert(is_same_v<float32x8, decltype(z)>);
@@ -157,6 +171,20 @@ TEST_CASE("pxart::simd256::float32x8 operations") {
     CHECK(sz[5] == -54.0f);
     CHECK(sz[6] == -63.0f);
     CHECK(sz[7] == -72.0f);
+  }
+
+  SUBCASE("negation") {
+    auto z = -x;
+    static_assert(is_same_v<float32x8, decltype(z)>);
+    auto sz = pxart::pun_cast<array<float, 8>>(z);
+    CHECK(sz[0] == -1.0f);
+    CHECK(sz[1] == -2.0f);
+    CHECK(sz[2] == -3.0f);
+    CHECK(sz[3] == -4.0f);
+    CHECK(sz[4] == -5.0f);
+    CHECK(sz[5] == -6.0f);
+    CHECK(sz[6] == -7.0f);
+    CHECK(sz[7] == -8.0f);
   }
 
   SUBCASE("multiplication") {

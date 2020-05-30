@@ -56,9 +56,13 @@ inline float32x8 operator+(float32x8 x, float32x8 y) noexcept {
   return _mm256_add_ps(x, y);
 }
 
+inline float32x8 operator+(float32x8 x) noexcept { return x; }
+
 inline float32x8 operator-(float32x8 x, float32x8 y) noexcept {
   return _mm256_sub_ps(x, y);
 }
+
+inline float32x8 operator-(float32x8 x) noexcept { return 0.0f - x; }
 
 inline float32x8 operator*(float32x8 x, float32x8 y) noexcept {
   return _mm256_mul_ps(x, y);
