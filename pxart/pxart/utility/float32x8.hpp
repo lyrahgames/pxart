@@ -18,7 +18,7 @@ struct float32x8 {
 
   float32x8(float init) noexcept : data{_mm256_set1_ps(init)} {}
   float32x8(float x0, float x1, float x2, float x3, float x4, float x5,
-            float x6, float x7)
+            float x6, float x7) noexcept
       : data{_mm256_setr_ps(x0, x1, x2, x3, x4, x5, x6, x7)} {}
   float32x8(float x7, float x6, float x5, float x4, float x3, float x2,
             float x1, float x0, reverse_t) noexcept
