@@ -318,6 +318,19 @@ TEST_CASE("pxart::simd256::uint32x8 operations") {
     CHECK(sz[7] == 10);
   }
 
+  SUBCASE("bitand") {
+    auto z = (x & uint32x8{3}) + y;
+    auto sz = pxart::pun_cast<array<uint32_t, 8>>(z);
+    CHECK(sz[0] == 11);
+    CHECK(sz[1] == 22);
+    CHECK(sz[2] == 33);
+    CHECK(sz[3] == 40);
+    CHECK(sz[4] == 51);
+    CHECK(sz[5] == 62);
+    CHECK(sz[6] == 73);
+    CHECK(sz[7] == 80);
+  }
+
   // SUBCASE("unpack_high_halfs") {
   //   auto z = unpack_high_halfs(x, y);
   //   auto sz = pxart::pun_cast<array<uint32_t, 8>>(z);

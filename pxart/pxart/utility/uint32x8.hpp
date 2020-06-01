@@ -22,6 +22,34 @@ struct uint32x8 : bool1x256 {
       : bool1x256{_mm256_set_epi32(x7, x6, x5, x4, x3, x2, x1, x0)} {}
 };
 
+inline uint32x8 operator&(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_and_si256(x, y);
+}
+
+inline uint32x8 andnot(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_andnot_si256(x, y);
+}
+
+inline uint32x8 operator|(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_or_si256(x, y);
+}
+
+inline uint32x8 operator^(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_xor_si256(x, y);
+}
+
+inline int testz(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_testz_si256(x, y);
+}
+
+inline int testnzc(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_testnzc_si256(x, y);
+}
+
+inline int testc(uint32x8 x, uint32x8 y) noexcept {
+  return _mm256_testc_si256(x, y);
+}
+
 inline uint32x8 operator+(uint32x8 x, uint32x8 y) noexcept {
   return _mm256_add_epi32(x, y);
 }
