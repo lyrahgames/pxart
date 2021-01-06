@@ -1,6 +1,6 @@
 : 1
 name: pxart-example-photon-propagation
-version: 0.1.0
+version: 0.2.0-a.0.z
 project: pxart
 summary: pXart Example Photon Propagation
 license: MIT ; MIT license
