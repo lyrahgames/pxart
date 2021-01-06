@@ -1,6 +1,6 @@
 : 1
 name: pxart-benchmarks
-version: 0.1.0-a.1.z
+version: 0.1.0
 project: pxart
 summary: Benchmarks for pXart
 license: MIT ; MIT license

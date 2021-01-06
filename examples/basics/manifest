@@ -1,6 +1,6 @@
 : 1
 name: pxart-examples-basics
-version: 0.1.0-a.1.z
+version: 0.1.0
 project: pxart
 summary: Basic pXart Examples
 license: MIT ; MIT license
