@@ -9,6 +9,8 @@
 
 using namespace std;
 
+#ifdef __AVX2__
+
 TEST_CASE("pxart::simd256::uint32x8 default constructor") {
   using pxart::simd256::uint32x8;
   uint32x8 v{};
@@ -357,3 +359,5 @@ TEST_CASE("pxart::simd256::uint32x8 operations") {
   //   CHECK(sz[7] == 60);
   // }
 }
+
+#endif  // __AVX2__

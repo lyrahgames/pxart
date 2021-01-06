@@ -9,6 +9,8 @@
 
 using namespace std;
 
+#ifdef __AVX2__
+
 TEST_CASE("pxart::simd256::float32x8 default constructor") {
   pxart::simd256::float32x8 v{};
   const auto sv = pxart::pun_cast<array<float, 8>>(v);
@@ -273,3 +275,5 @@ TEST_CASE("pxart::simd256::float32x8 operations") {
     CHECK(sz[7] == 7.0f);
   }
 }
+
+#endif  // __AVX2__
