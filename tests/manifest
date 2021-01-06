@@ -4,11 +4,14 @@ version: 0.1.0-a.1.z
 project: pxart
 summary: Tests for pXart
 license: MIT ; MIT License.
+
 url: https://lyrahgames.github.io/pxart/
 doc-url: https://lyrahgames.github.io/pxart/docs/home/
 src-url: https://github.com/lyrahgames/pxart
-email: markuspawellek@gmail.com
-depends: * build2 >= 0.12.0
-depends: * bpkg >= 0.12.0
-depends: pxart
+email: lyrahgames@mailbox.org
+
+depends: * build2 >= 0.13.0
+depends: * bpkg >= 0.13.0
+
+depends: pxart == $
 depends: doctest ^2.3.0
