@@ -1,8 +1,6 @@
----
-title: Installation by CMake
----
+# Setup with CMake
 
-**1. CMake Package Installation for CMake Projects and Projects without Build System**
+## 1. CMake Package Installation for CMake Projects and Projects without Build System
 
 Download the repository and create a configuration.
 ```
@@ -34,9 +32,7 @@ add_executable(main main.cpp)
 target_link_libraries(main PRIVATE pxart::pxart)
 ```
 
----
-
-**2. CMake Package Export from Build Configuration for CMake Projects**
+## 2. CMake Package Export from Build Configuration for CMake Projects
 
 Download the repository and create a configuration.
 ```

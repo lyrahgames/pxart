@@ -1,6 +1,7 @@
 title: Getting Started
 arrange:
   - quickstart.md
-  - build2.md
-  - cmake.md
-  - other_build_systems.md
+  - setup_build2.md
+  - setup_cmake.md
+  - setup_alternative.md
+  - examples.md

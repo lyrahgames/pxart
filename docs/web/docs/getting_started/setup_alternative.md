@@ -1,6 +1,4 @@
----
-title: Using Other Build Systems
----
+# Alternative Setup by Inlining
 
 pXart explicitly supports build2 and CMake.
 If you would like to use another build system or no build system at all, you will need to directly set a standard include path for the pXart library by using the specific compiler flags.

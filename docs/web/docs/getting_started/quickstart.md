@@ -1,6 +1,4 @@
----
-title: Quickstart
----
+# Quickstart
 
 To use pXart, you have to make two decisions.
 1. Which build system will be used to make pXart available to your current project?
