@@ -17,6 +17,7 @@
 ![](https://img.shields.io/github/repo-size/lyrahgames/pxart.svg?style=for-the-badge)
 ![](https://img.shields.io/github/license/lyrahgames/pxart.svg?style=for-the-badge&color=blue)
 [![Website lyrahgames.github.io/pxart](https://img.shields.io/website/https/lyrahgames.github.io/pxart.svg?down_message=offline&label=Documentation&style=for-the-badge&up_color=blue&up_message=online)](https://lyrahgames.github.io/pxart)
+[![build2 Package on cppget.org](https://img.shields.io/website/https/cppget.org/pxart.svg?down_message=offline&label=build2&style=for-the-badge&up_color=blue&up_message=package)](https://cppget.org/pxart)
 
 <b>
 <table>
@@ -96,6 +97,9 @@
 ## Tested Platforms
 - Operating System: Linux | Window | MacOS
 - Compiler: GCC | Clang | Intel | MinGW | MSVC
+
+[![build2 CI v0.1.0-a.1](https://img.shields.io/website/https/cppget.org/pxart/0.1.0-a.1.svg?down_message=offline&label=build2-CI&style=for-the-badge&up_color=blue&up_message=v0.1.0-a.1)](https://cppget.org/pxart/0.1.0-a.1)
+[![build2 CI v0.1.0](https://img.shields.io/website/https/cppget.org/pxart/0.1.0.svg?down_message=offline&label=build2-CI&style=for-the-badge&up_color=blue&up_message=v0.1.0)](https://cppget.org/pxart/0.1.0-a.1)
 
 ## Usage with build2
 ### 1. build2 Package Dependency for build2 Projects
