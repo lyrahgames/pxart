@@ -1,4 +1,4 @@
-# Development Setup
+# Setup
 ## Clone, Initialize, and Build
 By using build2, pxart can be easily tested with multiple configurations.
 For this, create a new folder `pxart` in your favorite project folder, like `~/projects`.

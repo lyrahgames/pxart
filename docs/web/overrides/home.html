@@ -175,14 +175,27 @@ p {
 <!-- Do not use the content from file but provide it here for better styling. -->
 {% block content %}
 <section>
-  <h2>What is pXart?</h2>
+  <h1>What is pXart?</h1>
   <p>
     pXart is a header-only library written in C++17 implementing vectorized pseudorandom number generators by using the SSE and AVX architecture of modern Intel processors.
     It is open-source and can be used on Linux, Windows, and MacOS.
   </p>
 </section>
+<hr>
 <section>
-  <h2>Master's Thesis</h2>
+  <h1>Features</h1>
+  <ul>
+    <li>SSE4.1-Vectorized Pseudorandom Number Generation</li>
+    <li>AVX2-Vectorized Pseudorandom Number Generation</li>
+    <li>Scalar Pseudorandom Number Generation</li>
+    <li>Fast Uniform Distribution</li>
+    <li>Simple Interface and Modern API</li>
+    <li>Different PRNGs: MT19937, Xoroshiro128+, MSWS</li>
+  </ul>
+</section>
+<hr>
+<section>
+  <h1>Master's Thesis</h1>
   <p>
     <blockquote>
       Design and Implementation of Vectorized Pseudorandom Number Generators and their Application to Simulations of Photon Propagation

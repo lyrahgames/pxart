@@ -1,4 +1,4 @@
-# Development Status
+# Status
 
 ![](https://img.shields.io/github/languages/top/lyrahgames/pxart.svg?style=for-the-badge)
 ![](https://img.shields.io/github/languages/code-size/lyrahgames/pxart.svg?style=for-the-badge)
@@ -72,3 +72,12 @@
     </tr>
 </table>
 </b>
+
+## Requirements
+- Standard: C++17
+- Build System: build2 | CMake
+- Intel Processor for Vectorized Components
+
+## Tested Platforms
+- Operating System: Linux | Window | MacOS
+- Compiler: GCC | Clang | Intel | MinGW | MSVC
