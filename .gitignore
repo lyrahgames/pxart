@@ -18,6 +18,7 @@
 !*.cmake
 
 !.circleci/config.yml
+!.github/**
 
 !README.md
 !LICENSE

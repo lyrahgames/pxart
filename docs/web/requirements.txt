@@ -1,0 +1,7 @@
+wheel
+mkdocs
+mkdocs-material
+mkdocs-minify-plugin
+mkdocs-git-revision-date-localized-plugin
+mkdocs-awesome-pages-plugin
+markdown-include

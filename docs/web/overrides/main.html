@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<style type="text/css">
+/* Justify all text paragraphs. */
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* Left align all mathematical equations. */
+mjx-container {
+  text-align: left !important;
+  text-indent: 10% !important;
+}
+</style>
+{{ super() }}
+{% endblock %}

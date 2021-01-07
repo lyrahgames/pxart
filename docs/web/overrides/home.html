@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block tabs %}
+{{ super() }}
+<style>
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.justify {
+  text-align: justify;
+}
+
+/* Application header should be static for the landing page */
+.md-header {
+  position: initial;
+}
+
+/* Remove spacing, as we cannot hide it completely */
+/*.md-main__inner {
+      margin: 0;
+    }*/
+
+/* Hide main content for now */
+/*.md-content {
+      display: none;
+    }*/
+
+/* Gradient background + blob */
+.tx-container {
+  padding-top: 1rem;
+  /*background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: white' /></svg>") no-repeat bottom,
+        linear-gradient(
+          to bottom,
+          var(--md-primary-fg-color),
+          hsla(280, 67%, 55%, 1) 99%,
+          white 99%
+        );*/
+  /*background-color: white;*/
+  background: url('images/banner.png') no-repeat center;
+  background-size: cover;
+  /*background-position: center 0%;*/
+  /*margin-top: -37px;*/
+}
+
+/* Set inverted text color on hero */
+.tx-hero {
+  margin: 0 .8rem;
+  /*color: var(--md-primary-bg-color);*/
+  color: var(--md-default-bg-color);
+}
+
+/* Make main headline thicker */
+.tx-hero h1 {
+  margin-bottom: 1rem;
+  color: currentColor;
+  /*color: white;*/
+  font-weight: 700;
+}
+
+/* Ensure that blob doesn't overlap buttons */
+.tx-hero__content {
+  padding-bottom: 6rem;
+}
+
+/* Adjust spacing of buttons and invert them */
+.tx-hero .md-button {
+  margin-top: .5rem;
+  margin-right: .5rem;
+  color: var(--md-primary-bg-color);
+  /*border-color: currentColor;*/
+}
+
+/* Invert primary button */
+/*.tx-hero .md-button--primary {
+      background-color: var(--md-primary-bg-color);
+      color: hsla(280deg, 37%, 48%, 1);
+      border-color: var(--md-primary-bg-color);
+    }*/
+
+.tx-hero .md-button--secondary {
+  color: currentColor;
+  border-color: currentColor;
+}
+
+/* Invert hover and focus button states */
+.tx-hero .md-button:hover,
+.tx-hero .md-button:focus {
+  background-color: var(--md-accent-fg-color);
+  color: var(--md-default-bg-color);
+  border-color: var(--md-accent-fg-color);
+}
+
+/* [mobile portrait -]: Adjust headline */
+@media screen and (max-width: 30em) {
+
+  /* Make main headline smaller */
+  .tx-hero h1 {
+    font-size: 1.4rem;
+  }
+}
+
+/* [tablet landscape +]: Display content and image next to each other */
+@media screen and (min-width: 60em) {
+
+  /* Hide table of contents */
+  .md-sidebar--secondary {
+    display: none;
+  }
+
+  /* Use flex layout to align items */
+  .tx-hero {
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* Increase bottom spacing and set dimensions */
+  .tx-hero__content {
+    max-width: 29rem;
+    margin-top: 3.5vw;
+    padding-bottom: 3.5vw;
+  }
+
+  /* Swap with teaser and set dimensions */
+  .tx-hero__image {
+    width: 38rem;
+    order: 1;
+    transform: translateX(4rem);
+  }
+}
+
+/* [screen +]: Adjust spacing */
+@media screen and (min-width: 76.25em) {
+
+  /* Hide navigation */
+  .md-sidebar--primary {
+    display: none;
+  }
+
+  /* Ensure the image aligns with the repository information */
+  .tx-hero__image {
+    transform: translateX(8rem);
+  }
+}
+</style>
+<section class="tx-container">
+  <div class="md-grid md-typeset">
+    <div class="tx-hero">
+      <!-- Hero image -->
+      <!-- <div class="tx-hero__image">
+          <img
+            src="assets/images/banner.png"
+            alt=""
+            width="1659"
+            height="1200"
+            draggable="false"
+          >
+        </div> -->
+      <!-- Hero content -->
+      <div class="tx-hero__content">
+        <h1>pXart</h1>
+        <div><em>{{ config.site_description }}.</em></div>
+        <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title | striptags }}" class="md-button md-button--primary">
+          Get Started
+        </a>
+        <a href="{{ config.repo_url }}" title="{{ lang.t('source.link.title') }}" class="md-button md-button--secondary">
+          Go to GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+<!-- Do not use the content from file but provide it here for better styling. -->
+{% block content %}
+<!-- {{ super() }} -->
+<section>
+  <h2>What is pXart?</h2>
+  <p>
+    pXart is a header-only library written in C++17 implementing vectorized pseudorandom number generators by using the SSE and AVX architecture of modern Intel processors.
+    It is open-source and can be used on Linux, Windows, and MacOS.
+  </p>
+</section>
+<section>
+  <h2>Master's Thesis</h2>
+  <p>
+    <blockquote>
+      Design and Implementation of Vectorized Pseudorandom Number Generators and their Application to Simulations of Photon Propagation
+    </blockquote>
+  </p>
+  <p>
+    pXart was developed as part of a thesis.
+    It makes it possible to improve the performance of physical simulations that need to use random numbers.
+    The library consists of pseudorandom number generators exploiting the SSE and AVX instruction set facilities of modern Intel processors.
+    For this, a new interface was created to simplify their initialization and usage.
+    Through the implementation of appropriate benchmarks and the simulation of photon propagation it was shown that the vectorized generators could indeed accelerate the execution of randomized algorithms.
+    Click the icon on the left to get a PDF version of the thesis.
+  </p>
+</section>
+{% endblock %}
+<!-- Use the same footer. -->
+{% block footer %}
+{{ super() }}
+{% endblock %}
