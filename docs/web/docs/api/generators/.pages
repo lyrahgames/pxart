@@ -1,0 +1,5 @@
+title: Random Number Generators
+arrange:
+  - mt19937.md
+  - xoroshiro128+.md
+  - msws.md

@@ -33,6 +33,7 @@ extra:
       link: https://github.com/lyrahgames
 
 markdown_extensions:
+  - attr_list
   - admonition
   - codehilite:
       guess_lang: false

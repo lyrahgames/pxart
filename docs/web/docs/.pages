@@ -1,6 +1,7 @@
 arrange:
   - index.md
-  - getting_started
+  - basics
+  - advanced
   - api
   - development
   - about
