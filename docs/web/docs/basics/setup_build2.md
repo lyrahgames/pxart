@@ -1,5 +1,9 @@
 # Setup with build2
-## 1. build2 Package Dependency for build2 Projects
+!!!note
+    You only have to choose one of the following variants.
+    We suggest to take the first alternative.
+
+## Alternative 1: build2 Package Dependency for build2 Projects
 
 Add the following entry to the `repositories.manifest` file of your build2 package.
 
@@ -8,7 +12,7 @@ Add the following entry to the `repositories.manifest` file of your build2 packa
     location: https://github.com/lyrahgames/pxart.git
 
 Instead of the GitHub repository you can also use the official `pkg.cppget.org` package repositories.
-Optionally, add a trusted key.
+There you could also add a trusted key if needed.
 
     :
     role: prerequisite
@@ -22,8 +26,10 @@ Here, you are allowed to specify the version range.
 Now, import the library in the according `buildfile` and link it to your target by putting it in the prerequisites.
 
     import pxart_lib = pxart%lib{pxart}
+    # ...
+    exe{your_exe}: {hxx cxx}{**} $pxart_lib
 
-## 2. build2 Package Installation for build2 Projects and Projects without Build System
+## Alternative 2: build2 Package Installation for build2 Projects and Projects without Build System
 
 Create a build2 configuration for packages if it does not exist already.
 Define a valid installation path which can be found by the compiler.
