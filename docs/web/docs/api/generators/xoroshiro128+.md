@@ -43,7 +43,7 @@ Parameter constructor.
 
 ```c++
 template <typename RNG>
-constexpr explicit xoroshiro128plus(RNG&& rng)
+constexpr explicit xoroshiro128plus(RNG&& rng);
 ```
 Initialize the PRNG by any other seeder or RNG.
 
@@ -67,8 +67,8 @@ Advance the inner state by $2^{96}$ elements.
 
 #### Characteristics
 ```c++
-static constexpr auto min() noexcept { return uint_type{}; }
-static constexpr auto max() noexcept { return ~uint_type{}; }
+static constexpr auto min() noexcept;
+static constexpr auto max() noexcept;
 ```
 Return the output range of pseudorandom numbers.
 

@@ -1,3 +1,5 @@
+./: */
+
 ./: exe{uniform_float}: cxx{uniform_float} $libs
 ./: exe{uniform_float_bounds}: cxx{uniform_float_bounds} $libs
 
