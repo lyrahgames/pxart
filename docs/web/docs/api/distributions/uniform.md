@@ -17,6 +17,11 @@ This functions advances the state of the given random number generator to get a 
 The range for floating-point types is interpreted as $[a,b)$.
 The range for integral types is interpreted as $\{x\in\mathbb{Z} \ | \ a\leq x \leq b\}$.
 
+### Include Scheme
+```c++
+#include <pxart/uniform.hpp>
+```
+
 ### Floating-Point Numbers
 The `#!c++ pxart::uniform` methods for floating-point types can only be used for `#!c++ float` and `#!c++ double`.
 

@@ -1,8 +1,6 @@
 # Type Punning with Pun Cast
 
 ```c++
-#include <pxart/utility/pun_cast.hpp>
-//
 template <typename T, typename U>
 T pxart::pun_cast(U x);
 ```
@@ -14,13 +12,10 @@ This function adheres to the strict-aliasing rules.
 Typically, such type punning is done to reinterpret floating-point types as unsigned integers to manipulate their sign bit and compute the absolute value for example.
 Here, `pun_cast` can also be used to reinterpret an SIMD type as an arbitray vector type to be able to access single elements.
 
-**Parameters**
-
-Value of type to be punned.
-
-**Return Value**
-
-Type-punned value.
+## Include Scheme
+```c++
+#include <pxart/utility/pun_cast.hpp>
+```
 
 ## Complexity
 Constant time complexity.
@@ -31,7 +26,6 @@ The function itself throws no exceptions.
 But the inner call to `std::memcpy` could throw.
 
 ## Example
-
 ```c++
 {!../../examples/basics/pun_cast/main.cpp!}
 ```
