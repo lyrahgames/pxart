@@ -5,6 +5,7 @@
 !*.cpp
 !*.ipp
 !*.in
+!*.txt
 
 !buildfile
 !manifest
