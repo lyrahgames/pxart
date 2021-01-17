@@ -18,6 +18,11 @@ workflows:
           requires:
             - install
       - code_coverage
+      - gcc-8
+      - gcc-9
+      - gcc-10
+      - clang-9
+      - clang-10
 
 jobs:
   build:
@@ -125,3 +130,70 @@ jobs:
             lcov -a coverage_base.info -a coverage_test.info -o coverage_total.info
             genhtml coverage_total.info -o coverage
             bash <(curl -s https://codecov.io/bash)
+
+  gcc-8:
+    docker:
+      - image: lyrahgames/gcc-build2:8-0.13
+    steps:
+      - checkout
+      - run:
+          name: build2_configure_build_test
+          command: |
+            cd pxart
+            bdep init -C @default cc config.cxx=g++ "config.cxx.coptions=-O3 -march=native"
+            cd ../tests
+            bdep init
+            b test
+  gcc-9:
+    docker:
+      - image: lyrahgames/gcc-build2:9-0.13
+    steps:
+      - checkout
+      - run:
+          name: build2_configure_build_test
+          command: |
+            cd pxart
+            bdep init -C @default cc config.cxx=g++ "config.cxx.coptions=-O3 -march=native"
+            cd ../tests
+            bdep init
+            b test
+  gcc-10:
+    docker:
+      - image: lyrahgames/gcc-build2:10-0.13
+    steps:
+      - checkout
+      - run:
+          name: build2_configure_build_test
+          command: |
+            cd pxart
+            bdep init -C @default cc config.cxx=g++ "config.cxx.coptions=-O3 -march=native"
+            cd ../tests
+            bdep init
+            b test
+  clang-9:
+    docker:
+      - image: lyrahgames/clang-build2:9-0.13
+    steps:
+      - checkout
+      - run:
+          name: build2_configure_build_test
+          command: |
+            cd pxart
+            bdep init -C @default cc config.cxx=clang++ "config.cxx.coptions=-O3 -march=native"
+            cd ../tests
+            bdep init
+            b test
+  clang-10:
+    docker:
+      - image: lyrahgames/clang-build2:10-0.13
+    steps:
+      - checkout
+      - run:
+          name: build2_configure_build_test
+          command: |
+            cd pxart
+            bdep init -C @default cc config.cxx=clang++ "config.cxx.coptions=-O3 -march=native"
+            cd ../tests
+            bdep init
+            b test
+
