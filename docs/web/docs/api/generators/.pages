@@ -3,3 +3,5 @@ arrange:
   - mt19937.md
   - xoroshiro128+.md
   - msws.md
+  - lcg.md
+  - pcg32.md

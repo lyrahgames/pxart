@@ -25,7 +25,7 @@ using result_type = uint32_t;
 ```c++
 constexpr pcg32();
 ```
-Default constructor which uses a default-initialized [`pxart::pcg32::default_seeder`](../seeding/mt19937_default_seeder.md).
+Default constructor.
 ---
 
 ```c++
