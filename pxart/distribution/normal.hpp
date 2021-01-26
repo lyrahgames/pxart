@@ -85,6 +85,7 @@ inline auto normal(G&& g, R mu, R sigma) {
 
 }  // namespace irwin_hall
 
-using namespace box_muller;
+// Make Box-Muller the default method for generating normal distributions.
+using box_muller::normal;
 
 }  // namespace pxart
