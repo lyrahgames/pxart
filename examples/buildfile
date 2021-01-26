@@ -1,2 +1,3 @@
 import libs = pxart%lib{pxart}
+import libs += lyrahgames-gnuplot-pipe%lib{lyrahgames-gnuplot-pipe}
 ./: {*/ -build/}

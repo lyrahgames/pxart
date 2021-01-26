@@ -15,5 +15,6 @@ depends: * build2 >= 0.13.0
 depends: * bpkg >= 0.13.0
 
 depends: doctest
+depends: lyrahgames-gnuplot-pipe
 
 requires: c++20
