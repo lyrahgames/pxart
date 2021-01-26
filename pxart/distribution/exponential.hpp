@@ -22,13 +22,13 @@ inline auto exponential(R u, R lambda) {
 
 }  // namespace detail
 
-// Standard Normal Distribution
+// Standard Exponential Distribution
 template <generic::floating_point R, generic::random_bit_generator G>
 inline auto exponential(G&& g) {
   return detail::exponential(uniform<R>(std::forward<G>(g)));
 }
 
-// exponential Distribution
+// Exponential Distribution with Parameter
 template <generic::floating_point R, generic::random_bit_generator G>
 inline auto exponential(G&& g, R lambda) {
   return detail::exponential(uniform<R>(std::forward<G>(g)), lambda);
