@@ -11,13 +11,15 @@ namespace detail {
 // Default Exponential Transformation
 template <generic::floating_point R>
 inline auto exponential(R u) {
+  // u1 must not be zero. Map from [0,1) to (0,1].
+  u = nextafter(u, R{2.0});
   return -std::log(u);
 }
 
 // Exponential Transformation with Parameter
 template <generic::floating_point R>
 inline auto exponential(R u, R lambda) {
-  return -std::log(u) / lambda;
+  return exponential(u) / lambda;
 }
 
 }  // namespace detail
