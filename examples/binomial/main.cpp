@@ -52,7 +52,8 @@ int main() {
 
   // For reference and comparison, print expected and estimated values
   // for mean, variance, and standard deviation on the screen.
-  cout << setw(25) << "expected mean = " << setw(15) << binomial.mean()
+  cout << "Example: Sampling the Binomial Distribution\n"
+       << setw(25) << "expected mean = " << setw(15) << binomial.mean()
        << setw(25) << "estimated mean = " << setw(15) << mean << '\n'
        << setw(25) << "expected variance = " << setw(15) << binomial.var()
        << setw(25) << "estimated variance = " << setw(15) << var << '\n'
