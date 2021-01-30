@@ -137,7 +137,7 @@ template <typename T, typename U>
 concept equal = std::same_as<T, U>;
 #else   // __cpp_concepts
 template <typename T, typename U>
-constexpr bool equal = std::is_same_v<T, U>&& std::is_same_v<U, T>;
+constexpr bool equal = std::is_same<T, U>::value&& std::is_same<U, T>::value;
 #endif  // __cpp_concepts
 
 // Integral Concept
@@ -146,7 +146,7 @@ template <typename T>
 concept integral = std::integral<T>;
 #else   // __cpp_concepts
 template <typename T>
-constexpr bool integral = std::is_integral_v<T>;
+constexpr bool integral = std::is_integral<T>::value;
 #endif  // __cpp_concepts
 
 // Unsigned Integral
@@ -155,7 +155,7 @@ template <typename T>
 concept unsigned_integral = std::unsigned_integral<T>;
 #else   // __cpp_concepts
 template <typename T>
-constexpr bool unsigned_integral = std::is_unsigned_v<T>;
+constexpr bool unsigned_integral = std::is_unsigned<T>::value;
 #endif  // __cpp_concepts
 
 // Supported Floating-Point Types Concept
