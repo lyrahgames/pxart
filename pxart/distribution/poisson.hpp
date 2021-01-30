@@ -9,8 +9,10 @@ namespace pxart {
 
 namespace knuth {
 
-template <generic::unsigned_integral U, generic::floating_point R,
-          generic::random_bit_generator G>
+// template <generic::unsigned_integral U, generic::floating_point R,
+//           generic::random_bit_generator G>
+PXART_TEMPLATE(generic::unsigned_integral, U, generic::floating_point, R,
+               generic::random_bit_generator, G)
 inline auto poisson(G&& g, R lambda) {
   assert(lambda > 0);
 
@@ -31,7 +33,8 @@ using knuth::poisson;
 
 // This structure provides characteristics and properties
 // of the Poisson distribution.
-template <generic::floating_point R>
+// template <generic::floating_point R>
+PXART_TEMPLATE(generic::floating_point, R)
 struct poisson_distribution {
   using real = R;
 

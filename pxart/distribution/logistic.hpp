@@ -11,7 +11,8 @@ namespace pxart {
 namespace detail {
 
 // Default Logistic Transformation
-template <generic::floating_point R>
+// template <generic::floating_point R>
+PXART_TEMPLATE(generic::floating_point, R)
 inline auto logistic(R u) {
   // 1-u cannot be zero.
   const auto tmp = std::log(1 - u);
@@ -21,28 +22,30 @@ inline auto logistic(R u) {
 }
 
 // Logistic Transformation with Parameters
-template <generic::floating_point R>
-inline auto logistic(R u, R mu, R s) {
-  return mu + s * logistic(u);
-}
+// template <generic::floating_point R>
+PXART_TEMPLATE(generic::floating_point, R)
+inline auto logistic(R u, R mu, R s) { return mu + s * logistic(u); }
 
 }  // namespace detail
 
 // Default Logistic Distribution
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto logistic(G&& g) {
   return detail::logistic(uniform<R>(std::forward<G>(g)));
 }
 
 // Logistic Distribution with Parameters
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto logistic(G&& g, R mu, R s) {
   return detail::logistic(uniform<R>(std::forward<G>(g)), mu, s);
 }
 
 // This structure provides characteristics and properties
 // of the logistic distribution.
-template <generic::floating_point R>
+// template <generic::floating_point R>
+PXART_TEMPLATE(generic::floating_point, R)
 struct logistic_distribution {
   using real = R;
 

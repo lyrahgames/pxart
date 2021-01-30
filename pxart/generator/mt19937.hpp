@@ -38,9 +38,10 @@ struct mt19937 {
   struct default_seeder;
 
   // Seeding Constructor
-  template <typename RNG>
-  requires generic::seeder_for<RNG, mt19937>  //
-      constexpr explicit mt19937(RNG&& rng);
+  // template <typename RNG>
+  // requires generic::seeder_for<RNG, mt19937>  //
+  PXART_TEMPLATE(generic::type, RNG, (generic::seeder_for<RNG, mt19937>))
+  constexpr explicit mt19937(RNG&& rng);
 
   // Default Constructor
   constexpr mt19937();
@@ -79,9 +80,10 @@ struct mt19937::default_seeder {
 };
 
 // Seeding Constructor
-template <typename RNG>
-requires generic::seeder_for<RNG, mt19937>  //
-    constexpr mt19937::mt19937(RNG&& rng) {
+// template <typename RNG>
+// requires generic::seeder_for<RNG, mt19937>  //
+PXART_TEMPLATE(generic::type, RNG, (generic::seeder_for<RNG, mt19937>))
+constexpr mt19937::mt19937(RNG&& rng) {
   generate(std::forward<RNG>(rng), state, state_size);
 }
 

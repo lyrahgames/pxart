@@ -9,12 +9,13 @@
 #include <pxart/generator/mt19937.hpp>
 
 static_assert(pxart::generic::random_bit_generator<pxart::mt19937>);
-static_assert(std::same_as<pxart::meta::result<pxart::mt19937>, uint32_t>);
+static_assert(
+    pxart::generic::equal<pxart::meta::result<pxart::mt19937>, uint32_t>);
 
 static_assert(
     pxart::generic::random_bit_generator<pxart::mt19937::default_seeder>);
-static_assert(std::same_as<pxart::meta::result<pxart::mt19937::default_seeder>,
-                           uint32_t>);
+static_assert(pxart::generic::equal<
+              pxart::meta::result<pxart::mt19937::default_seeder>, uint32_t>);
 
 TEST_CASE("pxart::mt19937 Default Initialization") {
   std::mt19937 rng{};
@@ -41,16 +42,5 @@ TEST_CASE("pxart::mt19937 Random Initialization with Default Seeder") {
       const auto myrnd = myrng();
       REQUIRE(rnd == myrnd);
     }
-  }
-}
-
-TEST_CASE("") {
-  pxart::mt19937 rng{};
-  for (int i = 0; i < 10; ++i) MESSAGE(pxart::uniform<float>(rng));
-  for (int i = 0; i < 10; ++i) MESSAGE(pxart::uniform(rng, -0.5, 0.5));
-  for (int i = 0; i < 10; ++i) MESSAGE(pxart::exponential(rng, 0.5));
-  for (int i = 0; i < 10; ++i) {
-    const auto [a, b] = pxart::normal(rng, 1.0f, 0.5f);
-    MESSAGE(a << " " << b);
   }
 }

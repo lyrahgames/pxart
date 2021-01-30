@@ -6,7 +6,8 @@
 
 namespace pxart {
 
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto disk(G&& g) {
   while (true) {
     const auto x = uniform<R>(g, -1, 1);

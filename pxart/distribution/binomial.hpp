@@ -66,8 +66,10 @@ namespace simulation {
 // template <generic::integral R, generic::floating_point U>
 // binomial(R n, U p) -> binomial<std::make_unsigned_t<R>, U>;
 
-template <generic::unsigned_integral U, generic::floating_point R,
-          generic::random_bit_generator G>
+// template <generic::unsigned_integral U, generic::floating_point R,
+//           generic::random_bit_generator G>
+PXART_TEMPLATE(generic::unsigned_integral, U, generic::floating_point, R,
+               generic::random_bit_generator, G)
 inline auto binomial(G&& g, U n, R p) {
   assert(n > 0);
   assert((0 < p) && (p < 1));
@@ -81,7 +83,8 @@ inline auto binomial(G&& g, U n, R p) {
 
 namespace inversion {
 
-template <generic::unsigned_integral R, generic::floating_point U>
+// template <generic::unsigned_integral R, generic::floating_point U>
+PXART_TEMPLATE(generic::unsigned_integral, R, generic::floating_point, U)
 struct binomial {
   using real_type = U;
   using uint_type = R;
@@ -114,7 +117,8 @@ struct binomial {
     for (uint_type i = 1; i < n; ++i) cdf_table[i] += cdf_table[i - 1];
   }
 
-  template <generic::random_bit_generator G>
+  // template <generic::random_bit_generator G>
+  PXART_TEMPLATE(generic::random_bit_generator, G)
   auto operator()(G&& g) const {
     const auto u = uniform<U>(std::forward<G>(g));
     for (uint_type i = 0; i < n; ++i)
@@ -141,8 +145,9 @@ struct binomial {
   real_type p;
 };
 
-template <generic::integral R, generic::floating_point U>
-binomial(R n, U p) -> binomial<std::make_unsigned_t<R>, U>;
+// template <generic::integral R, generic::floating_point U>
+PXART_TEMPLATE(generic::integral, R, generic::floating_point, U)
+binomial(R n, U p)->binomial<std::make_unsigned_t<R>, U>;
 
 }  // namespace inversion
 

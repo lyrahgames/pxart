@@ -11,7 +11,8 @@ namespace box_muller {
 namespace detail {
 
 // Standard Normal Transformation
-template <generic::floating_point R>
+// template <generic::floating_point R>
+PXART_TEMPLATE(generic::floating_point, R)
 inline auto normal(R u1, R u2) {
   using namespace std;
   // u1 must not be zero.
@@ -24,7 +25,8 @@ inline auto normal(R u1, R u2) {
 }
 
 // Normal Transformation
-template <generic::floating_point R>
+// template <generic::floating_point R>
+PXART_TEMPLATE(generic::floating_point, R)
 inline auto normal(R u1, R u2, R mu, R sigma) {
   using namespace std;
   // u1 must not be zero.
@@ -39,7 +41,8 @@ inline auto normal(R u1, R u2, R mu, R sigma) {
 }  // namespace detail
 
 // Standard Normal Distribution
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto normal(G&& g) {
   const auto u1 = uniform<R>(g);
   const auto u2 = uniform<R>(std::forward<G>(g));
@@ -47,7 +50,8 @@ inline auto normal(G&& g) {
 }
 
 // Normal Distribution
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto normal(G&& g, R mu, R sigma) {
   const auto u1 = uniform<R>(g);
   const auto u2 = uniform<R>(std::forward<G>(g));
@@ -59,7 +63,8 @@ inline auto normal(G&& g, R mu, R sigma) {
 namespace irwin_hall {
 
 // Approximation to Standard Normal Distribution
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto normal(G&& g) {
   const auto u01 = uniform<R>(g);
   const auto u02 = uniform<R>(g);
@@ -78,7 +83,8 @@ inline auto normal(G&& g) {
 }
 
 // Approximation to Normal Distribution
-template <generic::floating_point R, generic::random_bit_generator G>
+// template <generic::floating_point R, generic::random_bit_generator G>
+PXART_TEMPLATE(generic::floating_point, R, generic::random_bit_generator, G)
 inline auto normal(G&& g, R mu, R sigma) {
   return sigma * normal(std::forward<G>(g)) + mu;
 }
