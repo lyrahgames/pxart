@@ -5,6 +5,10 @@
 #include <pxart/distribution/uniform.hpp>
 #include <pxart/generator/minstd_rand.hpp>
 
+static_assert(pxart::generic::random_bit_generator<pxart::minstd_rand>);
+static_assert(
+    pxart::generic::equal<pxart::meta::result<pxart::minstd_rand>, uint32_t>);
+
 TEST_CASE("pxart::minstd_rand Default Initialization") {
   std::minstd_rand std_rng{};
   pxart::minstd_rand my_rng{};

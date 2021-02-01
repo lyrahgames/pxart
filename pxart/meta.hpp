@@ -194,14 +194,39 @@ constexpr bool generator = detail::generator<T>::value;
 namespace meta {
 
 // Returns the return type of a generator with its qualifications, like 'const'.
-// template <generic::generator T>
-PXART_TEMPLATE(generic::generator, T)
+#ifdef __cpp_concepts
+template <generic::generator T>
 using qualified_result = decltype(std::declval<T>()());
+#else   // __cpp_concepts
+// To support compilation without concepts, we have to make sure to provide a
+// sentinel type, like 'void', for meta functions when their input concept is
+// not fulfilled. Otherwise this will result in compilation errors. Concepts
+// would automatically remove such templates from the overload resolution.
+namespace detail {
+template <typename T, typename = void>
+struct qualified_result {
+  using type = void;
+};
+template <typename T>
+struct qualified_result<T, std::enable_if_t<generic::generator<T>>> {
+  using type = decltype(std::declval<T>()());
+};
+}  // namespace detail
+template <typename T>
+using qualified_result = typename detail::qualified_result<T>::type;
+#endif  // __cpp_concepts
 
 // Returns the return type of a generator without qualification by decaying it.
-// template <generic::generator T>
-PXART_TEMPLATE(generic::generator, T)
+#ifdef __cpp_concepts
+template <generic::generator T>
 using result = std::decay_t<qualified_result<T>>;
+#else   // __cpp_concepts
+// Due to the implementation of 'qualified_result', we are not allowed to
+// constrain the meta function. It has to return a valid type for every given
+// type.
+template <typename T>
+using result = std::decay_t<qualified_result<T>>;
+#endif  // __cpp_concepts
 
 }  // namespace meta
 

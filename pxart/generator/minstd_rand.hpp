@@ -16,10 +16,11 @@ struct minstd_rand {
 
   // Default and Parameter Constructors
   constexpr minstd_rand() = default;
-  constexpr minstd_rand(uint_type seed) : state{seed} {}
+  constexpr explicit minstd_rand(uint_type seed) : state{seed} {}
 
   // Seeding Constructor
   PXART_TEMPLATE(generic::type, G, (generic::seeder_for<G, minstd_rand>))
+  // template <typename G, std::enable_if_t<generic::generator<G>, int> = 0>
   constexpr explicit minstd_rand(G&& g) {
     generate(std::forward<G>(g), &state, 1);
   }
@@ -30,12 +31,12 @@ struct minstd_rand {
     return static_cast<result_type>(state);
   }
 
-  // Specialization of Default Uniform Distribution
+  // Specialization of Default Uniform Distribution on [0,1)
   PXART_TEMPLATE(generic::floating_point, R)
   constexpr auto uniform() {
     // The compiler will optimize away the division because it is a constexpr.
     // Manual optimization based on precomputed inverse was slower.
-    return R(operator()() - 1) / R(modulus - 2);
+    return R(operator()() - 1) / R(modulus - 1);
   }
   // PXART_TEMPLATE(generic::floating_point, R)
   // static constexpr auto uniform_scale = 1 / R(modulus - 2);
