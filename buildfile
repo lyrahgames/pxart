@@ -1,4 +1,4 @@
-./: tests/ examples/ manifest
+./: tests/ examples/ benchmarks/ manifest
 
 ./: lib{pxart}: pxart/hxx{**}
 {
@@ -7,3 +7,5 @@
 hxx{**}: install.subdirs = true
 
 tests/: install = false
+examples/: install = false
+benchmarks/: install = false

@@ -6,21 +6,51 @@
 namespace pxart {
 
 struct minstd_rand {
-  static constexpr uint64_t multiplier = 48271;
-  static constexpr uint64_t modulus = 2147483647;
-  // PXART_TEMPLATE(generic::floating_point, R)
-  // static constexpr auto uniform_scale = 1 / R(modulus - 2);
+  // Representation Types
+  using uint_type = uint64_t;
+  using result_type = uint32_t;
 
-  constexpr auto operator()() {
-    state = (multiplier * state) % modulus;
-    return static_cast<uint32_t>(state);
+  // Constexpr Parameters
+  static constexpr uint_type multiplier = 48271;
+  static constexpr uint_type modulus = 2147483647;
+
+  // Default and Parameter Constructors
+  constexpr minstd_rand() = default;
+  constexpr minstd_rand(uint_type seed) : state{seed} {}
+
+  // Seeding Constructor
+  PXART_TEMPLATE(generic::type, G, (generic::seeder_for<G, minstd_rand>))
+  constexpr explicit minstd_rand(G&& g) {
+    generate(std::forward<G>(g), &state, 1);
   }
 
+  // Generation
+  constexpr auto operator()() {
+    state = (multiplier * state) % modulus;
+    return static_cast<result_type>(state);
+  }
+
+  // Specialization of Default Uniform Distribution
   PXART_TEMPLATE(generic::floating_point, R)
-  constexpr auto uniform() { return R(operator()() - 1) / (modulus - 2); }
+  constexpr auto uniform() {
+    // The compiler will optimize away the division because it is a constexpr.
+    // Manual optimization based on precomputed inverse was slower.
+    return R(operator()() - 1) / R(modulus - 2);
+  }
+  // PXART_TEMPLATE(generic::floating_point, R)
+  // static constexpr auto uniform_scale = 1 / R(modulus - 2);
   // constexpr auto uniform() { return R(operator()() - 1) * uniform_scale<R>; }
 
-  uint64_t state{1};
+  // Specialization of Uniform Distribution with Parameters
+  PXART_TEMPLATE(generic::floating_point, R)
+  constexpr auto uniform(R a, R b) { return uniform<R>() * (b - a) + a; }
+
+  // Characteristics
+  static constexpr auto min() { return result_type{1}; }
+  static constexpr auto max() { return result_type{modulus - 1}; }
+
+  // State
+  uint_type state{1};
 };
 
 }  // namespace pxart

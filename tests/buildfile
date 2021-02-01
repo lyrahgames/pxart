@@ -1,3 +1,4 @@
 import libs = doctest%lib{doctest}
 import libs += pxart%lib{pxart}
+
 exe{main}: {hxx cxx}{**} $libs

@@ -1,0 +1,4 @@
+import libs = pxart%lib{pxart}
+import libs += perfevent%lib{perfevent}
+
+./: {*/ -build/}

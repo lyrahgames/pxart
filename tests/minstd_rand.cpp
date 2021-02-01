@@ -40,6 +40,21 @@ TEST_CASE("pxart::minstd_rand Specialization of Default Uniform Distribution") {
   for (size_t i = 0; i < 10'000'000; ++i) {
     const auto u1 = distribution(std_rng);
     const auto u2 = pxart::uniform<float>(my_rng);
-    REQUIRE(u1 == u2);
+    REQUIRE(u1 == doctest::Approx(u2));
+  }
+}
+
+TEST_CASE(
+    "pxart::minstd_rand Specialization of Uniform Distribution with Bounds") {
+  const auto seed = std::random_device{}();
+  std::minstd_rand std_rng{seed};
+  pxart::minstd_rand my_rng{seed};
+
+  std::uniform_real_distribution<float> distribution{1, 2};
+
+  for (size_t i = 0; i < 10'000'000; ++i) {
+    const auto u1 = distribution(std_rng);
+    const auto u2 = pxart::uniform<float>(my_rng, 1, 2);
+    REQUIRE(u1 == doctest::Approx(u2));
   }
 }

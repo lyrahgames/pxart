@@ -16,5 +16,6 @@ depends: * bpkg >= 0.13.0
 
 depends: doctest
 depends: lyrahgames-gnuplot-pipe
+depends: perfevent
 
 requires: c++20
