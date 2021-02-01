@@ -8,7 +8,9 @@
 #include <pxart/distribution/logistic.hpp>
 #include <pxart/generator/mt19937.hpp>
 //
+#ifndef PXART_EXAMPLES_DISABLE_GNUPLOT
 #include <lyrahgames/gnuplot_pipe.hpp>
+#endif
 
 using namespace std;
 
@@ -62,6 +64,7 @@ int main() {
        << setw(25) << "expected stddev = " << setw(15) << distribution.sigma()
        << setw(25) << "estimated stddev = " << setw(15) << stddev << '\n';
 
+#ifndef PXART_EXAMPLES_DISABLE_GNUPLOT
   // Use gnuplot to plot the histogram by first writing it to a file.
   // For reference and comparison, add the theoretical probability for all
   // possible values of the logistic distribution which is again given by the
@@ -79,4 +82,5 @@ int main() {
           "title 'Relative Frequencies', "
           "p(x) w lines lc rgb '#3366ff' lw 2 title 'Ideal Probability "
           "Density'\n";
+#endif  // PXART_EXAMPLES_DISABLE_GNUPLOT
 }

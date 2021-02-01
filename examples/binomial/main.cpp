@@ -7,7 +7,9 @@
 #include <pxart/distribution/binomial.hpp>
 #include <pxart/generator/mt19937.hpp>
 //
+#ifndef PXART_EXAMPLES_DISABLE_GNUPLOT
 #include <lyrahgames/gnuplot_pipe.hpp>
+#endif
 
 using namespace std;
 
@@ -60,6 +62,7 @@ int main() {
        << setw(25) << "expected stddev = " << setw(15) << binomial.stddev()
        << setw(25) << "estimated stddev = " << setw(15) << stddev << '\n';
 
+#ifndef PXART_EXAMPLES_DISABLE_GNUPLOT
   // Use gnuplot to plot the histogram by first writing it to a file.
   // For reference and comparison, add the theoretical probability for all
   // possible values of the binomial distribution.
@@ -73,4 +76,5 @@ int main() {
        << "plot 'histogram.txt' u 1:2 w boxes lc rgb '#222222' fs solid 0.2 "
           "title 'Relative Frequencies', "
           "'' u 1:3 w lines lc rgb '#3366ff' lw 2 title 'Ideal Probability'\n";
+#endif  // PXART_EXAMPLES_DISABLE_GNUPLOT
 }
