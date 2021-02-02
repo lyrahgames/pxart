@@ -11,4 +11,6 @@
 !manifest
 !repositories.manifest
 
+!.circleci/config.yml
+
 !.gitignore

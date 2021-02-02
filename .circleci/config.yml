@@ -1,0 +1,66 @@
+version: 2.1
+
+commands:
+  checkout-config-build-test:
+    steps:
+      - checkout
+      - run:
+          command: |
+            bdep init -C @release cc config.cxx=c++ "config.cxx.poptions=-DNDEBUG -DPXART_EXAMPLES_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_PERFEVENT" "config.cxx.coptions=-O3 -march=native"
+            bdep init -C @debug cc config.cxx=c++ "config.cxx.poptions=-DNDEBUG -DPXART_EXAMPLES_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_PERFEVENT" "config.cxx.coptions=-O0 -g"
+            b test
+            bdep test @debug
+
+jobs:
+  ubuntu-gcc-10:
+    docker:
+      - image: lyrahgames/ubuntu-gcc-build2:20.10-10-0.13
+    steps:
+      - checkout-config-build-test
+
+  ubuntu-gcc-9:
+    docker:
+      - image: lyrahgames/ubuntu-gcc-build2:20.10-9-0.13
+    steps:
+      - checkout-config-build-test
+
+  ubuntu-gcc-8:
+    docker:
+      - image: lyrahgames/ubuntu-gcc-build2:20.10-8-0.13
+    steps:
+      - checkout-config-build-test
+
+  ubuntu-gcc-7:
+    docker:
+      - image: lyrahgames/ubuntu-gcc-build2:20.10-7-0.13
+    steps:
+      - checkout-config-build-test
+
+  ubuntu-clang-10:
+    docker:
+      - image: lyrahgames/ubuntu-clang-build2:20.10-10-0.13
+    steps:
+      - checkout-config-build-test
+
+  ubuntu-clang-9:
+    docker:
+      - image: lyrahgames/ubuntu-clang-build2:20.10-9-0.13
+    steps:
+      - checkout-config-build-test
+
+  ubuntu-clang-8:
+    docker:
+      - image: lyrahgames/ubuntu-clang-build2:20.10-8-0.13
+    steps:
+      - checkout-config-build-test
+
+workflows:
+  build2-config-build-test:
+    jobs:
+      - ubuntu-gcc-10
+      - ubuntu-gcc-9
+      - ubuntu-gcc-8
+      - ubuntu-gcc-7
+      - ubuntu-clang-10
+      - ubuntu-clang-9
+      - ubuntu-clang-8
