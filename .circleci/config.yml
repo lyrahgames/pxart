@@ -6,8 +6,8 @@ commands:
       - checkout
       - run:
           command: |
-            bdep init -C @release cc config.cxx=c++ "config.cxx.poptions=-DNDEBUG -DPXART_EXAMPLES_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_PERFEVENT" "config.cxx.coptions=-O3 -march=native"
-            bdep init -C @debug cc config.cxx=c++ "config.cxx.poptions=-DNDEBUG -DPXART_EXAMPLES_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_PERFEVENT" "config.cxx.coptions=-O0 -g"
+            bdep init -C @release cc config.cxx=c++ "config.cxx.poptions=-DNDEBUG -DPXART_EXAMPLES_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_PERFEVENT -DPXART_BENCHMARKS_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_BOOST" "config.cxx.coptions=-O3 -march=native"
+            bdep init -C @debug cc config.cxx=c++ "config.cxx.poptions=-DNDEBUG -DPXART_EXAMPLES_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_PERFEVENT -DPXART_BENCHMARKS_DISABLE_GNUPLOT -DPXART_BENCHMARKS_DISABLE_BOOST" "config.cxx.coptions=-O0 -g"
             b test
             bdep test @debug
 

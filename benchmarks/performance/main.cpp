@@ -7,7 +7,9 @@
 #include <random>
 #include <vector>
 //
+#ifndef PXART_BENCHMARKS_DISABLE_BOOST
 #include <boost/random/mersenne_twister.hpp>
+#endif
 //
 #include <pxart/generator/minstd_rand.hpp>
 #include <pxart/generator/mt19937.hpp>
@@ -31,10 +33,13 @@ inline auto seeded_generator() { return G{rd}; }
 PXART_TEMPLATE(pxart::generic::random_bit_generator, G,
                (!pxart::generic::seedable_by<G, random_device>))
 inline auto seeded_generator() { return G{rd()}; }
+
+#ifndef PXART_BENCHMARKS_DISABLE_BOOST
 template <>
 inline auto seeded_generator<boost::random::mt19937>() {
   return boost::random::mt19937{rd()};
 }
+#endif  // PXART_BENCHMARKS_DISABLE_BOOST
 
 PXART_TEMPLATE(pxart::generic::random_bit_generator, G)
 double performance_runner() {
@@ -72,8 +77,12 @@ vector<runner> runners{};
 int main() {
   runners.push_back({"pxart::mt19937", performance_runner<pxart::mt19937>});
   runners.push_back({"std::mt19937", performance_runner<std::mt19937>});
+
+#ifndef PXART_BENCHMARKS_DISABLE_BOOST
   runners.push_back(
       {"boost::random::mt19937", performance_runner<boost::random::mt19937>});
+#endif
+
   runners.push_back(
       {"pxart::minstd_rand", performance_runner<pxart::minstd_rand>});
   runners.push_back({"std::minstd_rand", performance_runner<std::minstd_rand>});
