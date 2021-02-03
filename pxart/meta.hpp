@@ -243,6 +243,13 @@ template <typename T, typename U>
 PXART_CONCEPT seeder_for =
     random_bit_generator<T> && !equal<std::decay_t<T>, std::decay_t<U>>;
 
+// Concept to decide if a given type is pxart-seedable by a generator.
+template <typename T, typename U>
+concept seedable_by =
+    random_bit_generator<T>&& seeder_for<U, T>&& requires(T t, U u) {
+  t = T{u};
+};
+
 // Concept to decide if a type has a member function, called 'uniform', with
 // arguments for bounds and the correct return type.
 #ifdef __cpp_concepts

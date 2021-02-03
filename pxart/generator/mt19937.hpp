@@ -56,8 +56,8 @@ struct mt19937 {
   static constexpr auto max() { return ~uint_type{}; }
 
   // State
-  uint_type state[state_size];
   size_t state_index = state_size;
+  alignas(64) uint_type state[state_size];
 };
 
 struct mt19937::default_seeder {
@@ -97,8 +97,8 @@ constexpr auto mt19937::operator()() {
   if (state_index >= state_size) {
     const auto transition = [this](size_t k, size_t k1, size_t k2) {
       const auto x = (state[k] & upper_mask) | (state[k1] & lower_mask);
-      // state[k] = state[k2] ^ (x >> 1) ^ ((x & 0x01) * xor_mask);
-      state[k] = state[k2] ^ (x >> 1) ^ ((state[k1] & 0x01) * xor_mask);
+      state[k] = state[k2] ^ (x >> 1) ^ ((x & 0x01) * xor_mask);
+      // state[k] = state[k2] ^ (x >> 1) ^ ((state[k1] & 0x01) * xor_mask);
     };
 
     for (size_t k = 0; k < state_size - shift_size; ++k)

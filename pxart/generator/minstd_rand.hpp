@@ -2,6 +2,7 @@
 #include <cstdint>
 //
 #include <pxart/meta.hpp>
+#include <pxart/utility.hpp>
 
 namespace pxart {
 
@@ -22,7 +23,7 @@ struct minstd_rand {
   PXART_TEMPLATE(generic::type, G, (generic::seeder_for<G, minstd_rand>))
   // template <typename G, std::enable_if_t<generic::generator<G>, int> = 0>
   constexpr explicit minstd_rand(G&& g) {
-    generate(std::forward<G>(g), &state, 1);
+    generate(std::forward<G>(g), &state, 1u);
   }
 
   // Generation
