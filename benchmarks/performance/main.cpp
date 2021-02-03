@@ -13,6 +13,7 @@
 #endif
 //
 #include <pxart/generator/minstd_rand.hpp>
+#include <pxart/generator/msws.hpp>
 #include <pxart/generator/mt19937.hpp>
 #include <pxart/meta.hpp>
 //
@@ -146,6 +147,7 @@ int main(int argc, char** argv) {
 #endif
       .ADD(pxart::minstd_rand)
       .ADD(std::minstd_rand)
+      .ADD(pxart::msws)
       .run();
   cout << driver;
 
