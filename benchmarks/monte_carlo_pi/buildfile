@@ -1,0 +1,2 @@
+import libs += lyrahgames-gnuplot-pipe%lib{lyrahgames-gnuplot-pipe}
+exe{main}: cxx{main} $libs
